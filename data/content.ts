@@ -266,3 +266,4 @@ export const footerContent = {
   ],
   legal: `© ${new Date().getFullYear()} Promovere. Todos los derechos reservados.`,
 };
+
