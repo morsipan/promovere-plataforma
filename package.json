@@ -1,0 +1,15 @@
+{
+  "name": "promovere-plataforma",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "14.x.x",  // o la versión que estés usando
+    "react": "18.x.x",
+    "react-dom": "18.x.x"
+  }
+}
