@@ -28,7 +28,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center shadow-lg shadow-brand-600/30 group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:scale-105 transition-transform">
                 <span className="text-white font-black text-sm tracking-tight">P</span>
               </div>
               <div className="flex flex-col leading-none">
@@ -40,8 +40,8 @@ export default function Navbar() {
                   {siteConfig.name}
                 </span>
                 <span
-                  className={`text-[10px] font-medium uppercase tracking-widest transition-colors ${
-                    scrolled ? 'text-brand-600' : 'text-brand-300'
+                  className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${
+                    scrolled ? 'text-brand-green-600' : 'text-brand-green-400'
                   }`}
                 >
                   Turismo LATAM
@@ -81,7 +81,7 @@ export default function Navbar() {
             </a>
             <a
               href="#contacto"
-              className="btn-primary text-sm"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-brand-green-500 text-white font-semibold text-sm hover:opacity-95 shadow-lg shadow-brand-500/20 hover:-translate-y-0.5 transition-all"
             >
               Contacto
               <ChevronRight className="w-4 h-4" />

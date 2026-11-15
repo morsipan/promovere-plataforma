@@ -16,7 +16,7 @@ export default function DistributionSection() {
   return (
     <section id="red" className="py-24 relative overflow-hidden">
       {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-900 via-brand-800 to-teal-900" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#4d4e4f] via-[#113d5b] to-[#0b273d]" />
 
       {/* Decorative grid */}
       <div
@@ -55,7 +55,7 @@ export default function DistributionSection() {
                   key={stat.label}
                   className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm"
                 >
-                  <div className="text-3xl font-black text-brand-400 mb-1">
+                  <div className="text-3xl font-black text-brand-green-400 mb-1">
                     {stat.value}
                   </div>
                   <div className="text-white/50 text-sm font-medium">
@@ -103,8 +103,8 @@ export default function DistributionSection() {
                     style={{ top: country.coords.top, left: country.coords.left }}
                   >
                     <div className="relative">
-                      <div className="w-3 h-3 rounded-full bg-brand-400 shadow-lg shadow-brand-400/50 animate-pulse" />
-                      <div className="absolute -inset-2 rounded-full bg-brand-400/20 animate-ping" />
+                      <div className="w-3 h-3 rounded-full bg-brand-green-400 shadow-lg shadow-brand-green-400/50 animate-pulse" />
+                      <div className="absolute -inset-2 rounded-full bg-brand-green-400/20 animate-ping" />
                       {/* Tooltip */}
                       <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded-lg bg-white text-gray-900 text-xs font-bold shadow-lg opacity-0 group-hover/dot:opacity-100 transition-opacity">
                         {country.name}
@@ -115,8 +115,8 @@ export default function DistributionSection() {
               </div>
 
               {/* Connection lines (decorative) */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl bg-brand-500/20 border border-brand-400/30 flex items-center justify-center backdrop-blur-sm">
-                <MapPin className="w-8 h-8 text-brand-400" />
+              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl bg-brand-green-500/20 border border-brand-green-400/30 flex items-center justify-center backdrop-blur-sm">
+                <MapPin className="w-8 h-8 text-brand-green-400" />
               </div>
             </div>
           </div>

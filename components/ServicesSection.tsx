@@ -29,16 +29,16 @@ const iconMap: Record<string, LucideIcon | React.FC<{ className?: string }>> = {
 
 const iconColors = [
   'bg-brand-50 text-brand-600',
-  'bg-blue-50 text-blue-600',
-  'bg-purple-50 text-purple-600',
-  'bg-amber-50 text-amber-600',
-  'bg-rose-50 text-rose-600',
-  'bg-teal-50 text-teal-600',
+  'bg-brand-green-50 text-brand-green-600',
+  'bg-brand-100 text-brand-700',
+  'bg-brand-green-100 text-brand-green-700',
+  'bg-brand-50 text-brand-500',
+  'bg-brand-green-50 text-brand-green-500',
 ];
 
 export default function ServicesSection() {
   return (
-    <section id="servicios" className="py-24 bg-gray-50">
+    <section id="servicios" className="py-24 bg-[#f9f9f9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">

@@ -8,11 +8,13 @@
   }
 
   body {
-    @apply text-gray-800 antialiased;
+    background-color: #f9f9f9;
+    color: #4d4e4f;
+    @apply antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply font-semibold tracking-tight text-gray-900;
   }
 }
 
@@ -20,7 +22,13 @@
   .section-badge {
     @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full 
            text-xs font-semibold uppercase tracking-widest 
-           bg-brand-50 text-brand-700 border border-brand-200;
+           bg-brand-50 text-brand-600 border border-brand-200;
+  }
+
+  .section-badge-green {
+    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full 
+           text-xs font-semibold uppercase tracking-widest 
+           bg-brand-green-50 text-brand-green-600 border border-brand-green-200;
   }
 
   .section-title {
@@ -28,15 +36,23 @@
   }
 
   .section-subtitle {
-    @apply text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed;
+    @apply text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed;
   }
 
   .btn-primary {
     @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl 
-           bg-brand-600 text-white font-semibold text-sm
-           hover:bg-brand-700 active:bg-brand-800
-           transition-all duration-200 shadow-lg shadow-brand-600/25
-           hover:shadow-brand-600/40 hover:-translate-y-0.5;
+           bg-brand-500 text-white font-semibold text-sm
+           hover:bg-brand-600 active:bg-brand-700
+           transition-all duration-200 shadow-lg shadow-brand-500/25
+           hover:shadow-brand-500/40 hover:-translate-y-0.5;
+  }
+
+  .btn-green {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl 
+           bg-brand-green-500 text-white font-semibold text-sm
+           hover:bg-brand-green-600 active:bg-brand-green-700
+           transition-all duration-200 shadow-lg shadow-brand-green-500/25
+           hover:shadow-brand-green-500/40 hover:-translate-y-0.5;
   }
 
   .btn-secondary {
@@ -49,9 +65,9 @@
 
   .btn-outline {
     @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl 
-           bg-transparent text-brand-600 font-semibold text-sm
-           border-2 border-brand-600
-           hover:bg-brand-600 hover:text-white
+           bg-transparent text-brand-500 font-semibold text-sm
+           border-2 border-brand-500
+           hover:bg-brand-500 hover:text-white
            transition-all duration-200;
   }
 

@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center shadow-lg shadow-brand-600/30">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-lg shadow-brand-500/30">
                 <span className="text-white font-black text-sm">P</span>
               </div>
               <span className="text-white font-black text-xl tracking-tight">

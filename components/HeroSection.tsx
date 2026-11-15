@@ -33,8 +33,8 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/20 border border-brand-400/40 backdrop-blur-sm mb-8 animate-fade-in">
-          <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
-          <span className="text-brand-200 text-xs font-semibold uppercase tracking-widest">
+          <span className="w-2 h-2 rounded-full bg-brand-green-400 animate-pulse" />
+          <span className="text-brand-100 text-xs font-semibold uppercase tracking-widest">
             {heroContent.badge}
           </span>
         </div>
@@ -42,7 +42,14 @@ export default function HeroSection() {
         {/* Title */}
         <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-none tracking-tight animate-slide-up">
           {heroContent.title.split(' ').map((word, i) => (
-            <span key={i} className={i === 1 ? 'text-brand-400' : ''}>
+            <span
+              key={i}
+              className={
+                i === 1
+                  ? 'text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-green-400'
+                  : ''
+              }
+            >
               {i > 0 ? ' ' : ''}{word}
             </span>
           ))}
@@ -57,7 +64,7 @@ export default function HeroSection() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up">
           <a
             href={heroContent.cta1.href}
-            className="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-brand-500 text-white font-bold text-base hover:bg-brand-400 transition-all duration-300 shadow-2xl shadow-brand-500/40 hover:shadow-brand-500/60 hover:-translate-y-1"
+            className="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-500 to-brand-green-500 text-white font-bold text-base hover:opacity-95 transition-all duration-300 shadow-2xl shadow-brand-500/40 hover:shadow-brand-500/60 hover:-translate-y-1"
           >
             {heroContent.cta1.label}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
