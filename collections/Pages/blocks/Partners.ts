@@ -1,0 +1,58 @@
+import type { Block } from 'payload'
+
+export const PartnersBlock: Block = {
+  slug: 'partners',
+  labels: {
+    singular: 'Módulo Partners / Aliados',
+    plural: 'Módulos Partners / Aliados',
+  },
+  fields: [
+    {
+      name: 'badge',
+      type: 'text',
+      label: 'Badge / Etiqueta',
+      defaultValue: 'Nuestros Aliados',
+    },
+    {
+      name: 'title',
+      type: 'text',
+      label: 'Título de la Sección',
+      defaultValue: 'Empresas y Cadenas que Confían en Nosotros',
+    },
+    {
+      name: 'subtitle',
+      type: 'textarea',
+      label: 'Subtítulo',
+      defaultValue:
+        'Trabajamos con los operadores mayoristas más prestigiosos, cadenas hoteleras internacionales y asociaciones clave del sector turístico regional.',
+    },
+    {
+      name: 'partnersList',
+      type: 'array',
+      label: 'Listado de Partners',
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          label: 'Nombre de la Empresa / Partner',
+          required: true,
+        },
+        {
+          name: 'category',
+          type: 'text',
+          label: 'Categoría (ej: Operador Mayorista, Cadena Hotelera, DMC)',
+        },
+        {
+          name: 'description',
+          type: 'textarea',
+          label: 'Descripción de la alianza o servicios compartidos',
+        },
+        {
+          name: 'initials',
+          type: 'text',
+          label: 'Iniciales / Acrónimo (para avatar/logo)',
+        },
+      ],
+    },
+  ],
+}

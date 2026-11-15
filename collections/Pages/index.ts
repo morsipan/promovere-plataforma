@@ -1,0 +1,60 @@
+import type { CollectionConfig } from 'payload'
+import { HeroBlock } from './blocks/Hero'
+import { ServicesBlock } from './blocks/Services'
+import { RepresentationsBlock } from './blocks/Representations'
+import { DistributionBlock } from './blocks/Distribution'
+import { PartnersBlock } from './blocks/Partners'
+import { ContactBlock } from './blocks/Contact'
+
+export const Pages: CollectionConfig = {
+  slug: 'pages',
+  labels: {
+    singular: 'Página',
+    plural: 'Páginas',
+  },
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'slug', 'updatedAt'],
+  },
+  access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user?.role === 'admin'),
+    update: ({ req: { user } }) => Boolean(user?.role === 'admin'),
+    delete: ({ req: { user } }) => Boolean(user?.role === 'admin'),
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      label: 'Título de la Página',
+      required: true,
+      defaultValue: 'Inicio — One Page Promovêre',
+    },
+    {
+      name: 'slug',
+      type: 'text',
+      label: 'Slug / URL',
+      required: true,
+      unique: true,
+      index: true,
+      defaultValue: 'home',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'layout',
+      type: 'blocks',
+      label: 'Bloques de Contenido de la Página',
+      required: true,
+      blocks: [
+        HeroBlock,
+        ServicesBlock,
+        RepresentationsBlock,
+        DistributionBlock,
+        PartnersBlock,
+        ContactBlock,
+      ],
+    },
+  ],
+}
