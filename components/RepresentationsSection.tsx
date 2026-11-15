@@ -1,71 +1,88 @@
 import Image from 'next/image';
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import { MapPin, Building2, ArrowUpRight } from 'lucide-react';
 import { representationsContent } from '@/data/content';
 
 export default function RepresentationsSection() {
   return (
-    <section id="representaciones" className="py-24 bg-white">
+    <section id="representaciones" className="py-20 md:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <span className="section-badge mb-4">{representationsContent.badge}</span>
-          <h2 className="section-title mb-4">{representationsContent.title}</h2>
-          <p className="section-subtitle">{representationsContent.subtitle}</p>
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 text-xs font-bold uppercase tracking-wider mb-4">
+            {representationsContent.badge}
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight">
+            {representationsContent.title}
+          </h2>
+          <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
+            {representationsContent.subtitle}
+          </p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {representationsContent.items.map((item, index) => (
-            <div
-              key={item.title}
-              className={`group relative overflow-hidden rounded-3xl cursor-pointer ${
-                index === 0 ? 'sm:col-span-2 lg:col-span-1 lg:row-span-2' : ''
-              }`}
-              style={{ minHeight: index === 0 ? '480px' : '280px' }}
-            >
-              {/* Background Image */}
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
+        {/* Representations Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {representationsContent.items.map((item, index) => {
+            // Give first item or specific items unique featured span on desktop
+            const isFeatured = index === 0 || index === 3;
 
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            return (
+              <div
+                key={item.id}
+                className={`group relative overflow-hidden rounded-3xl bg-[#4d4e4f] shadow-md hover:shadow-2xl transition-all duration-500 min-h-[380px] sm:min-h-[420px] flex flex-col justify-between ${
+                  isFeatured ? 'md:col-span-1 lg:col-span-1' : ''
+                }`}
+              >
+                {/* Background Image */}
+                <Image
+                  src={item.image}
+                  alt={`${item.title} - ${item.brand}`}
+                  fill
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 brightness-90"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
 
-              {/* Top badges */}
-              <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-                <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-semibold uppercase tracking-wider border border-white/20">
-                  {item.category}
-                </span>
-                <span className="px-3 py-1 rounded-full bg-black/30 backdrop-blur-sm text-white text-xs font-medium border border-white/10">
-                  {item.tag}
-                </span>
-              </div>
+                {/* Overlays */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#4d4e4f] via-[#4d4e4f]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
 
-              {/* Bottom content */}
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-brand-300 transition-colors">
-                  {item.title}
-                </h3>
-                <p className="text-white/60 text-sm mb-4">{item.subtitle}</p>
-                <div className="flex items-center gap-2 text-brand-400 text-sm font-semibold opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                  <ExternalLink className="w-4 h-4" />
-                  Ver más
+                {/* Top Badges */}
+                <div className="relative z-10 p-6 flex items-start justify-between">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider border border-white/20">
+                    <Building2 className="w-3.5 h-3.5 text-[#3cac59]" />
+                    {item.category}
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#1b87c7] text-white text-xs font-bold shadow-sm">
+                    {item.tag}
+                  </span>
+                </div>
+
+                {/* Bottom Content */}
+                <div className="relative z-10 p-6 sm:p-8">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#3cac59] uppercase tracking-wider mb-2">
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>{item.country}</span>
+                  </div>
+
+                  <h3 className="text-2xl sm:text-3xl font-black text-white mb-1.5 leading-tight group-hover:text-[#3cac59] transition-colors">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-sm font-semibold text-white/90 mb-3">
+                    {item.brand}
+                  </p>
+
+                  <p className="text-xs sm:text-sm text-white/80 leading-relaxed line-clamp-3 mb-4">
+                    {item.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-xs font-bold text-white group-hover:text-[#1b87c7] transition-colors">
+                    <span>Ver información comercial</span>
+                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div className="text-center mt-12">
-          <a href="#contacto" className="btn-primary">
-            Sumar tu marca
-            <ArrowRight className="w-4 h-4" />
-          </a>
+            );
+          })}
         </div>
       </div>
     </section>
