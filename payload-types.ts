@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     pages: Page;
     users: User;
+    'community-content': CommunityContent;
     media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -79,6 +80,7 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'community-content': CommunityContentSelect<false> | CommunityContentSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -248,7 +250,7 @@ export interface Page {
 export interface User {
   id: number;
   name: string;
-  role: 'admin' | 'hotel' | 'agencia';
+  role: 'admin' | 'editor' | 'mayorista' | 'minorista';
   company?: string | null;
   phone?: string | null;
   country?: string | null;
@@ -272,6 +274,34 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * Recursos comerciales, manuales y herramientas para la Comunidad Promovêre. (Aviso: No publicar tarifas ni precios confidenciales).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-content".
+ */
+export interface CommunityContent {
+  id: number;
+  title: string;
+  category: 'promociones' | 'fichas' | 'manuales' | 'capacitaciones' | 'marketing';
+  /**
+   * Define qué perfiles de la Comunidad pueden visualizar y descargar este recurso.
+   */
+  accessibleTo: 'all' | 'mayorista' | 'minorista';
+  description: string;
+  highlight?: string | null;
+  downloadableFiles?:
+    | {
+        name: string;
+        url: string;
+        fileType?: ('PDF' | 'PPTX' | 'ZIP' | 'VIDEO') | null;
+        id?: string | null;
+      }[]
+    | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -323,6 +353,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'community-content';
+        value: number | CommunityContent;
       } | null)
     | ({
         relationTo: 'media';
@@ -527,6 +561,28 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-content_select".
+ */
+export interface CommunityContentSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  accessibleTo?: T;
+  description?: T;
+  highlight?: T;
+  downloadableFiles?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        fileType?: T;
+        id?: T;
+      };
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

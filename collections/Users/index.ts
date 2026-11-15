@@ -1,6 +1,11 @@
 import type { Access, CollectionConfig } from 'payload'
 
-export type UserRole = 'admin' | 'hotel' | 'agencia'
+export type UserRole = 'admin' | 'editor' | 'mayorista' | 'minorista'
+
+// Solo admin y editor pueden ingresar a /admin (retorna boolean estricto)
+export const canAccessAdmin = ({ req: { user } }: { req: { user?: any } }): boolean => {
+  return Boolean(user?.role && ['admin', 'editor'].includes(user.role))
+}
 
 export const isAdmin: Access = ({ req: { user } }) => {
   return Boolean(user?.role === 'admin')
@@ -8,7 +13,7 @@ export const isAdmin: Access = ({ req: { user } }) => {
 
 export const isAdminOrSelf: Access = ({ req: { user } }) => {
   if (!user) return false
-  if (user.role === 'admin') return true
+  if (['admin', 'editor'].includes(user.role)) return true
   return {
     id: {
       equals: user.id,
@@ -28,13 +33,13 @@ export const Users: CollectionConfig = {
     defaultColumns: ['name', 'email', 'role', 'company', 'createdAt'],
   },
   access: {
-    // Solo usuarios administradores pueden ingresar al panel /admin de Payload
-    admin: ({ req: { user } }) => Boolean(user?.role === 'admin'),
-    // Administradores pueden ver todos los usuarios; miembros de la comunidad ven su propio perfil
+    // Restricción de acceso estricta: Solo admin y editor pueden ingresar a /admin
+    admin: canAccessAdmin,
+    // Admin y editor ven todos; usuarios de la comunidad solo ven su propio perfil
     read: isAdminOrSelf,
-    // Administradores crean usuarios; usuarios no autenticados pueden registrarse para la Comunidad
+    // Solo admin puede crear usuarios en el CMS; o registro libre en el portal
     create: ({ req: { user } }) => {
-      if (user) return user.role === 'admin'
+      if (user) return ['admin', 'editor'].includes(user.role)
       return true
     },
     update: isAdminOrSelf,
@@ -44,7 +49,7 @@ export const Users: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
-      label: 'Nombre Completo',
+      label: 'Nombre y Apellido',
       required: true,
     },
     {
@@ -52,48 +57,52 @@ export const Users: CollectionConfig = {
       type: 'select',
       label: 'Rol de Usuario',
       required: true,
-      defaultValue: 'agencia',
+      defaultValue: 'minorista',
       options: [
         {
-          label: 'Administrador (Admin)',
+          label: 'Administrador (Equipo Promovêre)',
           value: 'admin',
         },
         {
-          label: 'Comunidad Hotel (Hotel)',
-          value: 'hotel',
+          label: 'Editor de Contenidos (Equipo Promovêre)',
+          value: 'editor',
         },
         {
-          label: 'Comunidad Agencia (Agencia)',
-          value: 'agencia',
+          label: 'Operador Mayorista (Comunidad)',
+          value: 'mayorista',
+        },
+        {
+          label: 'Agencia Minorista (Comunidad)',
+          value: 'minorista',
         },
       ],
       access: {
-        // Solo un administrador puede elevar privilegios o cambiar roles
+        // Solo un administrador puede cambiar roles o elevar privilegios
         update: ({ req: { user } }) => Boolean(user?.role === 'admin'),
       },
     },
     {
       name: 'company',
       type: 'text',
-      label: 'Empresa / Cadena Hotelera / Agencia de Viajes',
+      label: 'Razón Social / Agencia u Operador',
     },
     {
       name: 'phone',
       type: 'text',
-      label: 'Teléfono / WhatsApp de Contacto',
+      label: 'Teléfono / WhatsApp Comercial',
     },
     {
       name: 'country',
       type: 'text',
-      label: 'País de Residencia / Operación',
+      label: 'País de Operación',
     },
     {
       name: 'verified',
       type: 'checkbox',
-      label: 'Usuario Verificado para la Comunidad',
+      label: 'Cuenta Verificada de Comunidad',
       defaultValue: false,
       access: {
-        update: ({ req: { user } }) => Boolean(user?.role === 'admin'),
+        update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
       },
     },
   ],

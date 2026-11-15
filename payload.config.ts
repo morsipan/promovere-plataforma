@@ -1,4 +1,3 @@
-import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -8,16 +7,11 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Pages } from './collections/Pages'
+import { CommunityContent } from './collections/CommunityContent'
 import { Media } from './collections/Media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-
-const isPostgresConfigured = Boolean(
-  process.env.DATABASE_URI &&
-  process.env.DATABASE_URI.startsWith('postgres') &&
-  !process.env.DATABASE_URI.includes('your-project-ref')
-)
 
 export default buildConfig({
   admin: {
@@ -26,22 +20,16 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Pages, Users, Media],
+  collections: [Pages, Users, CommunityContent, Media],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'promovere-payload-secret-key-32-characters-minimum',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: isPostgresConfigured
-    ? postgresAdapter({
-        pool: {
-          connectionString: process.env.DATABASE_URI!,
-        },
-      })
-    : sqliteAdapter({
-        client: {
-          url: process.env.SQLITE_URL || 'file:./local.db',
-        },
-      }),
+  db: sqliteAdapter({
+    client: {
+      url: process.env.DATABASE_URI || 'file:./local.db',
+    },
+  }),
   sharp,
 })
