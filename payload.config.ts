@@ -32,6 +32,15 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      titleSuffix: '— Promovêre CMS',
+    },
+    components: {
+      graphics: {
+        Logo: '/components/admin/Logo#Logo',
+        Icon: '/components/admin/Icon#Icon',
+      },
+    },
   },
   collections: [Pages, Users, CommunityContent, Media],
   editor: lexicalEditor(),
