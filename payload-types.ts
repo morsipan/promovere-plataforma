@@ -340,7 +340,7 @@ export interface Page {
     | {
         badge?: string | null;
         title: string;
-        content: {
+        content?: {
           root: {
             type: string;
             children: {
@@ -354,7 +354,7 @@ export interface Page {
             version: number;
           };
           [k: string]: unknown;
-        };
+        } | null;
         alignment?: ('left' | 'center') | null;
         id?: string | null;
         blockName?: string | null;

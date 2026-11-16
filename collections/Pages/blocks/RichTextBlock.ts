@@ -24,7 +24,7 @@ export const RichTextBlock: Block = {
       name: 'content',
       type: 'richText',
       label: 'Cuerpo del Contenido / Texto Enriquecido',
-      required: true,
+      required: false,
     },
     {
       name: 'alignment',
