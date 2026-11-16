@@ -1,10 +1,18 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Baloo_Da_2, Roboto } from 'next/font/google';
 import '../globals.css';
 
-const inter = Inter({
+const balooDa2 = Baloo_Da_2({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-baloo-da-2',
+  display: 'swap',
+});
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '700', '900'],
+  variable: '--font-roboto',
   display: 'swap',
 });
 
@@ -33,8 +41,8 @@ export default function FrontendLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className="scroll-smooth">
-      <body className={`${inter.variable} font-sans bg-[#f9f9f9] text-[#4d4e4f] antialiased`}>
+    <html lang="es" className={`${balooDa2.variable} ${roboto.variable} scroll-smooth`}>
+      <body className="font-sans bg-[#f9f9f9] text-[#4d4e4f] antialiased">
         {children}
       </body>
     </html>

@@ -65,26 +65,25 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* CTA & Portal Comunidad */}
+          {/* CTA Iniciar Sesión a Comunidad & Contacto */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/comunidad/login"
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                scrolled
-                  ? 'text-[#4d4e4f] hover:text-[#3cac59] hover:bg-[#3cac59]/10'
-                  : 'text-white/90 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#3cac59]" />
-              Comunidad
-            </Link>
             <a
               href="#contacto"
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white font-semibold text-sm hover:bg-[#1571a8] active:bg-[#0f5b89] shadow-lg shadow-[#1b87c7]/25 hover:-translate-y-0.5 transition-all duration-200"
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                scrolled
+                  ? 'text-[#4d4e4f] hover:text-[#1b87c7]'
+                  : 'text-white/90 hover:text-white'
+              }`}
             >
               Contacto
-              <ArrowUpRight className="w-4 h-4" />
             </a>
+            <Link
+              href="/comunidad/login"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] active:bg-[#0f5b89] shadow-lg shadow-[#1b87c7]/25 hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <Sparkles className="w-4 h-4 text-[#3cac59]" />
+              <span>Iniciar Sesión</span>
+            </Link>
           </div>
 
           {/* Mobile menu button */}

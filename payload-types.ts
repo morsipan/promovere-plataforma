@@ -451,7 +451,18 @@ export interface User {
 export interface CommunityContent {
   id: number;
   title: string;
-  category: 'promociones' | 'fichas' | 'manuales' | 'capacitaciones' | 'marketing';
+  category:
+    | 'representaciones'
+    | 'novedades'
+    | 'herramientas'
+    | 'promociones'
+    | 'fichas'
+    | 'manuales'
+    | 'capacitaciones'
+    | 'marketing';
+  brand?: string | null;
+  country?: string | null;
+  image?: string | null;
   /**
    * Define qué perfiles de la Comunidad pueden visualizar y descargar este recurso.
    */
@@ -885,6 +896,9 @@ export interface UsersSelect<T extends boolean = true> {
 export interface CommunityContentSelect<T extends boolean = true> {
   title?: T;
   category?: T;
+  brand?: T;
+  country?: T;
+  image?: T;
   accessibleTo?: T;
   description?: T;
   highlight?: T;

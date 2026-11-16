@@ -50,7 +50,8 @@ export default async function Home() {
       case 'services':
         return <ServicesSection key={`block-${index}`} data={block} />;
       case 'representations':
-        return <RepresentationsSection key={`block-${index}`} data={block} />;
+        // Las representaciones de destinos son exclusivas del Portal Privado de Comunidad
+        return null;
       case 'distribution':
         return <DistributionSection key={`block-${index}`} data={block} />;
       case 'partners':
@@ -86,12 +87,10 @@ export default async function Home() {
         // Render dinámico de los bloques configurados en el CMS
         layout.map((block, index) => renderBlock(block, index))
       ) : (
-        // Fallback por defecto si aún no hay bloques guardados en la BD
+        // Fallback por defecto si aún no hay bloques guardados en la BD (Representaciones exclusiva de Comunidad)
         <>
           <HeroSection data={heroBlock} />
           <ServicesSection />
-          <RepresentationsSection />
-          <DistributionSection />
           <PartnersSection />
           <ContactSection />
         </>

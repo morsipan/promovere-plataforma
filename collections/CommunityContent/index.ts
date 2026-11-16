@@ -65,12 +65,37 @@ export const CommunityContent: CollectionConfig = {
       required: true,
       defaultValue: 'promociones',
       options: [
+        { label: 'Representaciones (Hoteles & Destinos)', value: 'representaciones' },
+        { label: 'Novedades (Promo News & Prensa)', value: 'novedades' },
+        { label: 'Herramientas de Gestión Comercial', value: 'herramientas' },
         { label: 'Promociones & Acciones Trade', value: 'promociones' },
         { label: 'Fichas Técnicas de Hoteles & Destinos', value: 'fichas' },
         { label: 'Manuales de Venta & Presentaciones', value: 'manuales' },
         { label: 'Capacitaciones & Webinars', value: 'capacitaciones' },
         { label: 'Kits de Marketing & Redes Sociales', value: 'marketing' },
       ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'brand',
+          type: 'text',
+          label: 'Marca / Cadena (para Representaciones)',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'country',
+          type: 'text',
+          label: 'País / Región (para Representaciones)',
+          admin: { width: '50%' },
+        },
+      ],
+    },
+    {
+      name: 'image',
+      type: 'text',
+      label: 'URL de Imagen de Portada / Destino (para Representaciones o Novedades)',
     },
     {
       name: 'accessibleTo',

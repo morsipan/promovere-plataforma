@@ -71,8 +71,6 @@ export const siteConfig: SiteConfig = {
 
 export const navLinks: NavLink[] = [
   { label: "Servicios", href: "#servicios" },
-  { label: "Representaciones", href: "#representaciones" },
-  { label: "Red LATAM", href: "#red" },
   { label: "Partners", href: "#partners" },
   { label: "Contacto", href: "#contacto" },
 ];

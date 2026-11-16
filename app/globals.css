@@ -12,17 +12,20 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-family: var(--font-roboto), system-ui, sans-serif;
   }
 
   body {
     background-color: var(--promovere-blanco-humo);
     color: var(--promovere-antracita);
+    font-family: var(--font-roboto), system-ui, sans-serif;
     @apply antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-baloo-da-2), system-ui, sans-serif;
     color: var(--promovere-antracita);
-    @apply font-semibold tracking-tight;
+    @apply font-bold tracking-tight;
   }
 }
 
