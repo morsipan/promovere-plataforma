@@ -9,7 +9,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Paleta oficial de Promovere
+        // Paleta oficial corporativa de Promovere (Mandatoria)
+        antracita: '#4d4e4f',
+        verde: '#3cac59',
+        azul: '#1b87c7',
+        blancoHumo: '#f9f9f9',
+        'blanco-humo': '#f9f9f9',
         promovere: {
           dark: '#4d4e4f',
           green: '#3cac59',

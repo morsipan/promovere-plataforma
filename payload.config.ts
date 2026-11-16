@@ -1,3 +1,4 @@
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -13,6 +14,13 @@ import { Media } from './collections/Media'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const databaseUri = process.env.DATABASE_URI || ''
+// Se conecta nativamente a PostgreSQL (Supabase) cuando se provee la URL de conexión real,
+// con respaldo a SQLite local para desarrollo si aún no se configuró Supabase.
+const isPostgres =
+  (databaseUri.startsWith('postgres://') || databaseUri.startsWith('postgresql://')) &&
+  !databaseUri.includes('your-project-ref')
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -26,10 +34,16 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URI || 'file:./local.db',
-    },
-  }),
+  db: isPostgres
+    ? postgresAdapter({
+        pool: {
+          connectionString: databaseUri,
+        },
+      })
+    : sqliteAdapter({
+        client: {
+          url: databaseUri.startsWith('file:') ? databaseUri : 'file:./local.db',
+        },
+      }),
   sharp,
 })

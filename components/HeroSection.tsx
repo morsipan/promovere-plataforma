@@ -22,7 +22,7 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
   const cta1Label = data?.cta1Label || heroContent.cta1.label;
   const cta1Href = data?.cta1Href || heroContent.cta1.href;
   const cta2Label = data?.cta2Label || heroContent.cta2.label;
-  const cta2Href = data?.cta2Href || heroContent.cta2.href;
+  const cta2Href = data?.cta2Href || '/comunidad/login';
   const backgroundImage = data?.backgroundImage || heroContent.backgroundImage;
 
   return (

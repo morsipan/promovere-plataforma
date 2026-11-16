@@ -2,19 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --promovere-antracita: #4d4e4f;
+  --promovere-verde: #3cac59;
+  --promovere-azul: #1b87c7;
+  --promovere-blanco-humo: #f9f9f9;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    background-color: #f9f9f9;
-    color: #4d4e4f;
+    background-color: var(--promovere-blanco-humo);
+    color: var(--promovere-antracita);
     @apply antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight text-gray-900;
+    color: var(--promovere-antracita);
+    @apply font-semibold tracking-tight;
   }
 }
 

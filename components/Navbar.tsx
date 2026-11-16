@@ -67,8 +67,8 @@ export default function Navbar() {
 
           {/* CTA & Portal Comunidad */}
           <div className="hidden md:flex items-center gap-3">
-            <a
-              href="#contacto"
+            <Link
+              href="/comunidad/login"
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 scrolled
                   ? 'text-[#4d4e4f] hover:text-[#3cac59] hover:bg-[#3cac59]/10'
@@ -77,7 +77,7 @@ export default function Navbar() {
             >
               <Sparkles className="w-3.5 h-3.5 text-[#3cac59]" />
               Comunidad
-            </a>
+            </Link>
             <a
               href="#contacto"
               className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white font-semibold text-sm hover:bg-[#1571a8] active:bg-[#0f5b89] shadow-lg shadow-[#1b87c7]/25 hover:-translate-y-0.5 transition-all duration-200"
@@ -120,14 +120,14 @@ export default function Navbar() {
             </a>
           ))}
           <div className="pt-3 border-t border-gray-200 flex flex-col gap-2">
-            <a
-              href="#contacto"
+            <Link
+              href="/comunidad/login"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-[#4d4e4f] font-semibold text-sm"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-[#4d4e4f] font-semibold text-sm hover:text-[#1b87c7]"
             >
               <Sparkles className="w-4 h-4 text-[#3cac59]" />
               Portal Comunidad
-            </a>
+            </Link>
             <a
               href="#contacto"
               onClick={() => setIsOpen(false)}
