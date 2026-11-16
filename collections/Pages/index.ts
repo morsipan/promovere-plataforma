@@ -12,6 +12,7 @@ import { StatsBlock } from './blocks/Stats'
 import { GalleryBlock } from './blocks/Gallery'
 import { TimelineBlock } from './blocks/Timeline'
 import { RichTextBlock } from './blocks/RichTextBlock'
+import { PromovereAnimCounterBlock } from './blocks/PromovereAnimCounter'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -68,6 +69,7 @@ export const Pages: CollectionConfig = {
         GalleryBlock,
         TimelineBlock,
         RichTextBlock,
+        PromovereAnimCounterBlock,
       ],
     },
   ],

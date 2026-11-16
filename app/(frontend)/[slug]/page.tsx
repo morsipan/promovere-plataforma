@@ -16,6 +16,7 @@ import StatsSection from '@/components/blocks/StatsSection';
 import GallerySection from '@/components/blocks/GallerySection';
 import TimelineSection from '@/components/blocks/TimelineSection';
 import RichTextSection from '@/components/blocks/RichTextSection';
+import PromovereAnimCounterSection from '@/components/blocks/PromovereAnimCounterSection';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
@@ -105,6 +106,8 @@ export default async function DynamicInternalPage({ params }: PageProps) {
         return <TimelineSection key={`block-${index}`} data={block} />;
       case 'richText':
         return <RichTextSection key={`block-${index}`} data={block} />;
+      case 'promovereAnimCounter':
+        return <PromovereAnimCounterSection key={`block-${index}`} data={block} />;
       default:
         return null;
     }

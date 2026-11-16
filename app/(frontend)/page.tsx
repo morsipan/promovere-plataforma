@@ -13,6 +13,7 @@ import StatsSection from '@/components/blocks/StatsSection';
 import GallerySection from '@/components/blocks/GallerySection';
 import TimelineSection from '@/components/blocks/TimelineSection';
 import RichTextSection from '@/components/blocks/RichTextSection';
+import PromovereAnimCounterSection from '@/components/blocks/PromovereAnimCounterSection';
 import { getPayload } from 'payload';
 import config from '@payload-config';
 
@@ -70,6 +71,8 @@ export default async function Home() {
         return <TimelineSection key={`block-${index}`} data={block} />;
       case 'richText':
         return <RichTextSection key={`block-${index}`} data={block} />;
+      case 'promovereAnimCounter':
+        return <PromovereAnimCounterSection key={`block-${index}`} data={block} />;
       default:
         return null;
     }

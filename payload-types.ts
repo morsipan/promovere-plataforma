@@ -360,6 +360,34 @@ export interface Page {
         blockName?: string | null;
         blockType: 'richText';
       }
+    | {
+        badge?: string | null;
+        title?: string | null;
+        subtitle?: string | null;
+        items?:
+          | {
+              topText: string;
+              prefix?: string | null;
+              countValue: number;
+              suffix?: string | null;
+              bottomText: string;
+              topTextColor?: ('azul' | 'verde' | 'antracita' | 'gris' | 'blanco') | null;
+              counterColor?: ('antracita' | 'azul' | 'verde' | 'degrade' | 'blanco') | null;
+              bottomTextColor?: ('gris' | 'antracita' | 'azul' | 'verde' | 'blanco') | null;
+              cardBg?: ('blanco' | 'blancoHumo' | 'oscuro' | 'glass') | null;
+              cardBorderAccent?: ('azul' | 'verde' | 'gris') | null;
+              topTextFont?: ('sans-bold' | 'sans-medium' | 'mono' | 'serif') | null;
+              counterFont?: ('sans-black' | 'sans-bold' | 'mono' | 'serif') | null;
+              bottomTextFont?: ('sans-normal' | 'sans-medium' | 'sans-bold' | 'mono') | null;
+              entryAnimation?: ('fade-up' | 'scale-up' | 'fade-in' | 'bounce') | null;
+              counterSpeed?: ('1000' | '2000' | '3000' | '600') | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'promovereAnimCounter';
+      }
   )[];
   updatedAt: string;
   createdAt: string;
@@ -761,6 +789,35 @@ export interface PagesSelect<T extends boolean = true> {
               title?: T;
               content?: T;
               alignment?: T;
+              id?: T;
+              blockName?: T;
+            };
+        promovereAnimCounter?:
+          | T
+          | {
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    topText?: T;
+                    prefix?: T;
+                    countValue?: T;
+                    suffix?: T;
+                    bottomText?: T;
+                    topTextColor?: T;
+                    counterColor?: T;
+                    bottomTextColor?: T;
+                    cardBg?: T;
+                    cardBorderAccent?: T;
+                    topTextFont?: T;
+                    counterFont?: T;
+                    bottomTextFont?: T;
+                    entryAnimation?: T;
+                    counterSpeed?: T;
+                    id?: T;
+                  };
               id?: T;
               blockName?: T;
             };
