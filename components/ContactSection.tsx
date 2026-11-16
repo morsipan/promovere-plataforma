@@ -15,14 +15,29 @@ import {
 } from 'lucide-react';
 import { contactContent, siteConfig } from '@/data/content';
 
-const iconMap = {
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-};
+interface ContactSectionProps {
+  data?: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    addressDetail?: string;
+    schedule?: string;
+  };
+}
 
-export default function ContactSection() {
+export default function ContactSection({ data }: ContactSectionProps = {}) {
+  const badge = data?.badge || contactContent.badge;
+  const title = data?.title || contactContent.title;
+  const subtitle = data?.subtitle || contactContent.subtitle;
+  const email = data?.email || siteConfig.email;
+  const phone = data?.phone || siteConfig.phone;
+  const address = data?.address || siteConfig.address;
+  const addressDetail = data?.addressDetail || siteConfig.addressDetail;
+  const schedule = data?.schedule || 'Lunes a Viernes 09:00 - 18:00 (GMT-3)';
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -49,19 +64,19 @@ export default function ContactSection() {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4">
-            {contactContent.badge}
+            {badge}
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight">
-            {contactContent.title}
+            {title}
           </h2>
           <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
-            {contactContent.subtitle}
+            {subtitle}
           </p>
         </div>
 
         {/* Dos Columnas */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          {/* Columna Izquierda: Datos Institucionales (5 cols) */}
+          {/* Columna Izquierda: Datos Institucionales y Oficina (5 cols) */}
           <div className="lg:col-span-5 space-y-5">
             <div className="bg-[#f9f9f9] border border-gray-200/80 rounded-2xl p-6 sm:p-8">
               <div className="flex items-center gap-2 mb-3">
@@ -75,40 +90,78 @@ export default function ContactSection() {
               </p>
 
               <div className="space-y-4">
-                {contactContent.info.map((item) => {
-                  const Icon = iconMap[item.icon as keyof typeof iconMap] || MapPin;
-                  const isInteractive = Boolean(item.href);
+                {/* Dirección */}
+                <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-[#1b87c7]/10 text-[#1b87c7] flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
+                      Dirección Comercial
+                    </span>
+                    <p className="text-xs sm:text-sm font-semibold text-[#4d4e4f]">
+                      {address}
+                    </p>
+                    {addressDetail && (
+                      <p className="text-xs text-[#4d4e4f]/70 mt-0.5">
+                        {addressDetail}
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-                  return (
-                    <div
-                      key={item.label}
-                      className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors"
+                {/* Teléfono */}
+                <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-[#1b87c7]/10 text-[#1b87c7] flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
+                      Teléfono / WhatsApp Trade
+                    </span>
+                    <a
+                      href={`tel:${phone.replace(/\s+/g, '')}`}
+                      className="text-xs sm:text-sm font-semibold text-[#4d4e4f] hover:text-[#1b87c7] transition-colors"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-[#1b87c7]/10 text-[#1b87c7] flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
-                          {item.label}
-                        </span>
-                        {isInteractive ? (
-                          <a
-                            href={item.href!}
-                            target={item.href?.startsWith('http') ? '_blank' : undefined}
-                            rel={item.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-                            className="text-xs sm:text-sm font-semibold text-[#4d4e4f] hover:text-[#1b87c7] transition-colors break-words"
-                          >
-                            {item.value}
-                          </a>
-                        ) : (
-                          <p className="text-xs sm:text-sm font-semibold text-[#4d4e4f] whitespace-pre-line">
-                            {item.value}
-                          </p>
-                        )}
-                      </div>
+                      {phone}
+                    </a>
+                  </div>
+                </div>
+
+                {/* Correo Electrónico */}
+                <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-[#1b87c7]/10 text-[#1b87c7] flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
+                      Correo Electrónico
+                    </span>
+                    <a
+                      href={`mailto:${email}`}
+                      className="text-xs sm:text-sm font-semibold text-[#4d4e4f] hover:text-[#1b87c7] transition-colors break-words"
+                    >
+                      {email}
+                    </a>
+                  </div>
+                </div>
+
+                {/* Horario de Atención */}
+                {schedule && (
+                  <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors">
+                    <div className="w-10 h-10 rounded-lg bg-[#3cac59]/10 text-[#3cac59] flex items-center justify-center flex-shrink-0">
+                      <Clock className="w-5 h-5" />
                     </div>
-                  );
-                })}
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
+                        Horario de Atención
+                      </span>
+                      <p className="text-xs sm:text-sm font-semibold text-[#4d4e4f]">
+                        {schedule}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -142,6 +195,7 @@ export default function ContactSection() {
                   Muchas gracias por comunicarte con Promovêre. Un asesor de nuestro equipo comercial te responderá a la brevedad.
                 </p>
                 <button
+                  type="button"
                   onClick={() => setSubmitted(false)}
                   className="px-6 py-2.5 rounded-xl bg-[#1b87c7] text-white font-semibold text-xs hover:bg-[#1571a8] transition-colors"
                 >

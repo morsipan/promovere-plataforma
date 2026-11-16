@@ -6,6 +6,9 @@ import {
   Compass,
   Calendar,
   CheckCircle2,
+  TrendingUp,
+  Globe,
+  Star,
   LucideIcon,
 } from 'lucide-react';
 import { servicesContent } from '@/data/content';
@@ -17,34 +20,69 @@ const iconMap: Record<string, LucideIcon> = {
   GraduationCap,
   Compass,
   Calendar,
+  TrendingUp,
+  Globe,
+  Star,
 };
 
-export default function ServicesSection() {
+interface ServiceItemCMS {
+  id?: string;
+  title: string;
+  subtitle?: string;
+  description: string;
+  icon?: string;
+  highlights?: Array<{ item: string } | string>;
+}
+
+interface ServicesSectionProps {
+  data?: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    servicesList?: ServiceItemCMS[];
+  };
+}
+
+export default function ServicesSection({ data }: ServicesSectionProps = {}) {
+  const badge = data?.badge || servicesContent.badge;
+  const title = data?.title || servicesContent.title;
+  const subtitle = data?.subtitle || servicesContent.subtitle;
+  const services =
+    data?.servicesList && data.servicesList.length > 0
+      ? data.servicesList
+      : servicesContent.services;
+
   return (
     <section id="servicios" className="py-20 md:py-28 bg-[#f9f9f9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4">
-            {servicesContent.badge}
+            {badge}
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight">
-            {servicesContent.title}
+            {title}
           </h2>
           <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
-            {servicesContent.subtitle}
+            {subtitle}
           </p>
         </div>
 
-        {/* Services Grid (6 Servicios Oficiales) */}
+        {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {servicesContent.services.map((service, index) => {
-            const Icon = iconMap[service.icon] || Briefcase;
+          {services.map((service, index) => {
+            const Icon = (service.icon && iconMap[service.icon]) || Briefcase;
             const isGreenAccent = index % 2 === 1;
+
+            const highlights: string[] = Array.isArray(service.highlights)
+              ? service.highlights
+                  .map((h: any) => (typeof h === 'string' ? h : h?.item || ''))
+                  .filter(Boolean)
+              : [];
 
             return (
               <div
-                key={service.id}
+                key={service.id || `service-${index}`}
                 className="group relative bg-white rounded-2xl p-7 sm:p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
               >
                 <div>
@@ -60,18 +98,20 @@ export default function ServicesSection() {
                       <Icon className="w-7 h-7" />
                     </div>
                     <span className="text-xs font-bold text-gray-300 tracking-widest uppercase">
-                      0{index + 1}
+                      {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
 
                   {/* Title & Subtitle */}
-                  <span
-                    className={`text-xs font-bold tracking-wider uppercase mb-1.5 block ${
-                      isGreenAccent ? 'text-[#3cac59]' : 'text-[#1b87c7]'
-                    }`}
-                  >
-                    {service.subtitle}
-                  </span>
+                  {service.subtitle && (
+                    <span
+                      className={`text-xs font-bold tracking-wider uppercase mb-1.5 block ${
+                        isGreenAccent ? 'text-[#3cac59]' : 'text-[#1b87c7]'
+                      }`}
+                    >
+                      {service.subtitle}
+                    </span>
+                  )}
                   <h3 className="text-xl font-bold text-[#4d4e4f] mb-3 group-hover:text-[#1b87c7] transition-colors">
                     {service.title}
                   </h3>
@@ -81,14 +121,23 @@ export default function ServicesSection() {
                 </div>
 
                 {/* Highlights List */}
-                <div className="pt-4 border-t border-gray-100 space-y-2">
-                  {service.highlights.map((highlight) => (
-                    <div key={highlight} className="flex items-center gap-2 text-xs font-medium text-[#4d4e4f]/90">
-                      <CheckCircle2 className={`w-3.5 h-3.5 flex-shrink-0 ${isGreenAccent ? 'text-[#3cac59]' : 'text-[#1b87c7]'}`} />
-                      <span>{highlight}</span>
-                    </div>
-                  ))}
-                </div>
+                {highlights.length > 0 && (
+                  <div className="pt-4 border-t border-gray-100 space-y-2">
+                    {highlights.map((highlight, hIdx) => (
+                      <div
+                        key={`highlight-${hIdx}`}
+                        className="flex items-center gap-2 text-xs font-medium text-[#4d4e4f]/90"
+                      >
+                        <CheckCircle2
+                          className={`w-3.5 h-3.5 flex-shrink-0 ${
+                            isGreenAccent ? 'text-[#3cac59]' : 'text-[#1b87c7]'
+                          }`}
+                        />
+                        <span>{highlight}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}

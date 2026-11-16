@@ -1,7 +1,44 @@
 import { Globe, ArrowRight, CheckCircle2, MapPin } from 'lucide-react';
 import { distributionContent } from '@/data/content';
 
-export default function DistributionSection() {
+interface StatItemCMS {
+  value: string;
+  label: string;
+  description?: string;
+}
+
+interface ChannelItemCMS {
+  title: string;
+  description: string;
+  coverage?: string;
+}
+
+interface DistributionSectionProps {
+  data?: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    cta1Label?: string;
+    cta1Href?: string;
+    cta2Label?: string;
+    cta2Href?: string;
+    stats?: StatItemCMS[];
+    channels?: ChannelItemCMS[];
+  };
+}
+
+export default function DistributionSection({ data }: DistributionSectionProps = {}) {
+  const badge = data?.badge || distributionContent.badge;
+  const title = data?.title || distributionContent.title;
+  const subtitle = data?.subtitle || distributionContent.subtitle;
+  const cta1Label = data?.cta1Label || distributionContent.cta1.label;
+  const cta1Href = data?.cta1Href || distributionContent.cta1.href;
+  const cta2Label = data?.cta2Label || distributionContent.cta2.label;
+  const cta2Href = data?.cta2Href || distributionContent.cta2.href;
+
+  const stats =
+    data?.stats && data.stats.length > 0 ? data.stats : distributionContent.stats;
+
   return (
     <section id="red" className="py-20 md:py-28 relative overflow-hidden bg-[#4d4e4f] text-white">
       {/* Background Gradients */}
@@ -27,22 +64,22 @@ export default function DistributionSection() {
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-[#3cac59] text-xs font-bold uppercase tracking-wider mb-6">
               <Globe className="w-3.5 h-3.5" />
-              {distributionContent.badge}
+              {badge}
             </div>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-              {distributionContent.title}
+              {title}
             </h2>
 
             <p className="text-base sm:text-lg text-white/80 leading-relaxed mb-8">
-              {distributionContent.subtitle}
+              {subtitle}
             </p>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 mb-10">
-              {distributionContent.stats.map((stat) => (
+              {stats.map((stat, idx) => (
                 <div
-                  key={stat.label}
+                  key={stat.label || `stat-${idx}`}
                   className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-[#1b87c7]/50 transition-colors"
                 >
                   <div className="text-3xl sm:text-4xl font-black text-[#3cac59] mb-1">
@@ -58,17 +95,17 @@ export default function DistributionSection() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href={distributionContent.cta1.href}
+                href={cta1Href}
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] transition-all shadow-lg shadow-[#1b87c7]/30 hover:-translate-y-0.5"
               >
-                {distributionContent.cta1.label}
+                {cta1Label}
                 <ArrowRight className="w-4 h-4" />
               </a>
               <a
-                href={distributionContent.cta2.href}
+                href={cta2Href}
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all"
               >
-                {distributionContent.cta2.label}
+                {cta2Label}
               </a>
             </div>
           </div>

@@ -152,7 +152,19 @@ export interface Page {
               title: string;
               subtitle?: string | null;
               description: string;
-              icon?: ('Briefcase' | 'Megaphone' | 'Users' | 'TrendingUp' | 'Globe' | 'Star') | null;
+              icon?:
+                | (
+                    | 'Briefcase'
+                    | 'Megaphone'
+                    | 'Users'
+                    | 'GraduationCap'
+                    | 'Compass'
+                    | 'Calendar'
+                    | 'TrendingUp'
+                    | 'Globe'
+                    | 'Star'
+                  )
+                | null;
               highlights?:
                 | {
                     item: string;
@@ -190,6 +202,10 @@ export interface Page {
         badge?: string | null;
         title?: string | null;
         subtitle?: string | null;
+        cta1Label?: string | null;
+        cta1Href?: string | null;
+        cta2Label?: string | null;
+        cta2Href?: string | null;
         stats?:
           | {
               value: string;
@@ -217,9 +233,10 @@ export interface Page {
         partnersList?:
           | {
               name: string;
+              logoUrl?: string | null;
+              initials?: string | null;
               category?: string | null;
               description?: string | null;
-              initials?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -235,6 +252,7 @@ export interface Page {
         phone?: string | null;
         address?: string | null;
         addressDetail?: string | null;
+        schedule?: string | null;
         id?: string | null;
         blockName?: string | null;
         blockType: 'contact';
@@ -628,6 +646,10 @@ export interface PagesSelect<T extends boolean = true> {
               badge?: T;
               title?: T;
               subtitle?: T;
+              cta1Label?: T;
+              cta1Href?: T;
+              cta2Label?: T;
+              cta2Href?: T;
               stats?:
                 | T
                 | {
@@ -657,9 +679,10 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     name?: T;
+                    logoUrl?: T;
+                    initials?: T;
                     category?: T;
                     description?: T;
-                    initials?: T;
                     id?: T;
                   };
               id?: T;
@@ -675,6 +698,7 @@ export interface PagesSelect<T extends boolean = true> {
               phone?: T;
               address?: T;
               addressDetail?: T;
+              schedule?: T;
               id?: T;
               blockName?: T;
             };

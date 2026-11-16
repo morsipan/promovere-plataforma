@@ -27,6 +27,44 @@ export const DistributionBlock: Block = {
         'Conectamos marcas con más de 12.000 profesionales del turismo a través de nuestra red multicanal y presencia activa en los mercados emisores clave.',
     },
     {
+      type: 'row',
+      fields: [
+        {
+          name: 'cta1Label',
+          type: 'text',
+          label: 'Texto Botón Primario (Acción)',
+          defaultValue: 'Sumar mi marca a la Red',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'cta1Href',
+          type: 'text',
+          label: 'Enlace Botón Primario',
+          defaultValue: '#contacto',
+          admin: { width: '50%' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'cta2Label',
+          type: 'text',
+          label: 'Texto Botón Secundario (Acción)',
+          defaultValue: 'Contactar a nuestro equipo',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'cta2Href',
+          type: 'text',
+          label: 'Enlace Botón Secundario',
+          defaultValue: '#contacto',
+          admin: { width: '50%' },
+        },
+      ],
+    },
+    {
       name: 'stats',
       type: 'array',
       label: 'Métricas / Estadísticas Clave',

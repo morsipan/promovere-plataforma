@@ -64,5 +64,11 @@ export const ContactBlock: Block = {
         },
       ],
     },
+    {
+      name: 'schedule',
+      type: 'text',
+      label: 'Horario de Atención',
+      defaultValue: 'Lunes a Viernes 09:00 - 18:00 (GMT-3)',
+    },
   ],
 }

@@ -21,9 +21,15 @@ try {
 } catch {}
 
 const databaseUri = process.env.DATABASE_URI || ''
-// Se conecta nativamente a PostgreSQL (Supabase) cuando se provee la URL de conexión real,
-// con respaldo a SQLite local para desarrollo si aún no se configuró Supabase.
+// Configuración de base de datos híbrida:
+// Utiliza SQLite (@payloadcms/db-sqlite) con almacenamiento local en local.db para entorno de desarrollo,
+// y PostgreSQL (Supabase Connection Pooler) para producción en Vercel.
+const preferSqlite =
+  process.env.USE_SQLITE === 'true' ||
+  process.env.PAYLOAD_DB === 'sqlite' ||
+  databaseUri.startsWith('file:')
 const isPostgres =
+  !preferSqlite &&
   (databaseUri.startsWith('postgres://') || databaseUri.startsWith('postgresql://')) &&
   !databaseUri.includes('your-project-ref')
 

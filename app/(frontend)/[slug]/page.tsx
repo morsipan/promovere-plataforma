@@ -83,15 +83,15 @@ export default async function DynamicInternalPage({ params }: PageProps) {
       case 'hero':
         return <HeroSection key={`block-${index}`} data={block} />;
       case 'services':
-        return <ServicesSection key={`block-${index}`} />;
+        return <ServicesSection key={`block-${index}`} data={block} />;
       case 'representations':
-        return <RepresentationsSection key={`block-${index}`} />;
+        return <RepresentationsSection key={`block-${index}`} data={block} />;
       case 'distribution':
-        return <DistributionSection key={`block-${index}`} />;
+        return <DistributionSection key={`block-${index}`} data={block} />;
       case 'partners':
-        return <PartnersSection key={`block-${index}`} />;
+        return <PartnersSection key={`block-${index}`} data={block} />;
       case 'contact':
-        return <ContactSection key={`block-${index}`} />;
+        return <ContactSection key={`block-${index}`} data={block} />;
       case 'faq':
         return <FAQSection key={`block-${index}`} data={block} />;
       case 'testimonials':

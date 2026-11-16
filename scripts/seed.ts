@@ -1,5 +1,14 @@
 import { getPayload } from 'payload'
 import config from '../payload.config'
+import {
+  servicesContent,
+  representationsContent,
+  partnersContent,
+  distributionContent,
+  contactContent,
+  heroContent,
+  siteConfig,
+} from '../data/content'
 
 async function seed() {
   console.log('🌱 Iniciando seed integral de datos para Promovêre...')
@@ -146,7 +155,98 @@ async function seed() {
       }
     }
 
-    // 3. Página One Page (Pages)
+    // 3. One Page Principal (Home) 100% Administrable con Bloques
+    const homeLayout = [
+      {
+        blockType: 'hero' as const,
+        badge: heroContent.badge,
+        title: heroContent.title,
+        subtitle: heroContent.subtitle,
+        cta1Label: heroContent.cta1.label,
+        cta1Href: heroContent.cta1.href,
+        cta2Label: heroContent.cta2.label,
+        cta2Href: '/comunidad/login',
+        backgroundImage: heroContent.backgroundImage,
+      },
+      {
+        blockType: 'services' as const,
+        badge: servicesContent.badge,
+        title: servicesContent.title,
+        subtitle: servicesContent.subtitle,
+        servicesList: servicesContent.services.map((s) => ({
+          title: s.title,
+          subtitle: s.subtitle,
+          description: s.description,
+          icon: s.icon as any,
+          highlights: s.highlights.map((h) => ({ item: h })),
+        })),
+      },
+      {
+        blockType: 'representations' as const,
+        badge: representationsContent.badge,
+        title: representationsContent.title,
+        subtitle: representationsContent.subtitle,
+        items: representationsContent.items.map((r) => ({
+          title: r.title,
+          brand: r.brand,
+          country: r.country,
+          category: r.category,
+          tag: r.tag,
+          description: r.description,
+          image: r.image,
+        })),
+      },
+      {
+        blockType: 'distribution' as const,
+        badge: distributionContent.badge,
+        title: distributionContent.title,
+        subtitle: distributionContent.subtitle,
+        cta1Label: distributionContent.cta1.label,
+        cta1Href: distributionContent.cta1.href,
+        cta2Label: distributionContent.cta2.label,
+        cta2Href: distributionContent.cta2.href,
+        stats: distributionContent.stats.map((st) => ({
+          value: st.value,
+          label: st.label,
+        })),
+        channels: [
+          {
+            title: 'Operadores Mayoristas',
+            description: 'Canal de comercialización directo con líderes del trade regional.',
+            coverage: 'Cono Sur, Región Andina y Centroamérica',
+          },
+          {
+            title: 'Red de Agencias Minoristas',
+            description: 'Capacitaciones continuas, webinars y provisión de material comercial.',
+            coverage: '+1.200 agencias activas',
+          },
+        ],
+      },
+      {
+        blockType: 'partners' as const,
+        badge: partnersContent.badge,
+        title: partnersContent.title,
+        subtitle: partnersContent.subtitle,
+        partnersList: partnersContent.partners.map((p) => ({
+          name: p.name,
+          category: p.category,
+          description: p.description,
+          initials: p.initials,
+        })),
+      },
+      {
+        blockType: 'contact' as const,
+        badge: contactContent.badge,
+        title: contactContent.title,
+        subtitle: contactContent.subtitle,
+        email: siteConfig.email,
+        phone: siteConfig.phone,
+        address: siteConfig.address,
+        addressDetail: siteConfig.addressDetail,
+        schedule: 'Lunes a Viernes 09:00 - 18:00 (GMT-3)',
+      },
+    ] as any
+
     const existingPage = await payload.find({
       collection: 'pages',
       where: { slug: { equals: 'home' } },
@@ -158,71 +258,19 @@ async function seed() {
         data: {
           title: 'Inicio — One Page Promovêre',
           slug: 'home',
-          layout: [
-            {
-              blockType: 'hero',
-              badge: 'Especialistas en Promoción Turística en LATAM',
-              title: 'Somos Promovêre',
-              subtitle:
-                'Impulsamos la presencia comercial, el posicionamiento y las ventas de destinos, hoteles y marcas turísticas de clase mundial en los mercados más dinámicos de América Latina.',
-              cta1Label: 'Nuestras Representaciones',
-              cta1Href: '#representaciones',
-              cta2Label: 'Comunidad Promovêre',
-              cta2Href: '/comunidad/login',
-              backgroundImage:
-                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80',
-            },
-            {
-              blockType: 'services',
-              badge: 'Nuestros Servicios',
-              title: 'Solución integral para tu marca turística',
-              subtitle:
-                'Ecosistema estratégico 360° para comercializar, posicionar y expandir marcas turísticas internacionales en el trade y público final de América Latina.',
-              servicesList: [
-                {
-                  title: 'Representaciones Turísticas (Vê REPS®)',
-                  subtitle: 'Gestión comercial activa',
-                  description:
-                    'Desarrollo y ejecución del plan comercial integral en mercados emisores de LATAM.',
-                  icon: 'Briefcase',
-                  highlights: [
-                    { item: 'Fuerza de ventas dedicada' },
-                    { item: 'Negociación con operadores clave' },
-                  ],
-                },
-              ],
-            },
-            {
-              blockType: 'representations',
-              badge: 'Nuestras Representaciones',
-              title: 'Marcas y Destinos de Excelencia',
-              subtitle:
-                'Cadenas hoteleras y marcas internacionales que confían en Promovêre.',
-              items: [],
-            },
-            {
-              blockType: 'partners',
-              badge: 'Nuestros Aliados',
-              title: 'Empresas y Cadenas que Confían en Nosotros',
-              subtitle:
-                'Trabajamos con los operadores mayoristas más prestigiosos de la región.',
-              partnersList: [],
-            },
-            {
-              blockType: 'contact',
-              badge: 'Conversemos',
-              title: '¿Listo para expandir tu presencia turística en LATAM?',
-              subtitle:
-                'Nuestro equipo está a disposición para coordinar acciones estratégicas.',
-              email: 'marketing@promovere.com.ar',
-              phone: '+54 9 11 4587 6932',
-              address: 'Av. Roque Sáenz Peña 720',
-              addressDetail: 'Piso 6 - Of AB, CABA, Argentina',
-            },
-          ],
+          layout: homeLayout,
         },
       })
-      console.log('✅ Página principal (home) creada con los bloques de la One Page')
+      console.log('✅ Página principal (home) creada con los bloques completos de la One Page')
+    } else {
+      await payload.update({
+        collection: 'pages',
+        id: existingPage.docs[0].id,
+        data: {
+          layout: homeLayout,
+        },
+      })
+      console.log('🔄 Página principal (home) actualizada con los bloques completos y administrables')
     }
 
     console.log('\n✨ Seed integral completado con éxito.')

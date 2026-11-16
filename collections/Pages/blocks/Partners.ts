@@ -38,6 +38,16 @@ export const PartnersBlock: Block = {
           required: true,
         },
         {
+          name: 'logoUrl',
+          type: 'text',
+          label: 'URL del Logo o Imagen de Marca',
+        },
+        {
+          name: 'initials',
+          type: 'text',
+          label: 'Iniciales / Acrónimo (para avatar/logo alternativo)',
+        },
+        {
           name: 'category',
           type: 'text',
           label: 'Categoría (ej: Operador Mayorista, Cadena Hotelera, DMC)',
@@ -46,11 +56,6 @@ export const PartnersBlock: Block = {
           name: 'description',
           type: 'textarea',
           label: 'Descripción de la alianza o servicios compartidos',
-        },
-        {
-          name: 'initials',
-          type: 'text',
-          label: 'Iniciales / Acrónimo (para avatar/logo)',
         },
       ],
     },

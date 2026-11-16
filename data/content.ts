@@ -46,6 +46,7 @@ export interface RepresentationItem {
 
 export interface PartnerItem {
   name: string;
+  logoUrl?: string;
   category: string;
   description: string;
   initials: string;
