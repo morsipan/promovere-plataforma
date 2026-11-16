@@ -2,6 +2,7 @@ import type { Block } from 'payload'
 
 export const PromovereAnimCounterBlock: Block = {
   slug: 'promovereAnimCounter',
+  dbName: 'anim_counter',
   labels: {
     singular: 'Promovere Anim Counter',
     plural: 'Promovere Anim Counters',
