@@ -8,8 +8,8 @@ export const Media: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req: { user } }) => Boolean(user?.role === 'admin'),
-    update: ({ req: { user } }) => Boolean(user?.role === 'admin'),
+    create: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
+    update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
     delete: ({ req: { user } }) => Boolean(user?.role === 'admin'),
   },
   upload: {
