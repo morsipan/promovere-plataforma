@@ -14,6 +14,11 @@ import { Media } from './collections/Media'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// Cargar variables de entorno si aún no fueron inyectadas por Next.js
+try {
+  process.loadEnvFile?.(path.resolve(dirname, '.env'))
+} catch {}
+
 const databaseUri = process.env.DATABASE_URI || ''
 // Se conecta nativamente a PostgreSQL (Supabase) cuando se provee la URL de conexión real,
 // con respaldo a SQLite local para desarrollo si aún no se configuró Supabase.
@@ -38,6 +43,9 @@ export default buildConfig({
     ? postgresAdapter({
         pool: {
           connectionString: databaseUri,
+          ssl: {
+            rejectUnauthorized: false,
+          },
         },
       })
     : sqliteAdapter({
