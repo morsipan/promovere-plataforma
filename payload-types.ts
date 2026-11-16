@@ -239,6 +239,127 @@ export interface Page {
         blockName?: string | null;
         blockType: 'contact';
       }
+    | {
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        items?:
+          | {
+              question: string;
+              answer: string;
+              category?: ('general' | 'representaciones' | 'trade' | 'comunidad') | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'faq';
+      }
+    | {
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        items?:
+          | {
+              quote: string;
+              author: string;
+              role: string;
+              company: string;
+              rating?: number | null;
+              avatar?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'testimonials';
+      }
+    | {
+        badge?: string | null;
+        title: string;
+        description?: string | null;
+        primaryButtonLabel?: string | null;
+        primaryButtonHref?: string | null;
+        secondaryButtonLabel?: string | null;
+        secondaryButtonHref?: string | null;
+        backgroundImage?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'ctaBanner';
+      }
+    | {
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        statsList?:
+          | {
+              value: string;
+              label: string;
+              description?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'stats';
+      }
+    | {
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        items?:
+          | {
+              image: string;
+              title: string;
+              location: string;
+              tag?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'gallery';
+      }
+    | {
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        milestones?:
+          | {
+              year: string;
+              title: string;
+              description: string;
+              tag?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'timeline';
+      }
+    | {
+        badge?: string | null;
+        title: string;
+        content: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        alignment?: ('left' | 'center') | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'richText';
+      }
   )[];
   updatedAt: string;
   createdAt: string;
@@ -526,6 +647,120 @@ export interface PagesSelect<T extends boolean = true> {
               phone?: T;
               address?: T;
               addressDetail?: T;
+              id?: T;
+              blockName?: T;
+            };
+        faq?:
+          | T
+          | {
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    question?: T;
+                    answer?: T;
+                    category?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        testimonials?:
+          | T
+          | {
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    quote?: T;
+                    author?: T;
+                    role?: T;
+                    company?: T;
+                    rating?: T;
+                    avatar?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ctaBanner?:
+          | T
+          | {
+              badge?: T;
+              title?: T;
+              description?: T;
+              primaryButtonLabel?: T;
+              primaryButtonHref?: T;
+              secondaryButtonLabel?: T;
+              secondaryButtonHref?: T;
+              backgroundImage?: T;
+              id?: T;
+              blockName?: T;
+            };
+        stats?:
+          | T
+          | {
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              statsList?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        gallery?:
+          | T
+          | {
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    image?: T;
+                    title?: T;
+                    location?: T;
+                    tag?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        timeline?:
+          | T
+          | {
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              milestones?:
+                | T
+                | {
+                    year?: T;
+                    title?: T;
+                    description?: T;
+                    tag?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        richText?:
+          | T
+          | {
+              badge?: T;
+              title?: T;
+              content?: T;
+              alignment?: T;
               id?: T;
               blockName?: T;
             };

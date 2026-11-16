@@ -5,6 +5,13 @@ import { RepresentationsBlock } from './blocks/Representations'
 import { DistributionBlock } from './blocks/Distribution'
 import { PartnersBlock } from './blocks/Partners'
 import { ContactBlock } from './blocks/Contact'
+import { FAQBlock } from './blocks/FAQ'
+import { TestimonialsBlock } from './blocks/Testimonials'
+import { CtaBannerBlock } from './blocks/CtaBanner'
+import { StatsBlock } from './blocks/Stats'
+import { GalleryBlock } from './blocks/Gallery'
+import { TimelineBlock } from './blocks/Timeline'
+import { RichTextBlock } from './blocks/RichTextBlock'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -54,6 +61,13 @@ export const Pages: CollectionConfig = {
         DistributionBlock,
         PartnersBlock,
         ContactBlock,
+        FAQBlock,
+        TestimonialsBlock,
+        CtaBannerBlock,
+        StatsBlock,
+        GalleryBlock,
+        TimelineBlock,
+        RichTextBlock,
       ],
     },
   ],
