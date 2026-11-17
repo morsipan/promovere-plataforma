@@ -2,10 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X, ArrowUpRight, Sparkles } from 'lucide-react';
 import { navLinks, siteConfig } from '@/data/content';
+import { getMediaUrl } from '@/lib/media';
 
-export default function Navbar() {
+export interface NavItem {
+  id?: string;
+  label: string;
+  href: string;
+  newTab?: boolean;
+}
+
+export interface NavbarProps {
+  data?: {
+    logoText?: string;
+    tagline?: string;
+    logoImage?: any;
+    navItems?: NavItem[];
+    ctaLabel?: string;
+    ctaHref?: string;
+  } | null;
+}
+
+export default function Navbar({ data }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -14,6 +34,14 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const logoText = data?.logoText || siteConfig.name;
+  const tagline = data?.tagline || 'Turismo LATAM';
+  const logoImageUrl = getMediaUrl(data?.logoImage, '');
+  const items: Array<{ id?: string; label: string; href: string; newTab?: boolean | null }> =
+    data?.navItems && data.navItems.length > 0 ? data.navItems : navLinks;
+  const ctaLabel = data?.ctaLabel || 'Iniciar Sesión';
+  const ctaHref = data?.ctaHref || '/comunidad/login';
 
   return (
     <header
@@ -27,33 +55,41 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md shadow-[#1b87c7]/20 group-hover:scale-105 transition-transform">
-              <span className="text-white font-black text-base tracking-tight">P</span>
-            </div>
+            {logoImageUrl ? (
+              <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-md">
+                <Image src={logoImageUrl} alt={logoText} fill className="object-cover" />
+              </div>
+            ) : (
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md shadow-[#1b87c7]/20 group-hover:scale-105 transition-transform">
+                <span className="text-white font-black text-base tracking-tight">P</span>
+              </div>
+            )}
             <div className="flex flex-col leading-tight">
               <span
                 className={`font-black text-xl tracking-tight transition-colors ${
                   scrolled ? 'text-[#4d4e4f]' : 'text-white'
                 }`}
               >
-                {siteConfig.name}
+                {logoText}
               </span>
               <span
                 className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${
                   scrolled ? 'text-[#3cac59]' : 'text-[#3cac59]'
                 }`}
               >
-                Turismo LATAM
+                {tagline}
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-            {navLinks.map((link) => (
+            {items.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
+                target={link.newTab ? '_blank' : undefined}
+                rel={link.newTab ? 'noopener noreferrer' : undefined}
                 className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   scrolled
                     ? 'text-[#4d4e4f] hover:text-[#1b87c7] hover:bg-[#1b87c7]/5'
@@ -65,24 +101,14 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* CTA Iniciar Sesión a Comunidad & Contacto */}
+          {/* CTA Iniciar Sesión a Comunidad */}
           <div className="hidden md:flex items-center gap-3">
-            <a
-              href="#contacto"
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                scrolled
-                  ? 'text-[#4d4e4f] hover:text-[#1b87c7]'
-                  : 'text-white/90 hover:text-white'
-              }`}
-            >
-              Contacto
-            </a>
             <Link
-              href="/comunidad/login"
+              href={ctaHref}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] active:bg-[#0f5b89] shadow-lg shadow-[#1b87c7]/25 hover:-translate-y-0.5 transition-all duration-200"
             >
               <Sparkles className="w-4 h-4 text-[#3cac59]" />
-              <span>Iniciar Sesión</span>
+              <span>{ctaLabel}</span>
             </Link>
           </div>
 
@@ -108,10 +134,12 @@ export default function Navbar() {
         }`}
       >
         <div className="bg-[#f9f9f9] border-t border-gray-200 px-4 py-4 space-y-1 shadow-xl">
-          {navLinks.map((link) => (
+          {items.map((link) => (
             <a
               key={link.href}
               href={link.href}
+              target={link.newTab ? '_blank' : undefined}
+              rel={link.newTab ? 'noopener noreferrer' : undefined}
               onClick={() => setIsOpen(false)}
               className="block px-4 py-2.5 rounded-lg text-sm font-semibold text-[#4d4e4f] hover:text-[#1b87c7] hover:bg-white transition-colors"
             >
@@ -120,21 +148,14 @@ export default function Navbar() {
           ))}
           <div className="pt-3 border-t border-gray-200 flex flex-col gap-2">
             <Link
-              href="/comunidad/login"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-[#4d4e4f] font-semibold text-sm hover:text-[#1b87c7]"
-            >
-              <Sparkles className="w-4 h-4 text-[#3cac59]" />
-              Portal Comunidad
-            </Link>
-            <a
-              href="#contacto"
+              href={ctaHref}
               onClick={() => setIsOpen(false)}
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#1b87c7] text-white font-bold text-sm shadow-md shadow-[#1b87c7]/30"
             >
-              Contactar a Promovêre
+              <Sparkles className="w-4 h-4 text-[#3cac59]" />
+              <span>{ctaLabel}</span>
               <ArrowUpRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

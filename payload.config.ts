@@ -11,6 +11,9 @@ import { Users } from './collections/Users'
 import { Pages } from './collections/Pages'
 import { CommunityContent } from './collections/CommunityContent'
 import { Media } from './collections/Media'
+import { Header } from './globals/Header'
+import { Footer } from './globals/Footer'
+import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -55,6 +58,7 @@ export default buildConfig({
     },
   },
   collections: [Pages, Users, CommunityContent, Media],
+  globals: [Header, Footer, SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'promovere-payload-secret-key-32-characters-minimum',
   typescript: {

@@ -42,6 +42,7 @@ export const CommunityContent: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'accessibleTo', 'updatedAt'],
+    group: 'Comunidad Trade',
     description:
       'Recursos comerciales, manuales y herramientas para la Comunidad Promovêre. (Aviso: No publicar tarifas ni precios confidenciales).',
   },

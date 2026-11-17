@@ -21,19 +21,31 @@ export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   let homePage = null;
+  let headerData: any = null;
+  let footerData: any = null;
+  let siteSettings: any = null;
 
   try {
     const payload = await getPayload({ config });
-    const { docs } = await payload.find({
-      collection: 'pages',
-      where: {
-        slug: { equals: 'home' },
-      },
-      depth: 2,
-    });
+    const [{ docs }, headerRes, footerRes, settingsRes] = await Promise.all([
+      payload.find({
+        collection: 'pages',
+        where: {
+          slug: { equals: 'home' },
+        },
+        depth: 2,
+      }),
+      payload.findGlobal({ slug: 'header', depth: 1 }).catch(() => null),
+      payload.findGlobal({ slug: 'footer', depth: 1 }).catch(() => null),
+      payload.findGlobal({ slug: 'site-settings', depth: 1 }).catch(() => null),
+    ]);
+
     if (docs && docs.length > 0) {
       homePage = docs[0];
     }
+    headerData = headerRes;
+    footerData = footerRes;
+    siteSettings = settingsRes;
   } catch (error) {
     console.warn('Payload Pages: cargando contenido estático por defecto.');
   }
@@ -80,7 +92,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-[#f9f9f9]">
-      <Navbar />
+      <Navbar data={headerData} />
 
       {layout.length > 0 ? (
         // Render dinámico de los bloques configurados en el CMS
@@ -97,7 +109,7 @@ export default async function Home() {
         </>
       )}
 
-      <Footer />
+      <Footer data={footerData} settings={siteSettings} />
     </main>
   );
 }

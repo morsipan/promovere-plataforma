@@ -6,6 +6,10 @@ export const Media: CollectionConfig = {
     singular: 'Multimedia',
     plural: 'Archivos Multimedia',
   },
+  admin: {
+    group: 'Biblioteca Digital',
+    description: 'Gestión centralizada de fotografías, logos e imágenes del sitio.',
+  },
   access: {
     read: () => true,
     create: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
@@ -15,6 +19,7 @@ export const Media: CollectionConfig = {
   upload: {
     staticDir: 'public/media',
     mimeTypes: ['image/*'],
+    focalPoint: true,
   },
   fields: [
     {

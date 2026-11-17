@@ -31,6 +31,7 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'role', 'company', 'createdAt'],
+    group: 'Configuración & Accesos',
   },
   access: {
     // Restricción de acceso estricta: Solo admin y editor pueden ingresar a /admin
