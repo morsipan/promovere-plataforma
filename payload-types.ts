@@ -131,14 +131,42 @@ export interface Page {
   slug: string;
   layout: (
     | {
+        /**
+         * Texto de la píldora informativa superior.
+         */
         badge?: string | null;
-        title: string;
+        /**
+         * Texto inicial antes de la palabra destacada (ej: "Somos").
+         */
+        preTitle?: string | null;
+        /**
+         * Se estiliza automáticamente en Azul Brillante (#1b87c7) y tipografía Baloo Da 2.
+         */
+        highlightedWord?: string | null;
+        /**
+         * Texto adicional que acompaña después de la palabra resaltada (opcional).
+         */
+        titleSuffix?: string | null;
+        /**
+         * Se utiliza como alternativa en caso de no desglosar en texto previo y palabra destacada.
+         */
+        title?: string | null;
+        /**
+         * Párrafo explicativo del hero banner (estilo Roboto limpio y legible).
+         */
         subtitle: string;
         cta1Label?: string | null;
         cta1Href?: string | null;
         cta2Label?: string | null;
         cta2Href?: string | null;
-        backgroundImage?: string | null;
+        /**
+         * Subí una foto panorámica de alta resolución. Si no se selecciona ninguna, se utilizará la imagen institucional por defecto.
+         */
+        backgroundImage?: (number | null) | Media;
+        /**
+         * URL directa de respaldo en caso de no subir un archivo multimedia.
+         */
+        backgroundImageUrl?: string | null;
         id?: string | null;
         blockName?: string | null;
         blockType: 'hero';
@@ -190,7 +218,14 @@ export interface Page {
               category?: string | null;
               tag?: string | null;
               description: string;
-              image: string;
+              /**
+               * Subí la foto representativa directamente arrastrando el archivo o seleccionándolo de la biblioteca.
+               */
+              image?: (number | null) | Media;
+              /**
+               * Enlace web alternativo si no se sube un archivo multimedia.
+               */
+              imageUrl?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -233,6 +268,13 @@ export interface Page {
         partnersList?:
           | {
               name: string;
+              /**
+               * Subí el logo en formato PNG, SVG o WebP con fondo transparente o blanco.
+               */
+              logo?: (number | null) | Media;
+              /**
+               * Enlace web directo si no se sube un archivo multimedia.
+               */
               logoUrl?: string | null;
               initials?: string | null;
               category?: string | null;
@@ -436,6 +478,25 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -504,25 +565,6 @@ export interface CommunityContent {
   featured?: boolean | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -620,6 +662,9 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               badge?: T;
+              preTitle?: T;
+              highlightedWord?: T;
+              titleSuffix?: T;
               title?: T;
               subtitle?: T;
               cta1Label?: T;
@@ -627,6 +672,7 @@ export interface PagesSelect<T extends boolean = true> {
               cta2Label?: T;
               cta2Href?: T;
               backgroundImage?: T;
+              backgroundImageUrl?: T;
               id?: T;
               blockName?: T;
             };
@@ -670,6 +716,7 @@ export interface PagesSelect<T extends boolean = true> {
                     tag?: T;
                     description?: T;
                     image?: T;
+                    imageUrl?: T;
                     id?: T;
                   };
               id?: T;
@@ -714,6 +761,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     name?: T;
+                    logo?: T;
                     logoUrl?: T;
                     initials?: T;
                     category?: T;

@@ -50,8 +50,7 @@ export default async function Home() {
       case 'services':
         return <ServicesSection key={`block-${index}`} data={block} />;
       case 'representations':
-        // Las representaciones de destinos son exclusivas del Portal Privado de Comunidad
-        return null;
+        return <RepresentationsSection key={`block-${index}`} data={block} />;
       case 'distribution':
         return <DistributionSection key={`block-${index}`} data={block} />;
       case 'partners':

@@ -67,9 +67,21 @@ export const RepresentationsBlock: Block = {
         },
         {
           name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Fotografía del Destino / Hotel (Arrastrar y soltar)',
+          admin: {
+            description:
+              'Subí la foto representativa directamente arrastrando el archivo o seleccionándolo de la biblioteca.',
+          },
+        },
+        {
+          name: 'imageUrl',
           type: 'text',
-          label: 'URL de Imagen',
-          required: true,
+          label: 'URL de Imagen Externa (Respaldo)',
+          admin: {
+            description: 'Enlace web alternativo si no se sube un archivo multimedia.',
+          },
         },
       ],
     },

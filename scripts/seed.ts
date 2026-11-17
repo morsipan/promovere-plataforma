@@ -160,13 +160,15 @@ async function seed() {
       {
         blockType: 'hero' as const,
         badge: heroContent.badge,
+        preTitle: 'Somos',
+        highlightedWord: 'Promovêre',
         title: heroContent.title,
         subtitle: heroContent.subtitle,
         cta1Label: heroContent.cta1.label,
         cta1Href: heroContent.cta1.href,
         cta2Label: heroContent.cta2.label,
         cta2Href: '/comunidad/login',
-        backgroundImage: heroContent.backgroundImage,
+        backgroundImageUrl: heroContent.backgroundImage,
       },
       {
         blockType: 'services' as const,
@@ -193,7 +195,7 @@ async function seed() {
           category: r.category,
           tag: r.tag,
           description: r.description,
-          image: r.image,
+          imageUrl: r.image,
         })),
       },
       {
@@ -232,6 +234,7 @@ async function seed() {
           category: p.category,
           description: p.description,
           initials: p.initials,
+          logoUrl: 'logoUrl' in p ? (p as any).logoUrl : undefined,
         })),
       },
       {

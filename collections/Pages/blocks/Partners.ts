@@ -38,9 +38,22 @@ export const PartnersBlock: Block = {
           required: true,
         },
         {
+          name: 'logo',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Logo Oficial (Arrastrar y soltar)',
+          admin: {
+            description:
+              'Subí el logo en formato PNG, SVG o WebP con fondo transparente o blanco.',
+          },
+        },
+        {
           name: 'logoUrl',
           type: 'text',
-          label: 'URL del Logo o Imagen de Marca',
+          label: 'URL de Logo Externa (Respaldo)',
+          admin: {
+            description: 'Enlace web directo si no se sube un archivo multimedia.',
+          },
         },
         {
           name: 'initials',

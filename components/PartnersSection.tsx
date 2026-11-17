@@ -1,9 +1,11 @@
 import Image from 'next/image';
 import { Handshake } from 'lucide-react';
 import { partnersContent } from '@/data/content';
+import { getMediaUrl } from '@/lib/media';
 
 interface PartnerItemCMS {
   name: string;
+  logo?: unknown;
   logoUrl?: string;
   category?: string;
   description?: string;
@@ -33,14 +35,14 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4 font-sans">
             <Handshake className="w-3.5 h-3.5" />
             {badge}
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
             {title}
           </h2>
-          <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
+          <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal font-sans">
             {subtitle}
           </p>
         </div>
@@ -48,7 +50,11 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
         {/* Partners Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {partners.map((partner, index) => {
-            const logoUrl = 'logoUrl' in partner ? (partner as PartnerItemCMS).logoUrl : undefined;
+            // Extracción segura del logo desde Media Upload o URL alternativa
+            const candidateLogo = 'logo' in partner ? partner.logo : undefined;
+            const fallbackLogoUrl = 'logoUrl' in partner ? partner.logoUrl : undefined;
+            const logoSrc = getMediaUrl(candidateLogo, fallbackLogoUrl || '');
+
             const fallbackInitials =
               partner.initials ||
               partner.name
@@ -66,38 +72,38 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     {/* Logo o Avatar con Iniciales */}
-                    {logoUrl ? (
-                      <div className="relative w-16 h-12 flex items-center justify-center p-1 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden">
+                    {logoSrc ? (
+                      <div className="relative w-20 h-12 flex items-center justify-center p-1 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden">
                         <img
-                          src={logoUrl}
+                          src={logoSrc}
                           alt={partner.name}
                           className="max-h-full max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
                         />
                       </div>
                     ) : (
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#1b87c7]/10 to-[#3cac59]/10 text-[#1b87c7] font-black text-lg flex items-center justify-center border border-gray-100 group-hover:from-[#1b87c7] group-hover:to-[#3cac59] group-hover:text-white transition-all duration-300">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#1b87c7]/10 to-[#3cac59]/10 text-[#1b87c7] font-black text-lg flex items-center justify-center border border-gray-100 group-hover:from-[#1b87c7] group-hover:to-[#3cac59] group-hover:text-white transition-all duration-300 font-heading">
                         {fallbackInitials}
                       </div>
                     )}
 
                     {partner.category && (
-                      <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[#f9f9f9] text-[#4d4e4f]/70 border border-gray-200">
+                      <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[#f9f9f9] text-[#4d4e4f]/70 border border-gray-200 font-sans">
                         {partner.category}
                       </span>
                     )}
                   </div>
 
-                  <h3 className="text-lg font-bold text-[#4d4e4f] mb-2 group-hover:text-[#1b87c7] transition-colors">
+                  <h3 className="text-lg font-bold text-[#4d4e4f] mb-2 group-hover:text-[#1b87c7] transition-colors font-heading">
                     {partner.name}
                   </h3>
                   {partner.description && (
-                    <p className="text-xs sm:text-sm text-[#4d4e4f]/80 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#4d4e4f]/80 leading-relaxed font-sans">
                       {partner.description}
                     </p>
                   )}
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#3cac59]">
+                <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#3cac59] font-sans">
                   <span>Alianza Comercial Activa</span>
                   <span className="w-2 h-2 rounded-full bg-[#3cac59]" />
                 </div>
