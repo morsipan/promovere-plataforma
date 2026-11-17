@@ -50,27 +50,27 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
     if (preTitle || highlightedWord) {
       return (
         <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-none font-heading">
-          {preTitle && <span>{preTitle} </span>}
-          {highlightedWord && (
+          {preTitle ? <span>{preTitle} </span> : null}
+          {highlightedWord ? (
             <span className="text-[#1b87c7] font-heading drop-shadow-md">
               {highlightedWord}
             </span>
-          )}
-          {titleSuffix && <span> {titleSuffix}</span>}
+          ) : null}
+          {titleSuffix ? <span> {titleSuffix}</span> : null}
         </h1>
       );
     }
 
     // Fallback si solo vino un string plano en 'title'
-    if (fallbackTitle.includes('Promovêre')) {
+    if (fallbackTitle && fallbackTitle.includes('Promovêre')) {
       const [before, after] = fallbackTitle.split('Promovêre');
       return (
         <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-none font-heading">
-          {before}
+          {before ? <span>{before} </span> : null}
           <span className="text-[#1b87c7] font-heading drop-shadow-md">
             Promovêre
           </span>
-          {after}
+          {after ? <span> {after}</span> : null}
         </h1>
       );
     }
@@ -85,20 +85,22 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
   return (
     <section className="relative min-h-[92vh] lg:min-h-screen flex items-center justify-center overflow-hidden">
       {/* Imagen de Fondo Gestionada por CMS */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={backgroundImageUrl}
-          alt={backgroundImageAlt}
-          fill
-          priority
-          quality={90}
-          className="object-cover object-center brightness-90"
-          sizes="100vw"
-        />
-        {/* Overlays corporativos de protección de contraste */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#4d4e4f]/80 via-[#4d4e4f]/70 to-[#4d4e4f]/90" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1b87c7]/30 to-transparent mix-blend-multiply" />
-      </div>
+      {backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={backgroundImageUrl}
+            alt={backgroundImageAlt}
+            fill
+            priority
+            quality={90}
+            className="object-cover object-center brightness-90"
+            sizes="100vw"
+          />
+          {/* Overlays corporativos de protección de contraste */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#4d4e4f]/80 via-[#4d4e4f]/70 to-[#4d4e4f]/90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1b87c7]/30 to-transparent mix-blend-multiply" />
+        </div>
+      ) : null}
 
       {/* Trama decorativa de fondo */}
       <div
@@ -112,41 +114,49 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
       {/* Contenedor de Contenido Principal */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
         {/* Badge Institucional */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-8 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-[#3cac59] animate-pulse" />
-          <span className="text-white text-xs sm:text-sm font-semibold tracking-wide uppercase font-sans">
-            {badge}
-          </span>
-        </div>
+        {badge ? (
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-8 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#3cac59] animate-pulse" />
+            <span className="text-white text-xs sm:text-sm font-semibold tracking-wide uppercase font-sans">
+              {badge}
+            </span>
+          </div>
+        ) : null}
 
         {/* Título Principal con Estilo Protegido */}
         {renderTitle()}
 
         {/* Subtítulo / Bajada */}
-        <p className="text-base sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-10 sm:mb-12 leading-relaxed font-light font-sans">
-          {subtitle}
-        </p>
+        {subtitle ? (
+          <p className="text-base sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-10 sm:mb-12 leading-relaxed font-light font-sans">
+            {subtitle}
+          </p>
+        ) : null}
 
         {/* Botones de Acción (CTAs Duales) */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
           {/* CTA Principal - Azul Brillante */}
-          <a
-            href={cta1Href}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#1b87c7] text-white font-bold text-base hover:bg-[#1571a8] active:bg-[#0f5b89] transition-all duration-200 shadow-xl shadow-[#1b87c7]/30 hover:-translate-y-0.5"
-          >
-            <Compass className="w-5 h-5 text-white" />
-            <span>{cta1Label}</span>
-            <ArrowRight className="w-5 h-5" />
-          </a>
+          {cta1Label ? (
+            <a
+              href={cta1Href}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#1b87c7] text-white font-bold text-base hover:bg-[#1571a8] active:bg-[#0f5b89] transition-all duration-200 shadow-xl shadow-[#1b87c7]/30 hover:-translate-y-0.5"
+            >
+              <Compass className="w-5 h-5 text-white" />
+              <span>{cta1Label}</span>
+              <ArrowRight className="w-5 h-5" />
+            </a>
+          ) : null}
 
           {/* CTA Secundario - Contorno con Acento Verde */}
-          <a
-            href={cta2Href}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-base border border-white/30 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5"
-          >
-            <Sparkles className="w-5 h-5 text-[#3cac59]" />
-            <span>{cta2Label}</span>
-          </a>
+          {cta2Label ? (
+            <a
+              href={cta2Href}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-base border border-white/30 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5"
+            >
+              <Sparkles className="w-5 h-5 text-[#3cac59]" />
+              <span>{cta2Label}</span>
+            </a>
+          ) : null}
         </div>
       </div>
     </section>

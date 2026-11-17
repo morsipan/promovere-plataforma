@@ -41,8 +41,15 @@ export default function FrontendLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${balooDa2.variable} ${roboto.variable} scroll-smooth`}>
-      <body className="font-sans bg-[#f9f9f9] text-[#4d4e4f] antialiased">
+    <html
+      lang="es"
+      className={`${balooDa2.variable} ${roboto.variable} scroll-smooth`}
+      suppressHydrationWarning
+    >
+      <body
+        className="font-sans bg-[#f9f9f9] text-[#4d4e4f] antialiased"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>

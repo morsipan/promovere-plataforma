@@ -36,15 +36,21 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header de Sección */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 text-xs font-bold uppercase tracking-wider mb-4 font-sans">
-            {badge}
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
-            {title}
-          </h2>
-          <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal font-sans">
-            {subtitle}
-          </p>
+          {badge ? (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 text-xs font-bold uppercase tracking-wider mb-4 font-sans">
+              {badge}
+            </div>
+          ) : null}
+          {title ? (
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
+              {title}
+            </h2>
+          ) : null}
+          {subtitle ? (
+            <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal font-sans">
+              {subtitle}
+            </p>
+          ) : null}
         </div>
 
         {/* Grilla de Representaciones */}
@@ -69,7 +75,7 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
                 }`}
               >
                 {/* Background Image */}
-                {imageUrl && (
+                {imageUrl ? (
                   <Image
                     src={imageUrl}
                     alt={`${item.title} - ${item.brand}`}
@@ -77,7 +83,7 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
                     className="object-cover object-center group-hover:scale-105 transition-transform duration-700 brightness-90"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
-                )}
+                ) : null}
 
                 {/* Overlays corporativos */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#4d4e4f] via-[#4d4e4f]/40 to-transparent" />
@@ -85,27 +91,27 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
 
                 {/* Badges superiores */}
                 <div className="relative z-10 p-6 flex items-start justify-between">
-                  {item.category && (
+                  {item.category ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider border border-white/20 font-sans">
                       <Building2 className="w-3.5 h-3.5 text-[#3cac59]" />
                       {item.category}
                     </span>
-                  )}
-                  {item.tag && (
+                  ) : null}
+                  {item.tag ? (
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#1b87c7] text-white text-xs font-bold shadow-sm font-sans">
                       {item.tag}
                     </span>
-                  )}
+                  ) : null}
                 </div>
 
                 {/* Contenido inferior */}
                 <div className="relative z-10 p-6 sm:p-8">
-                  {item.country && (
+                  {item.country ? (
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#3cac59] uppercase tracking-wider mb-2 font-sans">
                       <MapPin className="w-3.5 h-3.5" />
                       <span>{item.country}</span>
                     </div>
-                  )}
+                  ) : null}
 
                   <h3 className="text-2xl sm:text-3xl font-black text-white mb-1.5 leading-tight group-hover:text-[#3cac59] transition-colors font-heading">
                     {item.title}

@@ -35,16 +35,22 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4 font-sans">
-            <Handshake className="w-3.5 h-3.5" />
-            {badge}
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
-            {title}
-          </h2>
-          <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal font-sans">
-            {subtitle}
-          </p>
+          {badge ? (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4 font-sans">
+              <Handshake className="w-3.5 h-3.5" />
+              {badge}
+            </div>
+          ) : null}
+          {title ? (
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
+              {title}
+            </h2>
+          ) : null}
+          {subtitle ? (
+            <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal font-sans">
+              {subtitle}
+            </p>
+          ) : null}
         </div>
 
         {/* Partners Grid */}
@@ -52,7 +58,7 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
           {partners.map((partner, index) => {
             // Extracción segura del logo desde Media Upload o URL alternativa
             const candidateLogo = 'logo' in partner ? partner.logo : undefined;
-            const fallbackLogoUrl = 'logoUrl' in partner ? partner.logoUrl : undefined;
+            const fallbackLogoUrl = 'logoUrl' in partner ? (partner as any).logoUrl : undefined;
             const logoSrc = getMediaUrl(candidateLogo, fallbackLogoUrl || '');
 
             const fallbackInitials =
@@ -86,21 +92,21 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
                       </div>
                     )}
 
-                    {partner.category && (
+                    {partner.category ? (
                       <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[#f9f9f9] text-[#4d4e4f]/70 border border-gray-200 font-sans">
                         {partner.category}
                       </span>
-                    )}
+                    ) : null}
                   </div>
 
                   <h3 className="text-lg font-bold text-[#4d4e4f] mb-2 group-hover:text-[#1b87c7] transition-colors font-heading">
                     {partner.name}
                   </h3>
-                  {partner.description && (
+                  {partner.description ? (
                     <p className="text-xs sm:text-sm text-[#4d4e4f]/80 leading-relaxed font-sans">
                       {partner.description}
                     </p>
-                  )}
+                  ) : null}
                 </div>
 
                 <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#3cac59] font-sans">

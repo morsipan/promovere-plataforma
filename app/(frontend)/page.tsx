@@ -86,10 +86,12 @@ export default async function Home() {
         // Render dinámico de los bloques configurados en el CMS
         layout.map((block, index) => renderBlock(block, index))
       ) : (
-        // Fallback por defecto si aún no hay bloques guardados en la BD (Representaciones exclusiva de Comunidad)
+        // Fallback por defecto si aún no hay bloques guardados en la BD
         <>
           <HeroSection data={heroBlock} />
           <ServicesSection />
+          <RepresentationsSection />
+          <DistributionSection />
           <PartnersSection />
           <ContactSection />
         </>

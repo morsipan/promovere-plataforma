@@ -102,11 +102,11 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                     <p className="text-xs sm:text-sm font-semibold text-[#4d4e4f]">
                       {address}
                     </p>
-                    {addressDetail && (
+                    {addressDetail ? (
                       <p className="text-xs text-[#4d4e4f]/70 mt-0.5">
                         {addressDetail}
                       </p>
-                    )}
+                    ) : null}
                   </div>
                 </div>
 
@@ -147,7 +147,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                 </div>
 
                 {/* Horario de Atención */}
-                {schedule && (
+                {schedule ? (
                   <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-[#3cac59]/10 text-[#3cac59] flex items-center justify-center flex-shrink-0">
                       <Clock className="w-5 h-5" />
@@ -161,7 +161,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                       </p>
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
 
