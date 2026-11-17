@@ -39,6 +39,15 @@ const isPostgres =
   (databaseUri.startsWith('postgres://') || databaseUri.startsWith('postgresql://')) &&
   !databaseUri.includes('your-project-ref')
 
+// Detección dinámica de token de Vercel Blob (acepta BLOB_READ_WRITE_TOKEN o cualquier variable terminada en _READ_WRITE_TOKEN)
+const blobToken =
+  process.env.BLOB_READ_WRITE_TOKEN ||
+  process.env.VERCEL_BLOB_READ_WRITE_TOKEN ||
+  Object.entries(process.env).find(
+    ([k]) => k.endsWith('_READ_WRITE_TOKEN') || (k.includes('BLOB') && k.includes('TOKEN'))
+  )?.[1] ||
+  '';
+
 export default buildConfig({
   i18n: {
     supportedLanguages: { es },
@@ -63,13 +72,13 @@ export default buildConfig({
   collections: [Pages, Users, CommunityContent, Media],
   globals: [Header, Footer, SiteSettings],
   plugins: [
-    // 1. Almacenamiento en Vercel Blob (se activa automáticamente cuando se conecta un Blob store en Vercel)
+    // 1. Almacenamiento en Vercel Blob (se activa si existe token de Blob)
     vercelBlobStorage({
-      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      enabled: Boolean(blobToken),
       collections: {
         media: true,
       },
-      token: process.env.BLOB_READ_WRITE_TOKEN || '',
+      token: blobToken,
     }),
     // 2. Almacenamiento en S3 / Supabase Storage (se activa si se proveen claves S3 en el entorno)
     s3Storage({

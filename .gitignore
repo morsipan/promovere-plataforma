@@ -13,5 +13,3 @@ Thumbs.db
 
 .vercel
 .env*
-public/media/*
-!public/media/.gitkeep
