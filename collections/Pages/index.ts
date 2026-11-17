@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 import { HeroBlock } from './blocks/Hero'
 import { ServicesBlock } from './blocks/Services'
 import { RepresentationsBlock } from './blocks/Representations'
@@ -57,6 +58,29 @@ export const Pages: CollectionConfig = {
     create: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
     update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
     delete: ({ req: { user } }) => Boolean(user?.role === 'admin'),
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        try {
+          const path = doc?.slug === 'home' ? '/' : `/${doc?.slug || ''}`;
+          revalidatePath(path);
+          if (doc?.slug === 'home') {
+            revalidatePath('/');
+          }
+        } catch (e) {}
+        return doc;
+      },
+    ],
+    afterDelete: [
+      ({ doc }) => {
+        try {
+          const path = doc?.slug === 'home' ? '/' : `/${doc?.slug || ''}`;
+          revalidatePath(path);
+        } catch (e) {}
+        return doc;
+      },
+    ],
   },
   fields: [
     {

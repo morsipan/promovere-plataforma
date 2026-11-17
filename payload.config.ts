@@ -1,6 +1,7 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import { es } from '@payloadcms/translations/languages/es'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -59,6 +60,27 @@ export default buildConfig({
   },
   collections: [Pages, Users, CommunityContent, Media],
   globals: [Header, Footer, SiteSettings],
+  plugins: [
+    seoPlugin({
+      collections: ['pages'],
+      uploadsCollection: 'media',
+      tabbedUI: true,
+      generateTitle: ({ doc }) =>
+        doc?.title ? `${doc.title} — Promovêre` : 'Promovêre — Turismo LATAM',
+      generateDescription: ({ doc }) => {
+        const layout = doc?.layout || []
+        const hero = layout.find((b: any) => b.blockType === 'hero')
+        return (
+          hero?.subtitle ||
+          'Conectamos marcas, cadenas hoteleras y destinos de clase mundial con el trade turístico de América Latina.'
+        )
+      },
+      generateURL: ({ doc }) => {
+        const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://promovere.com.ar'
+        return doc?.slug === 'home' ? serverUrl : `${serverUrl}/${doc?.slug || ''}`
+      },
+    }),
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'promovere-payload-secret-key-32-characters-minimum',
   typescript: {

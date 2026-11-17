@@ -2,9 +2,10 @@ import { notFound } from 'next/navigation';
 import { getPayload } from 'payload';
 import config from '@payload-config';
 import PageLivePreview from '@/components/PageLivePreview';
+import { getMediaUrl } from '@/lib/media';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -20,17 +21,38 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         slug: { equals: slug },
       },
       limit: 1,
+      depth: 1,
     });
 
     if (docs && docs.length > 0) {
+      const page = docs[0] as any;
+      const meta = page?.meta;
+      const title = meta?.title || `${page.title} — Promovêre`;
+      const description =
+        meta?.description ||
+        'Promovêre — Conectamos marcas y destinos de clase mundial con el trade turístico de América Latina.';
+      const imageUrl = meta?.image ? getMediaUrl(meta.image) : undefined;
+
       return {
-        title: `${docs[0].title} — Promovêre`,
+        title,
+        description,
+        openGraph: {
+          title,
+          description,
+          images: imageUrl ? [{ url: imageUrl }] : undefined,
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title,
+          description,
+        },
       };
     }
   } catch (e) {}
 
   return {
     title: 'Promovêre — Turismo LATAM',
+    description: 'Especialistas en Promoción Turística y Comercialización Hotelera en LATAM.',
   };
 }
 

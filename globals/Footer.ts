@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
@@ -6,6 +7,16 @@ export const Footer: GlobalConfig = {
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        try {
+          revalidatePath('/', 'layout');
+        } catch (e) {}
+        return doc;
+      },
+    ],
   },
   admin: {
     group: 'Web Pública',
