@@ -273,6 +273,64 @@ async function seed() {
       console.log('🔄 Página principal (home) actualizada con los bloques completos y administrables')
     }
 
+    // 4. Página Comunidad (Landing de Captación)
+    const existingComunidad = await payload.find({
+      collection: 'pages',
+      where: { slug: { equals: 'comunidad' } },
+    })
+
+    const comunidadLandingLayout = [
+      {
+        blockType: 'communityLanding' as const,
+        heroTitle: 'Bienvenido a tu espacio',
+        heroSubtitle:
+          'Tu Comunidad Promovêre es una plataforma exclusiva pensada para potenciar tu gestión turística diaria, acceder a herramientas clave en tiempo real y conectar de forma directa con las mejores marcas, cadenas y destinos de América Latina.',
+        heroCtaText: 'Iniciá sesión para acceder a tu espacio',
+        toolsBadge: 'Herramientas Operativas',
+        toolsTitle: 'Herramientas Comerciales en Tiempo Real',
+        toolsSubtitle:
+          'Consultá requisitos migratorios actualizados y realizá el seguimiento de vuelos de tus pasajeros directamente desde tu panel.',
+        promotionsBadge: 'Oportunidades Comerciales',
+        promotionsTitle: 'Promociones, Eventos y Fam Tours Exclusivos',
+        promotionsSubtitle:
+          'Accedé a convocatorias para viajes de familiarización, desayunos de capacitación y acuerdos comerciales reservados para nuestra red.',
+        smartToolsBadge: 'Inteligencia Artificial Trade',
+        smartToolsTitle: 'Herramientas Inteligentes para Vender Más Rápido',
+        smartToolsSubtitle:
+          'Tecnología desarrollada a medida para agencias de viajes. Armá propuestas comerciales completas día por día en cuestión de segundos.',
+        productsBadge: 'Productos y Destinos',
+        productsTitle: 'Productos Destacados & Destinos',
+        productsSubtitle:
+          'Descubrí las marcas, cadenas y regiones preferidas por los viajeros de Latinoamérica.',
+        whatsappTitle: '¡Sumate a nuestra Comunidad de WhatsApp!',
+        whatsappSubtitle:
+          'Recibí al instante en tu celular alertas exclusivas de cupos, promociones de último momento, invitaciones a webinars y novedades de destinos de toda América Latina.',
+        whatsappCtaText: 'Unirme a la Comunidad de WhatsApp',
+        whatsappPhone: '5491145876932',
+      },
+    ] as any
+
+    if (existingComunidad.docs.length === 0) {
+      await payload.create({
+        collection: 'pages',
+        data: {
+          title: 'Comunidad Promovêre — Landing de Captación',
+          slug: 'comunidad',
+          layout: comunidadLandingLayout,
+        },
+      })
+      console.log('✅ Página comunidad creada con bloque CommunityLanding')
+    } else {
+      await payload.update({
+        collection: 'pages',
+        id: existingComunidad.docs[0].id,
+        data: {
+          layout: comunidadLandingLayout,
+        },
+      })
+      console.log('🔄 Página comunidad actualizada con bloque CommunityLanding')
+    }
+
     console.log('\n✨ Seed integral completado con éxito.')
     process.exit(0)
   } catch (error) {

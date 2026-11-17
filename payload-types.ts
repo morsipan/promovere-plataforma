@@ -406,6 +406,30 @@ export interface Page {
         blockName?: string | null;
         blockType: 'promovereAnimCounter';
       }
+    | {
+        heroTitle: string;
+        heroSubtitle?: string | null;
+        heroCtaText?: string | null;
+        toolsBadge?: string | null;
+        toolsTitle?: string | null;
+        toolsSubtitle?: string | null;
+        promotionsBadge?: string | null;
+        promotionsTitle?: string | null;
+        promotionsSubtitle?: string | null;
+        smartToolsBadge?: string | null;
+        smartToolsTitle?: string | null;
+        smartToolsSubtitle?: string | null;
+        productsBadge?: string | null;
+        productsTitle?: string | null;
+        productsSubtitle?: string | null;
+        whatsappTitle?: string | null;
+        whatsappSubtitle?: string | null;
+        whatsappCtaText?: string | null;
+        whatsappPhone?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'communityLanding';
+      }
   )[];
   updatedAt: string;
   createdAt: string;
@@ -853,6 +877,31 @@ export interface PagesSelect<T extends boolean = true> {
                     counterSpeed?: T;
                     id?: T;
                   };
+              id?: T;
+              blockName?: T;
+            };
+        communityLanding?:
+          | T
+          | {
+              heroTitle?: T;
+              heroSubtitle?: T;
+              heroCtaText?: T;
+              toolsBadge?: T;
+              toolsTitle?: T;
+              toolsSubtitle?: T;
+              promotionsBadge?: T;
+              promotionsTitle?: T;
+              promotionsSubtitle?: T;
+              smartToolsBadge?: T;
+              smartToolsTitle?: T;
+              smartToolsSubtitle?: T;
+              productsBadge?: T;
+              productsTitle?: T;
+              productsSubtitle?: T;
+              whatsappTitle?: T;
+              whatsappSubtitle?: T;
+              whatsappCtaText?: T;
+              whatsappPhone?: T;
               id?: T;
               blockName?: T;
             };
