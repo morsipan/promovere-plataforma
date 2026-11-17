@@ -26,6 +26,7 @@ const blockTables = [
   'pages_blocks_rich_text',
   'pages_blocks_anim_counter',
   'pages_blocks_promovere_anim_counter',
+  'anim_counter',
 ];
 
 async function run() {
