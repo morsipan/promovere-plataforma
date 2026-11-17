@@ -28,24 +28,21 @@ export interface PageLivePreviewProps {
   slug?: string;
 }
 
-export default function PageLivePreview({
+/**
+ * Suscriptor exclusivo de Live Preview que solo se monta cuando la página está
+ * dentro del iframe del Admin de Payload CMS y la hidratación ha finalizado.
+ * Esto evita condiciones de carrera durante la hidratación de React 19 y
+ * elimina errores de tipo #418 (Hydration text mismatch).
+ */
+function LivePreviewSubscriber({
   initialData,
-  headerData,
-  footerData,
-  siteSettings,
-  slug = 'home',
-}: PageLivePreviewProps) {
+  onDataChange,
+}: {
+  initialData: any;
+  onDataChange: (data: any) => void;
+}) {
   const router = useRouter();
-  const [isIframe, setIsIframe] = useState(false);
-
-  useEffect(() => {
-    setIsIframe(typeof window !== 'undefined' && window.self !== window.top);
-  }, []);
-
-  const serverURL =
-    typeof window !== 'undefined'
-      ? window.location.origin
-      : (process.env.NEXT_PUBLIC_SERVER_URL || '');
+  const serverURL = typeof window !== 'undefined' ? window.location.origin : '';
 
   const { data } = useLivePreview({
     initialData,
@@ -53,7 +50,36 @@ export default function PageLivePreview({
     depth: 2,
   });
 
-  const page = data || initialData;
+  useEffect(() => {
+    if (data) {
+      onDataChange(data);
+    }
+  }, [data, onDataChange]);
+
+  return <RefreshRouteOnSave refresh={() => router.refresh()} serverURL={serverURL} />;
+}
+
+export default function PageLivePreview({
+  initialData,
+  headerData,
+  footerData,
+  siteSettings,
+  slug = 'home',
+}: PageLivePreviewProps) {
+  const [liveData, setLiveData] = useState<any>(null);
+  const [inIframe, setInIframe] = useState(false);
+
+  useEffect(() => {
+    // Solo activamos Live Preview si estamos dentro del iframe o popup del admin de Payload
+    const isInsideAdmin =
+      typeof window !== 'undefined' &&
+      (window.self !== window.top || Boolean(window.opener));
+    if (isInsideAdmin) {
+      setInIframe(true);
+    }
+  }, []);
+
+  const page = inIframe && liveData ? liveData : initialData;
   const layout = (page?.layout as any[]) || [];
   const heroBlock = layout.find((b) => b.blockType === 'hero');
 
@@ -94,7 +120,12 @@ export default function PageLivePreview({
 
   return (
     <main className="min-h-screen bg-[#f9f9f9]">
-      {isIframe && <RefreshRouteOnSave refresh={() => router.refresh()} serverURL={serverURL} />}
+      {inIframe && (
+        <LivePreviewSubscriber
+          initialData={initialData}
+          onDataChange={setLiveData}
+        />
+      )}
 
       <Navbar data={headerData} />
 
