@@ -27,9 +27,36 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     group: 'Web Pública',
     livePreview: {
-      url: ({ data }) => {
-        const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-        return data?.slug === 'home' ? `${baseUrl}/` : `${baseUrl}/${data?.slug || ''}`
+      url: ({ data, req }) => {
+        const slug = data?.slug || 'home'
+        const path = slug === 'home' ? '' : `/${slug}`
+
+        // 1. Detectar dinámicamente el protocolo y host del editor en el admin
+        if (req?.headers) {
+          const headers = req.headers as any
+          const host =
+            typeof headers.get === 'function'
+              ? headers.get('x-forwarded-host') || headers.get('host')
+              : headers['x-forwarded-host'] || headers['host']
+          const proto =
+            (typeof headers.get === 'function'
+              ? headers.get('x-forwarded-proto')
+              : headers['x-forwarded-proto']) || (host?.includes('localhost') ? 'http' : 'https')
+          if (host) {
+            return `${proto}://${host}${path || '/'}`
+          }
+        }
+
+        // 2. Vercel deployment URLs si están presentes en runtime
+        if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+          return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}${path || '/'}`
+        }
+        if (process.env.VERCEL_URL) {
+          return `https://${process.env.VERCEL_URL}${path || '/'}`
+        }
+
+        // 3. Fallback relativo (el navegador resuelve automáticamente el dominio actual)
+        return path || '/'
       },
       breakpoints: [
         {

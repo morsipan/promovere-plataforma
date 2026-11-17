@@ -76,8 +76,14 @@ export default buildConfig({
         )
       },
       generateURL: ({ doc }) => {
-        const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://promovere.com.ar'
-        return doc?.slug === 'home' ? serverUrl : `${serverUrl}/${doc?.slug || ''}`
+        const serverUrl =
+          process.env.NEXT_PUBLIC_SERVER_URL &&
+          !process.env.NEXT_PUBLIC_SERVER_URL.includes('localhost')
+            ? process.env.NEXT_PUBLIC_SERVER_URL
+            : process.env.VERCEL_PROJECT_PRODUCTION_URL
+            ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+            : 'https://promovere.com.ar';
+        return doc?.slug === 'home' ? serverUrl : `${serverUrl}/${doc?.slug || ''}`;
       },
     }),
   ],

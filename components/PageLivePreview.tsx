@@ -36,8 +36,9 @@ export default function PageLivePreview({
 }: PageLivePreviewProps) {
   const router = useRouter();
   const serverURL =
-    process.env.NEXT_PUBLIC_SERVER_URL ||
-    (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : (process.env.NEXT_PUBLIC_SERVER_URL || '');
 
   const { data } = useLivePreview({
     initialData,
