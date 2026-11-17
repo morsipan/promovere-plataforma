@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const ContactBlock: Block = {
   slug: 'contact',
   labels: {
-    singular: 'Módulo Contacto',
-    plural: 'Módulos Contacto',
+    singular: 'Contacto Comercial y Formulario',
+    plural: 'Contacto Comercial',
   },
   fields: [
     createAppearanceField({

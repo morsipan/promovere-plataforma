@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const StatsBlock: Block = {
   slug: 'stats',
   labels: {
-    singular: 'Módulo de Estadísticas e Impacto (KPIs)',
-    plural: 'Módulos de Estadísticas',
+    singular: 'Métricas de Impacto (Estadísticas)',
+    plural: 'Métricas de Impacto',
   },
   fields: [
     createAppearanceField({

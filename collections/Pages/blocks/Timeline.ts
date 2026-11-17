@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const TimelineBlock: Block = {
   slug: 'timeline',
   labels: {
-    singular: 'Módulo de Trayectoria e Hitos (Timeline)',
-    plural: 'Módulos de Trayectoria',
+    singular: 'Línea de Tiempo / Trayectoria',
+    plural: 'Líneas de Tiempo',
   },
   fields: [
     createAppearanceField({

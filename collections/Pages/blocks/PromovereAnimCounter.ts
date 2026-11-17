@@ -5,8 +5,8 @@ export const PromovereAnimCounterBlock: Block = {
   slug: 'promovereAnimCounter',
   dbName: 'anim_counter',
   labels: {
-    singular: 'Promovere Anim Counter',
-    plural: 'Promovere Anim Counters',
+    singular: 'Contadores Numéricos Animados',
+    plural: 'Contadores Animados',
   },
   fields: [
     createAppearanceField({

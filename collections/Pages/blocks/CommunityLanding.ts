@@ -3,8 +3,8 @@ import type { Block } from 'payload';
 export const CommunityLandingBlock: Block = {
   slug: 'communityLanding',
   labels: {
-    singular: 'Módulo Landing Comunidad (Captación)',
-    plural: 'Módulos Landing Comunidad (Captación)',
+    singular: 'Landing Comunidad Trade B2B',
+    plural: 'Landings Comunidad Trade',
   },
   fields: [
     // 1. Hero

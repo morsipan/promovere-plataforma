@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const ServicesBlock: Block = {
   slug: 'services',
   labels: {
-    singular: 'Módulo Servicios',
-    plural: 'Módulos Servicios',
+    singular: 'Servicios 360° (Soluciones Comerciales)',
+    plural: 'Servicios 360°',
   },
   fields: [
     createAppearanceField({

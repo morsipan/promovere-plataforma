@@ -45,11 +45,10 @@ export default function Navbar({ data }: NavbarProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100'
-          : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+        ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100'
+        : 'bg-transparent'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -66,16 +65,14 @@ export default function Navbar({ data }: NavbarProps) {
             )}
             <div className="flex flex-col leading-tight">
               <span
-                className={`font-black text-xl tracking-tight transition-colors ${
-                  scrolled ? 'text-[#4d4e4f]' : 'text-white'
-                }`}
+                className={`font-black text-xl tracking-tight transition-colors ${scrolled ? 'text-[#4d4e4f]' : 'text-white'
+                  }`}
               >
                 {logoText}
               </span>
               <span
-                className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${
-                  scrolled ? 'text-[#3cac59]' : 'text-[#3cac59]'
-                }`}
+                className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${scrolled ? 'text-[#3cac59]' : 'text-[#3cac59]'
+                  }`}
               >
                 {tagline}
               </span>
@@ -90,11 +87,10 @@ export default function Navbar({ data }: NavbarProps) {
                 href={link.href}
                 target={link.newTab ? '_blank' : undefined}
                 rel={link.newTab ? 'noopener noreferrer' : undefined}
-                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  scrolled
-                    ? 'text-[#4d4e4f] hover:text-[#1b87c7] hover:bg-[#1b87c7]/5'
-                    : 'text-white/90 hover:text-white hover:bg-white/10'
-                }`}
+                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${scrolled
+                  ? 'text-[#4d4e4f] hover:text-[#1b87c7] hover:bg-[#1b87c7]/5'
+                  : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}
               >
                 {link.label}
               </a>
@@ -115,11 +111,10 @@ export default function Navbar({ data }: NavbarProps) {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`md:hidden p-2 rounded-lg transition-colors ${
-              scrolled
-                ? 'text-[#4d4e4f] hover:bg-gray-100'
-                : 'text-white hover:bg-white/10'
-            }`}
+            className={`md:hidden p-2 rounded-lg transition-colors ${scrolled
+              ? 'text-[#4d4e4f] hover:bg-gray-100'
+              : 'text-white hover:bg-white/10'
+              }`}
             aria-label="Abrir menú"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -129,9 +124,8 @@ export default function Navbar({ data }: NavbarProps) {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden transition-all duration-300 overflow-hidden ${
-          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
+        className={`md:hidden transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
       >
         <div className="bg-[#f9f9f9] border-t border-gray-200 px-4 py-4 space-y-1 shadow-xl">
           {items.map((link) => (

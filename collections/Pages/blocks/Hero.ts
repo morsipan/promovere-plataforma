@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const HeroBlock: Block = {
   slug: 'hero',
   labels: {
-    singular: 'Módulo Hero Principal',
-    plural: 'Módulos Hero Principal',
+    singular: 'Hero Principal (Banner Superior)',
+    plural: 'Hero Principal',
   },
   fields: [
     createAppearanceField({

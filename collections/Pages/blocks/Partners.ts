@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const PartnersBlock: Block = {
   slug: 'partners',
   labels: {
-    singular: 'Módulo Partners / Aliados',
-    plural: 'Módulos Partners / Aliados',
+    singular: 'Aliados Estratégicos (Cadenas y Partners)',
+    plural: 'Aliados Estratégicos',
   },
   fields: [
     createAppearanceField({

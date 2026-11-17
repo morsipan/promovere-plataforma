@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const FAQBlock: Block = {
   slug: 'faq',
   labels: {
-    singular: 'Módulo de Preguntas Frecuentes (FAQ)',
-    plural: 'Módulos de Preguntas Frecuentes',
+    singular: 'Preguntas Frecuentes (FAQ Acordeón)',
+    plural: 'Preguntas Frecuentes',
   },
   fields: [
     createAppearanceField({

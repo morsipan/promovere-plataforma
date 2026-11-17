@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const TestimonialsBlock: Block = {
   slug: 'testimonials',
   labels: {
-    singular: 'Módulo de Testimonios y Casos de Éxito',
-    plural: 'Módulos de Testimonios',
+    singular: 'Testimonios & Casos de Éxito',
+    plural: 'Testimonios & Casos de Éxito',
   },
   fields: [
     createAppearanceField({

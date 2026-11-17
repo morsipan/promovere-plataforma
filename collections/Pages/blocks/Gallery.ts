@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const GalleryBlock: Block = {
   slug: 'gallery',
   labels: {
-    singular: 'Módulo de Galería Multimedia de Destinos',
-    plural: 'Módulos de Galería Multimedia',
+    singular: 'Galería de Experiencias y Destinos',
+    plural: 'Galería de Experiencias',
   },
   fields: [
     createAppearanceField({

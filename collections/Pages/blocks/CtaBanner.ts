@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const CtaBannerBlock: Block = {
   slug: 'ctaBanner',
   labels: {
-    singular: 'Módulo de Banner de Acción (CTA Destacado)',
-    plural: 'Módulos de Banner de Acción',
+    singular: 'Banner de Conversión (Call to Action)',
+    plural: 'Banners de Conversión',
   },
   fields: [
     createAppearanceField({

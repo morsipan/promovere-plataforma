@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const RepresentationsBlock: Block = {
   slug: 'representations',
   labels: {
-    singular: 'Módulo Representaciones',
-    plural: 'Módulos Representaciones',
+    singular: 'Representaciones Oficiales (Marcas y Destinos)',
+    plural: 'Representaciones Oficiales',
   },
   fields: [
     createAppearanceField({

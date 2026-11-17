@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const RichTextBlock: Block = {
   slug: 'richText',
   labels: {
-    singular: 'Módulo de Contenido Libre / Editorial',
-    plural: 'Módulos de Contenido Libre',
+    singular: 'Texto Enriquecido (Comunicados / Editorial)',
+    plural: 'Textos Enriquecidos',
   },
   fields: [
     createAppearanceField({

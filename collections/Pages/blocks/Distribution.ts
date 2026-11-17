@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const DistributionBlock: Block = {
   slug: 'distribution',
   labels: {
-    singular: 'Módulo Red LATAM / Distribución',
-    plural: 'Módulos Red LATAM / Distribución',
+    singular: 'Red de Distribución (Alcance LATAM)',
+    plural: 'Red de Distribución',
   },
   fields: [
     createAppearanceField({
