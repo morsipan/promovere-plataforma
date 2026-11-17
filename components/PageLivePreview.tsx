@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useLivePreview, RefreshRouteOnSave } from '@payloadcms/live-preview-react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -35,6 +36,12 @@ export default function PageLivePreview({
   slug = 'home',
 }: PageLivePreviewProps) {
   const router = useRouter();
+  const [isIframe, setIsIframe] = useState(false);
+
+  useEffect(() => {
+    setIsIframe(typeof window !== 'undefined' && window.self !== window.top);
+  }, []);
+
   const serverURL =
     typeof window !== 'undefined'
       ? window.location.origin
@@ -87,7 +94,7 @@ export default function PageLivePreview({
 
   return (
     <main className="min-h-screen bg-[#f9f9f9]">
-      <RefreshRouteOnSave refresh={() => router.refresh()} serverURL={serverURL} />
+      {isIframe && <RefreshRouteOnSave refresh={() => router.refresh()} serverURL={serverURL} />}
 
       <Navbar data={headerData} />
 

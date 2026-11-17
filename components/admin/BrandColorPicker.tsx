@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { useField, FieldLabel, FieldDescription } from '@payloadcms/ui';
+import React, { useState, useEffect } from 'react';
+import { useField } from '@payloadcms/ui';
 
 interface SwatchDef {
   label: string;
@@ -33,28 +33,54 @@ export const BrandColorPicker: React.FC<{
   };
 }> = ({ path = '', field }) => {
   const { value, setValue, disabled } = useField<string>({ path });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const options = field?.options || [];
-  const currentValue = (value as string) || (options[0]?.value ?? '');
+  const currentValue = typeof value === 'string' ? value : '';
 
-  const activeDef = COLOR_MAP[currentValue] || {
-    label: currentValue,
-    hex: '#1b87c7',
-  };
+  const activeDef = currentValue ? COLOR_MAP[currentValue] : null;
+  const labelText = typeof field?.label === 'string' ? field.label : field?.name || '';
 
   return (
-    <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+    <div
+      suppressHydrationWarning
+      style={{
+        marginBottom: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '6px',
+      }}
+    >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <FieldLabel label={field?.label || field?.name} required={field?.required} path={path} />
-        {currentValue && (
+        <label
+          style={{
+            fontSize: '13px',
+            fontWeight: 600,
+            color: '#334155',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            margin: 0,
+          }}
+        >
+          <span>{labelText}</span>
+          {field?.required && <span style={{ color: '#ef4444' }}>*</span>}
+        </label>
+
+        {mounted && activeDef && (
           <span
+            suppressHydrationWarning
             style={{
               fontSize: '11px',
               fontWeight: 600,
               padding: '2px 8px',
               borderRadius: '9999px',
-              backgroundColor: 'rgba(0,0,0,0.05)',
-              color: '#4d4e4f',
+              backgroundColor: 'rgba(0,0,0,0.06)',
+              color: '#334155',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
@@ -81,7 +107,7 @@ export const BrandColorPicker: React.FC<{
           flexWrap: 'wrap',
           alignItems: 'center',
           gap: '8px',
-          padding: '6px 0',
+          padding: '4px 0',
         }}
       >
         {options.map((opt) => {
@@ -105,15 +131,15 @@ export const BrandColorPicker: React.FC<{
                 height: '36px',
                 borderRadius: '10px',
                 backgroundColor: def.isTransparent ? 'transparent' : def.hex,
-                border: def.border ? `1px solid ${def.border}` : '1px solid rgba(0,0,0,0.1)',
+                border: def.border ? `1px solid ${def.border}` : '1px solid rgba(0,0,0,0.12)',
                 cursor: disabled ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: isSelected
                   ? `0 0 0 2px #ffffff, 0 0 0 4px #1b87c7`
-                  : '0 1px 3px rgba(0,0,0,0.08)',
-                transform: isSelected ? 'scale(1.08)' : 'scale(1)',
+                  : '0 1px 2px rgba(0,0,0,0.06)',
+                transform: isSelected ? 'scale(1.06)' : 'scale(1)',
                 transition: 'all 0.15s ease-in-out',
                 backgroundImage: def.isTransparent
                   ? 'repeating-conic-gradient(#e2e8f0 0% 25%, #ffffff 0% 50%) 50% / 10px 10px'
@@ -140,7 +166,9 @@ export const BrandColorPicker: React.FC<{
       </div>
 
       {field?.admin?.description && (
-        <FieldDescription description={field.admin.description} path={path} />
+        <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
+          {field.admin.description}
+        </p>
       )}
     </div>
   );

@@ -57,13 +57,13 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
     if (preTitle || highlightedWord) {
       return (
         <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
-          {preTitle ? <span>{preTitle} </span> : null}
+          {preTitle ? `${preTitle} ` : ''}
           {highlightedWord ? (
             <span className={`${sectionAppearance.accentTextClass} font-heading drop-shadow-md`}>
               {highlightedWord}
             </span>
           ) : null}
-          {titleSuffix ? <span> {titleSuffix}</span> : null}
+          {titleSuffix ? ` ${titleSuffix}` : ''}
         </h1>
       );
     }
@@ -72,11 +72,11 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
       const [before, after] = fallbackTitle.split('Promovêre');
       return (
         <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
-          {before ? <span>{before} </span> : null}
-          <span className="text-[#1b87c7] font-heading drop-shadow-md">
+          {before || ''}
+          <span className={`${sectionAppearance.accentTextClass} font-heading drop-shadow-md`}>
             Promovêre
           </span>
-          {after ? <span> {after}</span> : null}
+          {after || ''}
         </h1>
       );
     }
