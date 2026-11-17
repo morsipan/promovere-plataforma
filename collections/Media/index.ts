@@ -1,4 +1,9 @@
+import path from 'path'
+import { fileURLToPath } from 'url'
 import type { CollectionConfig } from 'payload'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -17,8 +22,20 @@ export const Media: CollectionConfig = {
     delete: ({ req: { user } }) => Boolean(user?.role === 'admin'),
   },
   upload: {
-    staticDir: 'public/media',
-    mimeTypes: ['image/*'],
+    // Si estamos en Vercel Serverless y aún no se configuró Blob/S3, usamos /tmp para evitar EROFS (read-only filesystem)
+    staticDir: process.env.VERCEL
+      ? path.resolve('/tmp/media')
+      : path.resolve(dirname, '../../public/media'),
+    mimeTypes: [
+      'image/*',
+      'image/svg+xml',
+      'image/webp',
+      'image/png',
+      'image/jpeg',
+      'image/gif',
+      'image/x-icon',
+      'image/vnd.microsoft.icon',
+    ],
     focalPoint: true,
   },
   fields: [

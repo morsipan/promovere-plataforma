@@ -7,6 +7,11 @@ const nextConfig = {
     '@payloadcms/db-sqlite',
     '@payloadcms/db-postgres',
   ],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '20mb',
+    },
+  },
   images: {
     remotePatterns: [
       {

@@ -2,6 +2,8 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { es } from '@payloadcms/translations/languages/es'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -61,6 +63,34 @@ export default buildConfig({
   collections: [Pages, Users, CommunityContent, Media],
   globals: [Header, Footer, SiteSettings],
   plugins: [
+    // 1. Almacenamiento en Vercel Blob (se activa automáticamente cuando se conecta un Blob store en Vercel)
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      collections: {
+        media: true,
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN || '',
+    }),
+    // 2. Almacenamiento en S3 / Supabase Storage (se activa si se proveen claves S3 en el entorno)
+    s3Storage({
+      enabled: Boolean(process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY),
+      collections: {
+        media: true,
+      },
+      bucket: process.env.S3_BUCKET || 'media',
+      config: {
+        forcePathStyle: true,
+        region: process.env.S3_REGION || 'us-west-2',
+        endpoint:
+          process.env.S3_ENDPOINT ||
+          'https://nfbutyeottopxphyykdh.storage.supabase.co/storage/v1/s3',
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+        },
+      },
+    }),
+    // 3. Suite de SEO
     seoPlugin({
       collections: ['pages'],
       uploadsCollection: 'media',
