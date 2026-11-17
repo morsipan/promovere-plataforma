@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { createAppearanceField } from '../fields/appearance'
 
 export const PromovereAnimCounterBlock: Block = {
   slug: 'promovereAnimCounter',
@@ -8,6 +9,10 @@ export const PromovereAnimCounterBlock: Block = {
     plural: 'Promovere Anim Counters',
   },
   fields: [
+    createAppearanceField({
+      defaultBackgroundColor: 'blancoHumo',
+      defaultTheme: 'light',
+    }),
     {
       name: 'badge',
       type: 'text',

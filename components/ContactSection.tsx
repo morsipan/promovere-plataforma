@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import {
   MapPin,
   Phone,
@@ -14,9 +15,11 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { contactContent, siteConfig } from '@/data/content';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface ContactSectionProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     title?: string;
     subtitle?: string;
@@ -29,6 +32,13 @@ interface ContactSectionProps {
 }
 
 export default function ContactSection({ data }: ContactSectionProps = {}) {
+  // Resolución dinámica de apariencia no-code
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blanco',
+    theme: 'light',
+    overlayOpacity: 'media',
+  });
+
   const badge = data?.badge || contactContent.badge;
   const title = data?.title || contactContent.title;
   const subtitle = data?.subtitle || contactContent.subtitle;
@@ -52,40 +62,61 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulación de envío de formulario institucional
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setSubmitted(true);
     setLoading(false);
   };
 
   return (
-    <section id="contacto" className="py-20 md:py-28 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contacto" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
+      {/* Fondo de Imagen Opcional configurado en Apariencia */}
+      {sectionAppearance.backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={sectionAppearance.backgroundImageUrl}
+            alt="Fondo decorativo de contacto"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
+        </div>
+      ) : null}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4">
-            {badge}
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight">
-            {title}
-          </h2>
-          <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
-            {subtitle}
-          </p>
+          {badge ? (
+            <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 font-sans ${sectionAppearance.badgeClass}`}>
+              {badge}
+            </div>
+          ) : null}
+          {title ? (
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}>
+              {title}
+            </h2>
+          ) : null}
+          {subtitle ? (
+            <p className={`text-base sm:text-lg leading-relaxed font-normal ${sectionAppearance.subtitleClass}`}>
+              {subtitle}
+            </p>
+          ) : null}
         </div>
 
         {/* Dos Columnas */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           {/* Columna Izquierda: Datos Institucionales y Oficina (5 cols) */}
           <div className="lg:col-span-5 space-y-5">
-            <div className="bg-[#f9f9f9] border border-gray-200/80 rounded-2xl p-6 sm:p-8">
+            <div className={`border rounded-2xl p-6 sm:p-8 ${
+              sectionAppearance.isDark ? 'bg-white/10 border-white/15 text-white' : 'bg-[#f9f9f9] border-gray-200/80 text-[#4d4e4f]'
+            }`}>
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#3cac59]" />
-                <h3 className="text-lg font-bold text-[#4d4e4f]">
+                <h3 className={`text-lg font-bold ${sectionAppearance.titleClass}`}>
                   Oficinas Centrales en Buenos Aires
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm text-[#4d4e4f]/75 leading-relaxed mb-6">
+              <p className={`text-xs sm:text-sm leading-relaxed mb-6 ${sectionAppearance.subtitleClass}`}>
                 Representamos y conectamos destinos internacionales desde el corazón financiero y turístico de la región.
               </p>
 
@@ -96,7 +127,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
+                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block font-sans">
                       Dirección Comercial
                     </span>
                     <p className="text-xs sm:text-sm font-semibold text-[#4d4e4f]">
@@ -116,7 +147,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                     <Phone className="w-5 h-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
+                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block font-sans">
                       Teléfono / WhatsApp Trade
                     </span>
                     <a
@@ -134,7 +165,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                     <Mail className="w-5 h-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
+                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block font-sans">
                       Correo Electrónico
                     </span>
                     <a
@@ -153,7 +184,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                       <Clock className="w-5 h-5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block">
+                      <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block font-sans">
                         Horario de Atención
                       </span>
                       <p className="text-xs sm:text-sm font-semibold text-[#4d4e4f]">
@@ -174,7 +205,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                 <h4 className="text-sm font-bold text-[#4d4e4f]">
                   Comunidad Promovêre
                 </h4>
-                <p className="text-xs text-[#4d4e4f]/80 leading-relaxed">
+                <p className="text-xs text-[#4d4e4f]/80 leading-relaxed font-sans">
                   Acceso exclusivo para agentes de viajes, operadores y profesionales del trade turístico.
                 </p>
               </div>
@@ -188,10 +219,10 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                 <div className="w-16 h-16 rounded-full bg-[#3cac59]/10 text-[#3cac59] flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#4d4e4f] mb-2">
+                <h3 className="text-2xl font-bold text-[#4d4e4f] mb-2 font-heading">
                   ¡Mensaje Enviado con Éxito!
                 </h3>
-                <p className="text-sm text-[#4d4e4f]/80 max-w-md mx-auto mb-6">
+                <p className="text-sm text-[#4d4e4f]/80 max-w-md mx-auto mb-6 font-sans">
                   Muchas gracias por comunicarte con Promovêre. Un asesor de nuestro equipo comercial te responderá a la brevedad.
                 </p>
                 <button
@@ -207,7 +238,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   {/* Nombre */}
                   <div>
-                    <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5 font-sans">
                       Nombre y Apellido *
                     </label>
                     <div className="relative">
@@ -227,7 +258,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
 
                   {/* Email */}
                   <div>
-                    <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5 font-sans">
                       Correo Electrónico *
                     </label>
                     <div className="relative">
@@ -249,7 +280,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   {/* Empresa / Operador */}
                   <div>
-                    <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5 font-sans">
                       Empresa / Agencia / Destino *
                     </label>
                     <div className="relative">
@@ -269,7 +300,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
 
                   {/* Servicio de Interés */}
                   <div>
-                    <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5 font-sans">
                       Área de Interés
                     </label>
                     <select
@@ -290,7 +321,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
 
                 {/* Mensaje */}
                 <div>
-                  <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-[#4d4e4f] uppercase tracking-wider mb-1.5 font-sans">
                     Detalle de la Consulta *
                   </label>
                   <div className="relative">

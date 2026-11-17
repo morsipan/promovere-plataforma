@@ -1,4 +1,6 @@
+import Image from 'next/image';
 import { Calendar, Flag } from 'lucide-react';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface MilestoneItem {
   year: string;
@@ -9,6 +11,7 @@ interface MilestoneItem {
 
 interface TimelineSectionProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     title?: string;
     subtitle?: string;
@@ -17,6 +20,11 @@ interface TimelineSectionProps {
 }
 
 export default function TimelineSection({ data }: TimelineSectionProps) {
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blancoHumo',
+    theme: 'light',
+  });
+
   const badge = data?.badge || 'Nuestra Trayectoria';
   const title =
     data?.title || 'Años construyendo puentes comerciales en LATAM';
@@ -61,22 +69,43 @@ export default function TimelineSection({ data }: TimelineSectionProps) {
       : defaultMilestones;
 
   return (
-    <section id="trayectoria" className="py-20 md:py-28 bg-white">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="trayectoria" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
+      {sectionAppearance.backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={sectionAppearance.backgroundImageUrl}
+            alt="Fondo Trayectoria"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
+        </div>
+      ) : null}
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4">
-            <Calendar className="w-3.5 h-3.5 text-[#3cac59]" />
-            {badge}
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
+          {badge ? (
+            <div
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}
+            >
+              <Calendar className="w-3.5 h-3.5 text-[#3cac59]" />
+              {badge}
+            </div>
+          ) : null}
+          {title ? (
+            <h2
+              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}
+            >
+              {title}
+            </h2>
+          ) : null}
+          {subtitle ? (
+            <p className={`text-base sm:text-lg leading-relaxed font-normal ${sectionAppearance.subtitleClass}`}>
               {subtitle}
             </p>
-          )}
+          ) : null}
         </div>
 
         {/* Timeline Grid */}
@@ -84,29 +113,29 @@ export default function TimelineSection({ data }: TimelineSectionProps) {
           {milestones.map((item, index) => (
             <div
               key={index}
-              className="bg-[#f9f9f9] rounded-3xl p-8 border border-gray-200/80 hover:border-[#3cac59]/40 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+              className={`rounded-3xl p-8 border transition-all duration-300 flex flex-col justify-between ${sectionAppearance.cardClass}`}
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="px-3.5 py-1 rounded-xl bg-[#1b87c7] text-white font-black text-sm shadow-xs">
                     {item.year}
                   </span>
-                  {item.tag && (
+                  {item.tag ? (
                     <span className="text-xs font-bold text-[#3cac59] uppercase tracking-wider">
                       {item.tag}
                     </span>
-                  )}
+                  ) : null}
                 </div>
 
-                <h3 className="text-xl font-bold text-[#4d4e4f] mb-3">
+                <h3 className={`text-xl font-bold mb-3 ${sectionAppearance.cardTitleClass}`}>
                   {item.title}
                 </h3>
-                <p className="text-sm text-[#4d4e4f]/80 leading-relaxed">
+                <p className={`text-sm leading-relaxed ${sectionAppearance.cardSubtextClass}`}>
                   {item.description}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-gray-200/60 flex items-center gap-2 text-xs font-semibold text-[#1b87c7]">
+              <div className={`mt-6 pt-4 border-t ${sectionAppearance.borderClass} flex items-center gap-2 text-xs font-semibold text-[#1b87c7]`}>
                 <Flag className="w-3.5 h-3.5 text-[#3cac59]" />
                 <span>Hito Consolidado</span>
               </div>

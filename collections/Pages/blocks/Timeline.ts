@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { createAppearanceField } from '../fields/appearance'
 
 export const TimelineBlock: Block = {
   slug: 'timeline',
@@ -7,6 +8,10 @@ export const TimelineBlock: Block = {
     plural: 'Módulos de Trayectoria',
   },
   fields: [
+    createAppearanceField({
+      defaultBackgroundColor: 'blancoHumo',
+      defaultTheme: 'light',
+    }),
     {
       name: 'badge',
       type: 'text',

@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { Sparkles } from 'lucide-react';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 export interface AnimCounterItem {
   topText: string;
@@ -26,6 +28,7 @@ export interface AnimCounterItem {
 
 export interface PromovereAnimCounterProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     title?: string;
     subtitle?: string;
@@ -292,6 +295,11 @@ export default function PromovereAnimCounterSection({ data }: PromovereAnimCount
   const items = data?.items && data.items.length > 0 ? data.items : defaultItems;
   const count = items.length;
 
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blancoHumo',
+    theme: 'light',
+  });
+
   // Clases dinámicas de columnas para desktop (hasta 5 en línea)
   const gridColsClass =
     count === 1
@@ -305,29 +313,48 @@ export default function PromovereAnimCounterSection({ data }: PromovereAnimCount
       : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5';
 
   return (
-    <section id="contadores" className="py-20 md:py-28 bg-[#f9f9f9]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contadores" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
+      {sectionAppearance.backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={sectionAppearance.backgroundImageUrl}
+            alt="Fondo Contadores"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
+        </div>
+      ) : null}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabecera de Sección */}
-        {(badge || title || subtitle) && (
+        {badge || title || subtitle ? (
           <div className="text-center max-w-3xl mx-auto mb-16">
-            {badge && (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4">
+            {badge ? (
+              <div
+                className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}
+              >
                 <Sparkles className="w-3.5 h-3.5 text-[#3cac59]" />
                 {badge}
               </div>
-            )}
-            {title && (
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight">
+            ) : null}
+            {title ? (
+              <h2
+                className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}
+              >
                 {title}
               </h2>
-            )}
-            {subtitle && (
-              <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
+            ) : null}
+            {subtitle ? (
+              <p
+                className={`text-base sm:text-lg leading-relaxed font-normal ${sectionAppearance.subtitleClass}`}
+              >
                 {subtitle}
               </p>
-            )}
+            ) : null}
           </div>
-        )}
+        ) : null}
 
         {/* Layout Responsive: hasta 5 elementos en línea en Desktop */}
         <div className={`grid gap-5 lg:gap-6 ${gridColsClass}`}>

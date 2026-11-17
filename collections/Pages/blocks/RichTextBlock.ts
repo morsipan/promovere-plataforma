@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { createAppearanceField } from '../fields/appearance'
 
 export const RichTextBlock: Block = {
   slug: 'richText',
@@ -7,6 +8,10 @@ export const RichTextBlock: Block = {
     plural: 'Módulos de Contenido Libre',
   },
   fields: [
+    createAppearanceField({
+      defaultBackgroundColor: 'blanco',
+      defaultTheme: 'light',
+    }),
     {
       name: 'badge',
       type: 'text',

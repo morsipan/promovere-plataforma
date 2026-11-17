@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Handshake } from 'lucide-react';
 import { partnersContent } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface PartnerItemCMS {
   name: string;
@@ -14,6 +15,7 @@ interface PartnerItemCMS {
 
 interface PartnersSectionProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     title?: string;
     subtitle?: string;
@@ -22,6 +24,13 @@ interface PartnersSectionProps {
 }
 
 export default function PartnersSection({ data }: PartnersSectionProps = {}) {
+  // Resolución dinámica de apariencia no-code
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blancoHumo',
+    theme: 'light',
+    overlayOpacity: 'media',
+  });
+
   const badge = data?.badge || partnersContent.badge;
   const title = data?.title || partnersContent.title;
   const subtitle = data?.subtitle || partnersContent.subtitle;
@@ -31,23 +40,37 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
       : partnersContent.partners;
 
   return (
-    <section id="partners" className="py-20 md:py-28 bg-[#f9f9f9] border-t border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+    <section id="partners" className={`py-20 md:py-28 relative overflow-hidden border-t border-b ${sectionAppearance.bgClass} ${sectionAppearance.borderClass}`}>
+      {/* Fondo de Imagen Opcional configurado en Apariencia */}
+      {sectionAppearance.backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={sectionAppearance.backgroundImageUrl}
+            alt="Fondo decorativo de aliados"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
+        </div>
+      ) : null}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header con contraste dinámico */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           {badge ? (
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-4 font-sans">
+            <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 font-sans ${sectionAppearance.badgeClass}`}>
               <Handshake className="w-3.5 h-3.5" />
               {badge}
             </div>
           ) : null}
           {title ? (
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}>
               {title}
             </h2>
           ) : null}
           {subtitle ? (
-            <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal font-sans">
+            <p className={`text-base sm:text-lg leading-relaxed font-normal ${sectionAppearance.subtitleClass}`}>
               {subtitle}
             </p>
           ) : null}
@@ -56,7 +79,6 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
         {/* Partners Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {partners.map((partner, index) => {
-            // Extracción segura del logo desde Media Upload o URL alternativa
             const candidateLogo = 'logo' in partner ? partner.logo : undefined;
             const fallbackLogoUrl = 'logoUrl' in partner ? (partner as any).logoUrl : undefined;
             const logoSrc = getMediaUrl(candidateLogo, fallbackLogoUrl || '');
@@ -73,13 +95,13 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
             return (
               <div
                 key={partner.name || `partner-${index}`}
-                className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
+                className={`rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group ${sectionAppearance.cardClass}`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     {/* Logo o Avatar con Iniciales */}
                     {logoSrc ? (
-                      <div className="relative w-20 h-12 flex items-center justify-center p-1 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden">
+                      <div className="relative w-20 h-12 flex items-center justify-center p-1 rounded-lg bg-white/90 border border-gray-100 overflow-hidden shadow-xs">
                         <img
                           src={logoSrc}
                           alt={partner.name}
@@ -93,23 +115,27 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
                     )}
 
                     {partner.category ? (
-                      <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[#f9f9f9] text-[#4d4e4f]/70 border border-gray-200 font-sans">
+                      <span className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border font-sans ${
+                        sectionAppearance.isDark
+                          ? 'bg-white/10 text-white/90 border-white/20'
+                          : 'bg-[#f9f9f9] text-[#4d4e4f]/70 border-gray-200'
+                      }`}>
                         {partner.category}
                       </span>
                     ) : null}
                   </div>
 
-                  <h3 className="text-lg font-bold text-[#4d4e4f] mb-2 group-hover:text-[#1b87c7] transition-colors font-heading">
+                  <h3 className={`text-lg font-bold mb-2 group-hover:text-[#1b87c7] transition-colors ${sectionAppearance.cardTitleClass}`}>
                     {partner.name}
                   </h3>
                   {partner.description ? (
-                    <p className="text-xs sm:text-sm text-[#4d4e4f]/80 leading-relaxed font-sans">
+                    <p className={`text-xs sm:text-sm leading-relaxed ${sectionAppearance.cardSubtextClass}`}>
                       {partner.description}
                     </p>
                   ) : null}
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-[#3cac59] font-sans">
+                <div className={`mt-5 pt-3 border-t flex items-center justify-between text-xs font-semibold text-[#3cac59] font-sans ${sectionAppearance.borderClass}`}>
                   <span>Alianza Comercial Activa</span>
                   <span className="w-2 h-2 rounded-full bg-[#3cac59]" />
                 </div>

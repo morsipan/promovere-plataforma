@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { MapPin, Building2, ArrowUpRight } from 'lucide-react';
 import { representationsContent } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface RepresentationItemCMS {
   id?: string;
@@ -17,6 +18,7 @@ interface RepresentationItemCMS {
 
 interface RepresentationsSectionProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     title?: string;
     subtitle?: string;
@@ -25,6 +27,13 @@ interface RepresentationsSectionProps {
 }
 
 export default function RepresentationsSection({ data }: RepresentationsSectionProps = {}) {
+  // Resolución dinámica de apariencia no-code
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blanco',
+    theme: 'light',
+    overlayOpacity: 'media',
+  });
+
   const badge = data?.badge || representationsContent.badge;
   const title = data?.title || representationsContent.title;
   const subtitle = data?.subtitle || representationsContent.subtitle;
@@ -32,22 +41,36 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
     data?.items && data.items.length > 0 ? data.items : representationsContent.items;
 
   return (
-    <section id="representaciones" className="py-20 md:py-28 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header de Sección */}
+    <section id="representaciones" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
+      {/* Fondo de Imagen Opcional configurado en Apariencia */}
+      {sectionAppearance.backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={sectionAppearance.backgroundImageUrl}
+            alt="Fondo decorativo de representaciones"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
+        </div>
+      ) : null}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header de Sección con contraste dinámico */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           {badge ? (
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 text-xs font-bold uppercase tracking-wider mb-4 font-sans">
+            <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 font-sans ${sectionAppearance.badgeClass}`}>
               {badge}
             </div>
           ) : null}
           {title ? (
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}>
               {title}
             </h2>
           ) : null}
           {subtitle ? (
-            <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal font-sans">
+            <p className={`text-base sm:text-lg leading-relaxed font-normal ${sectionAppearance.subtitleClass}`}>
               {subtitle}
             </p>
           ) : null}
@@ -57,7 +80,6 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {items.map((item, index) => {
             const isFeatured = index === 0 || index === 3;
-            // Extracción segura de la imagen de Payload Media con fallback
             const fallbackImageUrl =
               'imageUrl' in item && typeof (item as any).imageUrl === 'string'
                 ? (item as any).imageUrl

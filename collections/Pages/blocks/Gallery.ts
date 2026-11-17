@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { createAppearanceField } from '../fields/appearance'
 
 export const GalleryBlock: Block = {
   slug: 'gallery',
@@ -7,6 +8,10 @@ export const GalleryBlock: Block = {
     plural: 'Módulos de Galería Multimedia',
   },
   fields: [
+    createAppearanceField({
+      defaultBackgroundColor: 'blanco',
+      defaultTheme: 'light',
+    }),
     {
       name: 'badge',
       type: 'text',

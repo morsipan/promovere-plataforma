@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { createAppearanceField } from '../fields/appearance'
 
 export const CtaBannerBlock: Block = {
   slug: 'ctaBanner',
@@ -7,6 +8,10 @@ export const CtaBannerBlock: Block = {
     plural: 'Módulos de Banner de Acción',
   },
   fields: [
+    createAppearanceField({
+      defaultBackgroundColor: 'azul',
+      defaultTheme: 'dark',
+    }),
     {
       name: 'badge',
       type: 'text',

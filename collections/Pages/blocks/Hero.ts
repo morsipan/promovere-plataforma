@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { createAppearanceField } from '../fields/appearance'
 
 export const HeroBlock: Block = {
   slug: 'hero',
@@ -7,6 +8,11 @@ export const HeroBlock: Block = {
     plural: 'Módulos Hero Principal',
   },
   fields: [
+    createAppearanceField({
+      defaultBackgroundColor: 'grisOscuro',
+      defaultTheme: 'dark',
+      defaultOverlayOpacity: 'media',
+    }),
     {
       name: 'badge',
       type: 'text',

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Camera, MapPin } from 'lucide-react';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface GalleryItem {
   image: string;
@@ -10,6 +11,7 @@ interface GalleryItem {
 
 interface GallerySectionProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     title?: string;
     subtitle?: string;
@@ -18,6 +20,11 @@ interface GallerySectionProps {
 }
 
 export default function GallerySection({ data }: GallerySectionProps) {
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blanco',
+    theme: 'light',
+  });
+
   const badge = data?.badge || 'Galería de Experiencias';
   const title = data?.title || 'Destinos y propiedades de clase mundial';
   const subtitle =
@@ -58,22 +65,43 @@ export default function GallerySection({ data }: GallerySectionProps) {
   const items = data?.items && data.items.length > 0 ? data.items : defaultItems;
 
   return (
-    <section id="galeria" className="py-20 md:py-28 bg-[#f9f9f9]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="galeria" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
+      {sectionAppearance.backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={sectionAppearance.backgroundImageUrl}
+            alt="Fondo Galería"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
+        </div>
+      ) : null}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 text-xs font-bold uppercase tracking-wider mb-4">
-            <Camera className="w-3.5 h-3.5" />
-            {badge}
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
+          {badge ? (
+            <div
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}
+            >
+              <Camera className="w-3.5 h-3.5 text-[#3cac59]" />
+              {badge}
+            </div>
+          ) : null}
+          {title ? (
+            <h2
+              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}
+            >
+              {title}
+            </h2>
+          ) : null}
+          {subtitle ? (
+            <p className={`text-base sm:text-lg leading-relaxed font-normal ${sectionAppearance.subtitleClass}`}>
               {subtitle}
             </p>
-          )}
+          ) : null}
         </div>
 
         {/* Gallery Bento Grid */}
@@ -95,13 +123,13 @@ export default function GallerySection({ data }: GallerySectionProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
               {/* Tag Top */}
-              {item.tag && (
+              {item.tag ? (
                 <div className="absolute top-4 left-4 z-10">
                   <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider border border-white/20">
                     {item.tag}
                   </span>
                 </div>
-              )}
+              ) : null}
 
               {/* Content Bottom */}
               <div className="absolute bottom-4 left-4 right-4 z-10 text-white">

@@ -1,7 +1,10 @@
+import Image from 'next/image';
 import { FileText } from 'lucide-react';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface RichTextSectionProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     title?: string;
     content?: any;
@@ -10,36 +13,60 @@ interface RichTextSectionProps {
 }
 
 export default function RichTextSection({ data }: RichTextSectionProps) {
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blanco',
+    theme: 'light',
+  });
+
   const badge = data?.badge || 'Comunicado Institucional';
   const title =
     data?.title || 'Nuestra visión y compromiso con el trade turístico';
   const isCentered = data?.alignment === 'center';
 
   return (
-    <section className="py-20 md:py-28 bg-[#f9f9f9]">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
+      {sectionAppearance.backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={sectionAppearance.backgroundImageUrl}
+            alt="Fondo Contenido"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
+        </div>
+      ) : null}
+
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
-          className={`bg-white rounded-3xl p-8 sm:p-14 border border-gray-200/80 shadow-xs ${
-            isCentered ? 'text-center' : 'text-left'
-          }`}
+          className={`rounded-3xl p-8 sm:p-14 border transition-all duration-300 ${
+            sectionAppearance.cardClass
+          } ${isCentered ? 'text-center' : 'text-left'}`}
         >
           {/* Badge */}
-          <div
-            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/10 text-[#1b87c7] border border-[#1b87c7]/20 text-xs font-bold uppercase tracking-wider mb-6 ${
-              isCentered ? 'mx-auto' : ''
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5 text-[#3cac59]" />
-            {badge}
-          </div>
+          {badge ? (
+            <div
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-6 ${
+                sectionAppearance.badgeClass
+              } ${isCentered ? 'mx-auto' : ''}`}
+            >
+              <FileText className="w-3.5 h-3.5 text-[#3cac59]" />
+              {badge}
+            </div>
+          ) : null}
 
           {/* Title */}
-          <h2 className="text-3xl sm:text-4xl font-black text-[#4d4e4f] tracking-tight mb-8 leading-tight">
-            {title}
-          </h2>
+          {title ? (
+            <h2
+              className={`text-3xl sm:text-4xl font-black tracking-tight mb-8 leading-tight ${sectionAppearance.titleClass}`}
+            >
+              {title}
+            </h2>
+          ) : null}
 
           {/* Content */}
-          <div className="prose prose-lg max-w-none text-[#4d4e4f]/85 space-y-5 leading-relaxed">
+          <div className={`prose prose-lg max-w-none space-y-5 leading-relaxed ${sectionAppearance.bodyClass}`}>
             <p>
               En <strong>Promovêre</strong> creemos que la promoción turística de excelencia se construye a través de relaciones genuinas, conocimiento profundo del producto y una presencia comercial constante junto a los tomadores de decisiones de la industria en Latinoamérica.
             </p>

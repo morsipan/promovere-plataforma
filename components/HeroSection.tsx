@@ -2,9 +2,11 @@ import Image from 'next/image';
 import { ArrowRight, Compass, Sparkles } from 'lucide-react';
 import { heroContent } from '@/data/content';
 import { getMediaUrl, getMediaAlt } from '@/lib/media';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface HeroSectionProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     preTitle?: string;
     highlightedWord?: string;
@@ -21,6 +23,13 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ data }: HeroSectionProps = {}) {
+  // Resolución dinámica de apariencia y contraste
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'grisOscuro',
+    theme: 'dark',
+    overlayOpacity: 'media',
+  });
+
   const badge = data?.badge || heroContent.badge;
   const subtitle = data?.subtitle || heroContent.subtitle;
   const cta1Label = data?.cta1Label || heroContent.cta1.label;
@@ -28,28 +37,26 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
   const cta2Label = data?.cta2Label || heroContent.cta2.label;
   const cta2Href = data?.cta2Href || '/comunidad/login';
 
-  // Obtener URL e información accesible de la imagen de fondo desde Payload Media
-  const backgroundImageUrl = getMediaUrl(
-    data?.backgroundImage,
-    data?.backgroundImageUrl || heroContent.backgroundImage,
-  );
+  // Obtener URL de imagen de fondo (prioriza la subida en apariencia, luego en bloque, luego default)
+  const backgroundImageUrl =
+    sectionAppearance.backgroundImageUrl ||
+    getMediaUrl(data?.backgroundImage, data?.backgroundImageUrl || heroContent.backgroundImage);
+
   const backgroundImageAlt = getMediaAlt(
-    data?.backgroundImage,
+    data?.appearance?.backgroundImage || data?.backgroundImage,
     'Promovêre — Promoción Turística y Comercialización en LATAM',
   );
 
-  // Lógica de Título Protegido:
-  // Permite al cliente destacar la palabra clave en Azul Brillante (#1b87c7) sin alterar tipografías
+  // Lógica de Título Protegido
   const preTitle = data?.preTitle !== undefined ? data.preTitle : 'Somos';
   const highlightedWord = data?.highlightedWord !== undefined ? data.highlightedWord : 'Promovêre';
   const titleSuffix = data?.titleSuffix || '';
   const fallbackTitle = data?.title || heroContent.title;
 
   const renderTitle = () => {
-    // Si se especificaron campos estructurados
     if (preTitle || highlightedWord) {
       return (
-        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-none font-heading">
+        <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
           {preTitle ? <span>{preTitle} </span> : null}
           {highlightedWord ? (
             <span className="text-[#1b87c7] font-heading drop-shadow-md">
@@ -61,11 +68,10 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
       );
     }
 
-    // Fallback si solo vino un string plano en 'title'
     if (fallbackTitle && fallbackTitle.includes('Promovêre')) {
       const [before, after] = fallbackTitle.split('Promovêre');
       return (
-        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-none font-heading">
+        <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
           {before ? <span>{before} </span> : null}
           <span className="text-[#1b87c7] font-heading drop-shadow-md">
             Promovêre
@@ -76,15 +82,15 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
     }
 
     return (
-      <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-none font-heading">
+      <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
         {fallbackTitle}
       </h1>
     );
   };
 
   return (
-    <section className="relative min-h-[92vh] lg:min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Imagen de Fondo Gestionada por CMS */}
+    <section className={`relative min-h-[92vh] lg:min-h-screen flex items-center justify-center overflow-hidden ${sectionAppearance.bgClass}`}>
+      {/* Imagen de Fondo Gestionada por CMS con Capa de Superposición */}
       {backgroundImageUrl ? (
         <div className="absolute inset-0 z-0">
           <Image
@@ -96,8 +102,8 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
             className="object-cover object-center brightness-90"
             sizes="100vw"
           />
-          {/* Overlays corporativos de protección de contraste */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#4d4e4f]/80 via-[#4d4e4f]/70 to-[#4d4e4f]/90" />
+          {/* Capa de contraste dinámica configurada por el usuario */}
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1b87c7]/30 to-transparent mix-blend-multiply" />
         </div>
       ) : null}
@@ -115,20 +121,20 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
         {/* Badge Institucional */}
         {badge ? (
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-8 shadow-sm">
+          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 shadow-sm ${sectionAppearance.badgeClass}`}>
             <span className="w-2 h-2 rounded-full bg-[#3cac59] animate-pulse" />
-            <span className="text-white text-xs sm:text-sm font-semibold tracking-wide uppercase font-sans">
+            <span className="text-xs sm:text-sm font-semibold tracking-wide uppercase font-sans">
               {badge}
             </span>
           </div>
         ) : null}
 
-        {/* Título Principal con Estilo Protegido */}
+        {/* Título Principal con Estilo Protegido y Contraste Dinámico */}
         {renderTitle()}
 
         {/* Subtítulo / Bajada */}
         {subtitle ? (
-          <p className="text-base sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-10 sm:mb-12 leading-relaxed font-light font-sans">
+          <p className={`text-base sm:text-xl md:text-2xl max-w-3xl mx-auto mb-10 sm:mb-12 leading-relaxed font-light ${sectionAppearance.subtitleClass}`}>
             {subtitle}
           </p>
         ) : null}
@@ -147,11 +153,15 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
             </a>
           ) : null}
 
-          {/* CTA Secundario - Contorno con Acento Verde */}
+          {/* CTA Secundario */}
           {cta2Label ? (
             <a
               href={cta2Href}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-base border border-white/30 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5"
+              className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-base border backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 ${
+                sectionAppearance.isDark
+                  ? 'bg-white/10 hover:bg-white/20 text-white border-white/30'
+                  : 'bg-[#4d4e4f]/10 hover:bg-[#4d4e4f]/15 text-[#4d4e4f] border-[#4d4e4f]/20'
+              }`}
             >
               <Sparkles className="w-5 h-5 text-[#3cac59]" />
               <span>{cta2Label}</span>

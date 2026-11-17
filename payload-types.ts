@@ -132,6 +132,27 @@ export interface Page {
   layout: (
     | {
         /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        /**
          * Texto de la píldora informativa superior.
          */
         badge?: string | null;
@@ -172,6 +193,27 @@ export interface Page {
         blockType: 'hero';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title?: string | null;
         subtitle?: string | null;
@@ -207,6 +249,27 @@ export interface Page {
         blockType: 'services';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title?: string | null;
         subtitle?: string | null;
@@ -234,6 +297,27 @@ export interface Page {
         blockType: 'representations';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title?: string | null;
         subtitle?: string | null;
@@ -262,6 +346,27 @@ export interface Page {
         blockType: 'distribution';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title?: string | null;
         subtitle?: string | null;
@@ -287,6 +392,27 @@ export interface Page {
         blockType: 'partners';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title?: string | null;
         subtitle?: string | null;
@@ -300,6 +426,27 @@ export interface Page {
         blockType: 'contact';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title: string;
         subtitle?: string | null;
@@ -316,6 +463,27 @@ export interface Page {
         blockType: 'faq';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title: string;
         subtitle?: string | null;
@@ -335,6 +503,27 @@ export interface Page {
         blockType: 'testimonials';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title: string;
         description?: string | null;
@@ -348,6 +537,27 @@ export interface Page {
         blockType: 'ctaBanner';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title: string;
         subtitle?: string | null;
@@ -364,6 +574,27 @@ export interface Page {
         blockType: 'stats';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title: string;
         subtitle?: string | null;
@@ -381,6 +612,27 @@ export interface Page {
         blockType: 'gallery';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title: string;
         subtitle?: string | null;
@@ -398,6 +650,27 @@ export interface Page {
         blockType: 'timeline';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title: string;
         content?: {
@@ -421,6 +694,27 @@ export interface Page {
         blockType: 'richText';
       }
     | {
+        /**
+         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         */
+        appearance: {
+          /**
+           * Paleta oficial de Promovêre.
+           */
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          /**
+           * Define el color de los textos para garantizar legibilidad.
+           */
+          theme: 'light' | 'dark';
+          /**
+           * Capa oscura para garantizar contraste si hay foto de fondo.
+           */
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
         badge?: string | null;
         title?: string | null;
         subtitle?: string | null;
@@ -661,6 +955,14 @@ export interface PagesSelect<T extends boolean = true> {
         hero?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               preTitle?: T;
               highlightedWord?: T;
@@ -679,6 +981,14 @@ export interface PagesSelect<T extends boolean = true> {
         services?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -703,6 +1013,14 @@ export interface PagesSelect<T extends boolean = true> {
         representations?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -725,6 +1043,14 @@ export interface PagesSelect<T extends boolean = true> {
         distribution?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -754,6 +1080,14 @@ export interface PagesSelect<T extends boolean = true> {
         partners?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -774,6 +1108,14 @@ export interface PagesSelect<T extends boolean = true> {
         contact?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -788,6 +1130,14 @@ export interface PagesSelect<T extends boolean = true> {
         faq?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -805,6 +1155,14 @@ export interface PagesSelect<T extends boolean = true> {
         testimonials?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -825,6 +1183,14 @@ export interface PagesSelect<T extends boolean = true> {
         ctaBanner?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               description?: T;
@@ -839,6 +1205,14 @@ export interface PagesSelect<T extends boolean = true> {
         stats?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -856,6 +1230,14 @@ export interface PagesSelect<T extends boolean = true> {
         gallery?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -874,6 +1256,14 @@ export interface PagesSelect<T extends boolean = true> {
         timeline?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;
@@ -892,6 +1282,14 @@ export interface PagesSelect<T extends boolean = true> {
         richText?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               content?: T;
@@ -902,6 +1300,14 @@ export interface PagesSelect<T extends boolean = true> {
         promovereAnimCounter?:
           | T
           | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    backgroundImage?: T;
+                  };
               badge?: T;
               title?: T;
               subtitle?: T;

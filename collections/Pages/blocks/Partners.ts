@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { createAppearanceField } from '../fields/appearance'
 
 export const PartnersBlock: Block = {
   slug: 'partners',
@@ -7,6 +8,10 @@ export const PartnersBlock: Block = {
     plural: 'Módulos Partners / Aliados',
   },
   fields: [
+    createAppearanceField({
+      defaultBackgroundColor: 'blancoHumo',
+      defaultTheme: 'light',
+    }),
     {
       name: 'badge',
       type: 'text',

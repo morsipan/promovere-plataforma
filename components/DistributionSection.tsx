@@ -1,5 +1,7 @@
+import Image from 'next/image';
 import { Globe, ArrowRight, CheckCircle2, MapPin } from 'lucide-react';
 import { distributionContent } from '@/data/content';
+import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface StatItemCMS {
   value: string;
@@ -15,6 +17,7 @@ interface ChannelItemCMS {
 
 interface DistributionSectionProps {
   data?: {
+    appearance?: AppearanceData;
     badge?: string;
     title?: string;
     subtitle?: string;
@@ -28,6 +31,13 @@ interface DistributionSectionProps {
 }
 
 export default function DistributionSection({ data }: DistributionSectionProps = {}) {
+  // Resolución dinámica de apariencia no-code
+  const sectionAppearance = resolveAppearance(data?.appearance, {
+    backgroundColor: 'grisOscuro',
+    theme: 'dark',
+    overlayOpacity: 'media',
+  });
+
   const badge = data?.badge || distributionContent.badge;
   const title = data?.title || distributionContent.title;
   const subtitle = data?.subtitle || distributionContent.subtitle;
@@ -40,13 +50,27 @@ export default function DistributionSection({ data }: DistributionSectionProps =
     data?.stats && data.stats.length > 0 ? data.stats : distributionContent.stats;
 
   return (
-    <section id="red" className="py-20 md:py-28 relative overflow-hidden bg-[#4d4e4f] text-white">
+    <section id="red" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
       {/* Background Gradients */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#4d4e4f] via-[#2c2d2e] to-[#113d5b] opacity-95" />
 
+      {/* Fondo de Imagen Opcional configurado en Apariencia */}
+      {sectionAppearance.backgroundImageUrl ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={sectionAppearance.backgroundImageUrl}
+            alt="Fondo decorativo de red"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className={`absolute inset-0 ${sectionAppearance.overlayClass}`} />
+        </div>
+      ) : null}
+
       {/* Decorative Grid */}
       <div
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-10 pointer-events-none"
         style={{
           backgroundImage: `linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), 
                             linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)`,
@@ -62,18 +86,24 @@ export default function DistributionSection({ data }: DistributionSectionProps =
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left Column: Content (7 cols) */}
           <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-[#3cac59] text-xs font-bold uppercase tracking-wider mb-6">
-              <Globe className="w-3.5 h-3.5" />
-              {badge}
-            </div>
+            {badge ? (
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-[#3cac59] text-xs font-bold uppercase tracking-wider mb-6">
+                <Globe className="w-3.5 h-3.5" />
+                {badge}
+              </div>
+            ) : null}
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-              {title}
-            </h2>
+            {title ? (
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black mb-6 leading-tight ${sectionAppearance.titleClass}`}>
+                {title}
+              </h2>
+            ) : null}
 
-            <p className="text-base sm:text-lg text-white/80 leading-relaxed mb-8">
-              {subtitle}
-            </p>
+            {subtitle ? (
+              <p className={`text-base sm:text-lg leading-relaxed mb-8 ${sectionAppearance.subtitleClass}`}>
+                {subtitle}
+              </p>
+            ) : null}
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 mb-10">
@@ -82,10 +112,10 @@ export default function DistributionSection({ data }: DistributionSectionProps =
                   key={stat.label || `stat-${idx}`}
                   className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-[#1b87c7]/50 transition-colors"
                 >
-                  <div className="text-3xl sm:text-4xl font-black text-[#3cac59] mb-1">
+                  <div className="text-3xl sm:text-4xl font-black text-[#3cac59] mb-1 font-heading">
                     {stat.value}
                   </div>
-                  <div className="text-white/70 text-xs sm:text-sm font-medium leading-tight">
+                  <div className="text-white/70 text-xs sm:text-sm font-medium leading-tight font-sans">
                     {stat.label}
                   </div>
                 </div>
@@ -94,19 +124,23 @@ export default function DistributionSection({ data }: DistributionSectionProps =
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <a
-                href={cta1Href}
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] transition-all shadow-lg shadow-[#1b87c7]/30 hover:-translate-y-0.5"
-              >
-                {cta1Label}
-                <ArrowRight className="w-4 h-4" />
-              </a>
-              <a
-                href={cta2Href}
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all"
-              >
-                {cta2Label}
-              </a>
+              {cta1Label ? (
+                <a
+                  href={cta1Href}
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] transition-all shadow-lg shadow-[#1b87c7]/30 hover:-translate-y-0.5"
+                >
+                  <span>{cta1Label}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              ) : null}
+              {cta2Label ? (
+                <a
+                  href={cta2Href}
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all"
+                >
+                  {cta2Label}
+                </a>
+              ) : null}
             </div>
           </div>
 
