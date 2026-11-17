@@ -95,7 +95,7 @@ export const Pages: CollectionConfig = {
           if (doc?.slug === 'home') {
             revalidatePath('/');
           }
-        } catch (e) {}
+        } catch (e) { }
         return doc;
       },
     ],
@@ -104,7 +104,7 @@ export const Pages: CollectionConfig = {
         try {
           const path = doc?.slug === 'home' ? '/' : `/${doc?.slug || ''}`;
           revalidatePath(path);
-        } catch (e) {}
+        } catch (e) { }
         return doc;
       },
     ],

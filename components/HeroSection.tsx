@@ -59,7 +59,7 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
         <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
           {preTitle ? <span>{preTitle} </span> : null}
           {highlightedWord ? (
-            <span className="text-[#1b87c7] font-heading drop-shadow-md">
+            <span className={`${sectionAppearance.accentTextClass} font-heading drop-shadow-md`}>
               {highlightedWord}
             </span>
           ) : null}
@@ -141,13 +141,13 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
 
         {/* Botones de Acción (CTAs Duales) */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
-          {/* CTA Principal - Azul Brillante */}
+          {/* CTA Principal */}
           {cta1Label ? (
             <a
               href={cta1Href}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#1b87c7] text-white font-bold text-base hover:bg-[#1571a8] active:bg-[#0f5b89] transition-all duration-200 shadow-xl shadow-[#1b87c7]/30 hover:-translate-y-0.5"
+              className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5 ${sectionAppearance.buttonClass}`}
             >
-              <Compass className="w-5 h-5 text-white" />
+              <Compass className="w-5 h-5 text-current" />
               <span>{cta1Label}</span>
               <ArrowRight className="w-5 h-5" />
             </a>

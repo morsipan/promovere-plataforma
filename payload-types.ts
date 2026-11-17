@@ -140,21 +140,15 @@ export interface Page {
   layout: (
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -202,21 +196,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -258,21 +246,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -306,21 +288,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -355,21 +331,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -401,21 +371,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -435,21 +399,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -472,21 +430,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -512,21 +464,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -546,21 +492,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -583,21 +523,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -621,21 +555,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -659,21 +587,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -703,21 +625,15 @@ export interface Page {
       }
     | {
         /**
-         * Personalizá el color de fondo, imagen y contraste de esta sección respetando el manual de marca y asegurando legibilidad.
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
          */
         appearance: {
-          /**
-           * Paleta oficial de Promovêre.
-           */
           backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
-          /**
-           * Define el color de los textos para garantizar legibilidad.
-           */
           theme: 'light' | 'dark';
-          /**
-           * Capa oscura para garantizar contraste si hay foto de fondo.
-           */
           overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
           /**
            * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
            */
@@ -979,6 +895,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1005,6 +924,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1037,6 +959,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1067,6 +992,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1104,6 +1032,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1132,6 +1063,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1154,6 +1088,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1179,6 +1116,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1207,6 +1147,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1229,6 +1172,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1254,6 +1200,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1280,6 +1229,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1306,6 +1258,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;
@@ -1324,6 +1279,9 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundColor?: T;
                     theme?: T;
                     overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
                     backgroundImage?: T;
                   };
               badge?: T;

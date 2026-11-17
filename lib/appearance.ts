@@ -12,11 +12,20 @@ export type ThemeKey = 'light' | 'dark';
 
 export type OverlayOpacityKey = 'ninguna' | 'sutil' | 'media' | 'intensa';
 
+export type AccentColorKey = 'azul' | 'verde' | 'grisOscuro' | 'blanco';
+
+export type ButtonColorKey = 'azul' | 'verde' | 'blanco' | 'oscuro';
+
+export type BadgeColorKey = 'verde' | 'azul' | 'gris' | 'blanco';
+
 export interface AppearanceData {
   backgroundColor?: BackgroundColorKey;
   theme?: ThemeKey;
   backgroundImage?: unknown;
   overlayOpacity?: OverlayOpacityKey;
+  accentColor?: AccentColorKey;
+  buttonColor?: ButtonColorKey;
+  badgeColor?: BadgeColorKey;
 }
 
 export interface SectionAppearance {
@@ -27,6 +36,10 @@ export interface SectionAppearance {
   subtitleClass: string;
   bodyClass: string;
   badgeClass: string;
+  buttonClass: string;
+  accentTextClass: string;
+  accentBgClass: string;
+  accentBorderClass: string;
   cardClass: string;
   cardTitleClass: string;
   cardSubtextClass: string;
@@ -37,7 +50,8 @@ export interface SectionAppearance {
 
 /**
  * Traduce el objeto de apariencia configurado en Payload CMS
- * a clases utilitarias de Tailwind CSS garantizando el contraste visual.
+ * a clases utilitarias de Tailwind CSS garantizando el contraste visual
+ * y la personalización de elementos individuales (botones, badges, acentos).
  */
 export function resolveAppearance(
   appearance?: AppearanceData,
@@ -45,6 +59,9 @@ export function resolveAppearance(
     backgroundColor?: BackgroundColorKey;
     theme?: ThemeKey;
     overlayOpacity?: OverlayOpacityKey;
+    accentColor?: AccentColorKey;
+    buttonColor?: ButtonColorKey;
+    badgeColor?: BadgeColorKey;
   } = {}
 ): SectionAppearance {
   const bg = appearance?.backgroundColor || defaults.backgroundColor || 'blancoHumo';
@@ -55,6 +72,13 @@ export function resolveAppearance(
     : 'light';
   const theme = appearance?.theme || defaults.theme || inferredTheme;
   const isDark = theme === 'dark';
+
+  const accent: AccentColorKey =
+    appearance?.accentColor || defaults.accentColor || (isDark ? 'verde' : 'azul');
+  const button: ButtonColorKey =
+    appearance?.buttonColor || defaults.buttonColor || 'azul';
+  const badge: BadgeColorKey =
+    appearance?.badgeColor || defaults.badgeColor || (isDark ? 'blanco' : 'verde');
 
   // 1. Mapeo de colores de fondo corporativos
   const bgClasses: Record<BackgroundColorKey, string> = {
@@ -94,10 +118,56 @@ export function resolveAppearance(
     ? 'text-white/80 font-sans'
     : 'text-[#4d4e4f]/75 font-sans';
 
+  // 4. Mapeo de acentos y elementos individuales
+  const accentTextClasses: Record<AccentColorKey, string> = {
+    azul: 'text-[#1b87c7]',
+    verde: 'text-[#3cac59]',
+    grisOscuro: 'text-[#4d4e4f]',
+    blanco: 'text-white',
+  };
+  const accentTextClass = accentTextClasses[accent] || 'text-[#1b87c7]';
+
+  const accentBgClasses: Record<AccentColorKey, string> = {
+    azul: 'bg-[#1b87c7]',
+    verde: 'bg-[#3cac59]',
+    grisOscuro: 'bg-[#4d4e4f]',
+    blanco: 'bg-white',
+  };
+  const accentBgClass = accentBgClasses[accent] || 'bg-[#1b87c7]';
+
+  const accentBorderClasses: Record<AccentColorKey, string> = {
+    azul: 'border-[#1b87c7]',
+    verde: 'border-[#3cac59]',
+    grisOscuro: 'border-[#4d4e4f]',
+    blanco: 'border-white',
+  };
+  const accentBorderClass = accentBorderClasses[accent] || 'border-[#1b87c7]';
+
+  // Botón Principal (CTA)
+  const buttonClasses: Record<ButtonColorKey, string> = {
+    azul: 'bg-[#1b87c7] text-white hover:bg-[#1571a8] shadow-lg shadow-[#1b87c7]/25',
+    verde: 'bg-[#3cac59] text-white hover:bg-[#32924a] shadow-lg shadow-[#3cac59]/25',
+    blanco: 'bg-white text-[#4d4e4f] hover:bg-gray-100 shadow-md',
+    oscuro: 'bg-[#4d4e4f] text-white hover:bg-[#3b3c3d] shadow-md',
+  };
+  const buttonClass = buttonClasses[button] || buttonClasses.azul;
+
   // Badges y píldoras
-  const badgeClass = isDark
-    ? 'bg-white/10 text-white border-white/20 backdrop-blur-sm'
-    : 'bg-[#1b87c7]/10 text-[#1b87c7] border-[#1b87c7]/20';
+  const badgeClasses: Record<BadgeColorKey, string> = {
+    verde: isDark
+      ? 'bg-[#3cac59]/20 text-[#3cac59] border-[#3cac59]/30 backdrop-blur-sm'
+      : 'bg-[#3cac59]/10 text-[#3cac59] border-[#3cac59]/20',
+    azul: isDark
+      ? 'bg-[#1b87c7]/20 text-[#1b87c7] border-[#1b87c7]/30 backdrop-blur-sm'
+      : 'bg-[#1b87c7]/10 text-[#1b87c7] border-[#1b87c7]/20',
+    gris: isDark
+      ? 'bg-white/10 text-white border-white/20 backdrop-blur-sm'
+      : 'bg-[#4d4e4f]/10 text-[#4d4e4f] border-[#4d4e4f]/20',
+    blanco: isDark
+      ? 'bg-white/20 text-white border-white/30 backdrop-blur-sm'
+      : 'bg-white text-[#4d4e4f] border-gray-200 shadow-sm',
+  };
+  const badgeClass = badgeClasses[badge] || (isDark ? badgeClasses.blanco : badgeClasses.verde);
 
   // Tarjetas internas
   const cardClass = isDark
@@ -122,6 +192,10 @@ export function resolveAppearance(
     subtitleClass,
     bodyClass,
     badgeClass,
+    buttonClass,
+    accentTextClass,
+    accentBgClass,
+    accentBorderClass,
     cardClass,
     cardTitleClass,
     cardSubtextClass,

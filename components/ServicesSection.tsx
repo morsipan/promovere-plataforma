@@ -102,7 +102,10 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service, index) => {
             const Icon = (service.icon && iconMap[service.icon]) || Briefcase;
-            const isGreenAccent = index % 2 === 1;
+            const isAccentExplicit = Boolean(data?.appearance?.accentColor);
+            const isGreenAccent = isAccentExplicit
+              ? data?.appearance?.accentColor === 'verde'
+              : index % 2 === 1;
 
             const highlights: string[] = Array.isArray(service.highlights)
               ? service.highlights
