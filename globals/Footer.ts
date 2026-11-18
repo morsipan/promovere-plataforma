@@ -24,6 +24,31 @@ export const Footer: GlobalConfig = {
   },
   fields: [
     {
+      type: 'row',
+      fields: [
+        {
+          name: 'logoImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: '1. Isotipo / Ícono del Footer',
+          admin: {
+            width: '50%',
+            description: 'Ícono gráfico para el pie de página. Si se omite, se muestra el isotipo estándar.',
+          },
+        },
+        {
+          name: 'logoTypeImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: '2. Logotipo Completo del Footer',
+          admin: {
+            width: '50%',
+            description: 'Imagen del logo completo (ej: logo en blanco/color para fondo oscuro del footer).',
+          },
+        },
+      ],
+    },
+    {
       name: 'brandDescription',
       type: 'textarea',
       label: 'Descripción Institucional',

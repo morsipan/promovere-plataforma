@@ -15,6 +15,7 @@ import { TimelineBlock } from './blocks/Timeline'
 import { RichTextBlock } from './blocks/RichTextBlock'
 import { PromovereAnimCounterBlock } from './blocks/PromovereAnimCounter'
 import { CommunityLandingBlock } from './blocks/CommunityLanding'
+import { FullWidthImageBlock } from './blocks/FullWidthImage'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -150,6 +151,7 @@ export const Pages: CollectionConfig = {
         RichTextBlock,
         PromovereAnimCounterBlock,
         CommunityLandingBlock,
+        FullWidthImageBlock,
       ],
     },
   ],

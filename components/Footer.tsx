@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
 import { footerContent, siteConfig } from '@/data/content';
+import { getMediaUrl } from '@/lib/media';
 
 function InstagramIcon({ className = 'w-4 h-4' }: { className?: string }) {
   return (
@@ -49,6 +51,8 @@ export interface FooterColumn {
 
 export interface FooterProps {
   data?: {
+    logoImage?: any;
+    logoTypeImage?: any;
     brandDescription?: string;
     columns?: FooterColumn[];
     copyrightText?: string;
@@ -78,6 +82,9 @@ export default function Footer({ data, settings }: FooterProps) {
   const copyrightText = data?.copyrightText || footerContent.legal;
   const disclaimerText = data?.disclaimerText;
 
+  const footerIsotypeUrl = getMediaUrl(data?.logoImage, '');
+  const footerLogoTypeUrl = getMediaUrl(data?.logoTypeImage, '');
+
   const columns =
     data?.columns && data.columns.length > 0 ? data.columns : footerContent.columns;
 
@@ -95,18 +102,43 @@ export default function Footer({ data, settings }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* Brand Column (4 cols) */}
           <div className="lg:col-span-4">
-            <Link href="/" className="inline-flex items-center gap-2 mb-5 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md">
-                <span className="text-white font-black text-base">P</span>
-              </div>
-              <div className="flex flex-col leading-tight">
-                <span className="text-white font-black text-xl tracking-tight">
-                  {companyName}
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#3cac59]">
-                  Turismo LATAM
-                </span>
-              </div>
+            <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
+              {/* Isotipo */}
+              {footerIsotypeUrl ? (
+                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm shrink-0 group-hover:scale-105 transition-transform">
+                  <Image
+                    src={footerIsotypeUrl}
+                    alt={companyName || 'Promovêre Isotipo'}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              ) : !footerLogoTypeUrl ? (
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform">
+                  <span className="text-white font-black text-base">P</span>
+                </div>
+              ) : null}
+
+              {/* Logotipo Imagen o Texto */}
+              {footerLogoTypeUrl ? (
+                <div className="relative h-9 w-36 sm:w-48">
+                  <Image
+                    src={footerLogoTypeUrl}
+                    alt={companyName}
+                    fill
+                    className="object-contain object-left"
+                  />
+                </div>
+              ) : (
+                <div className="flex flex-col leading-tight">
+                  <span className="text-white font-black text-xl tracking-tight">
+                    {companyName}
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#3cac59]">
+                    Turismo LATAM
+                  </span>
+                </div>
+              )}
             </Link>
 
             <p className="text-gray-300/80 text-xs sm:text-sm leading-relaxed mb-6 max-w-sm">

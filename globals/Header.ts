@@ -43,7 +43,32 @@ export const Header: GlobalConfig = {
           label: '2. Logotipo (Imagen del Logo completo)',
           admin: {
             width: '50%',
-            description: 'Imagen del logo completo (ej: logo-principal.svg). Si se adjunta, se muestra junto al isotipo.',
+            description: 'Imagen del logo completo (ej: logo-principal.svg para fondo claro con scroll).',
+          },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'logoImageTransparent',
+          type: 'upload',
+          relationTo: 'media',
+          label: '3. Isotipo para Navbar Transparente (Opcional)',
+          admin: {
+            width: '50%',
+            description: 'Isotipo para fondo transparente / hero inicial. Si se omite, se usa el isotipo principal.',
+          },
+        },
+        {
+          name: 'logoTypeImageTransparent',
+          type: 'upload',
+          relationTo: 'media',
+          label: '4. Logotipo para Navbar Transparente (Fondo Oscuro)',
+          admin: {
+            width: '50%',
+            description: 'Versión del logotipo (ej: logo blanco/claro) que se muestra al entrar al sitio cuando el navbar es transparente.',
           },
         },
       ],

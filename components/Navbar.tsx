@@ -20,6 +20,8 @@ export interface NavbarProps {
     tagline?: string;
     logoImage?: any;
     logoTypeImage?: any;
+    logoImageTransparent?: any;
+    logoTypeImageTransparent?: any;
     navItems?: NavItem[];
     ctaLabel?: string;
     ctaHref?: string;
@@ -40,6 +42,13 @@ export default function Navbar({ data }: NavbarProps) {
   const tagline = data?.tagline || 'Turismo LATAM';
   const isotypeImageUrl = getMediaUrl(data?.logoImage, '');
   const logoTypeImageUrl = getMediaUrl(data?.logoTypeImage, '');
+  const isotypeTransparentUrl = getMediaUrl(data?.logoImageTransparent, '');
+  const logoTypeTransparentUrl = getMediaUrl(data?.logoTypeImageTransparent, '');
+
+  // Logotipo e isotipo dinámicos: se prioriza la versión para fondo transparente cuando no hay scroll
+  const activeLogoTypeUrl = !scrolled && logoTypeTransparentUrl ? logoTypeTransparentUrl : logoTypeImageUrl;
+  const activeIsotypeUrl = !scrolled && isotypeTransparentUrl ? isotypeTransparentUrl : isotypeImageUrl;
+
   const items: Array<{ id?: string; label: string; href: string; newTab?: boolean | null }> =
     data?.navItems && data.navItems.length > 0 ? data.navItems : navLinks;
   const ctaLabel = data?.ctaLabel || 'Iniciar Sesión';
@@ -58,27 +67,27 @@ export default function Navbar({ data }: NavbarProps) {
           {/* Logo & Marca */}
           <Link href="/" suppressHydrationWarning className="flex items-center gap-2.5 sm:gap-3 group">
             {/* 1. Isotipo / Ícono */}
-            {isotypeImageUrl ? (
+            {activeIsotypeUrl ? (
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform shrink-0">
                 <Image
-                  src={isotypeImageUrl}
+                  src={activeIsotypeUrl}
                   alt={logoText || 'Promovêre Isotipo'}
                   fill
                   className="object-contain"
                   priority
                 />
               </div>
-            ) : !logoTypeImageUrl ? (
+            ) : !activeLogoTypeUrl ? (
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md shadow-[#1b87c7]/20 group-hover:scale-105 transition-transform shrink-0">
                 <span className="text-white font-black text-base tracking-tight">P</span>
               </div>
             ) : null}
 
             {/* 2. Logotipo: Imagen O Texto */}
-            {logoTypeImageUrl ? (
+            {activeLogoTypeUrl ? (
               <div className={`relative h-8 sm:h-9 w-32 sm:w-44 transition-all duration-300 ${!scrolled ? 'drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]' : ''}`}>
                 <Image
-                  src={logoTypeImageUrl}
+                  src={activeLogoTypeUrl}
                   alt={logoText || 'Promovêre'}
                   fill
                   className="object-contain object-left"

@@ -19,6 +19,7 @@ import GallerySection from '@/components/blocks/GallerySection';
 import TimelineSection from '@/components/blocks/TimelineSection';
 import RichTextSection from '@/components/blocks/RichTextSection';
 import PromovereAnimCounterSection from '@/components/blocks/PromovereAnimCounterSection';
+import FullWidthImageSection from '@/components/blocks/FullWidthImageSection';
 
 export interface PageLivePreviewProps {
   initialData: any;
@@ -113,6 +114,8 @@ export default function PageLivePreview({
         return <RichTextSection key={`block-${index}`} data={block} />;
       case 'promovereAnimCounter':
         return <PromovereAnimCounterSection key={`block-${index}`} data={block} />;
+      case 'fullWidthImage':
+        return <FullWidthImageSection key={`block-${index}`} data={block} />;
       default:
         return null;
     }
