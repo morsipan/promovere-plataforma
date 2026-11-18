@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import {
   Building2,
   Compass,
@@ -17,7 +16,6 @@ import {
   User as UserIcon,
   CheckCircle2,
   Phone,
-  Mail,
   MapPin,
 } from 'lucide-react';
 import type { User } from '@/payload-types';
@@ -28,7 +26,7 @@ export interface SidebarProps {
    * Datos del usuario obtenidos desde la sesión (Server Component).
    * Si no se especifica, UserProfileItem los consultará automáticamente vía REST.
    */
-  user?: Partial<User> | null;
+  user?: Partial<User> | any | null;
   /**
    * Estado de carga de la sesión.
    */
@@ -54,7 +52,6 @@ export default function Sidebar({
   onClose,
   className = '',
 }: SidebarProps) {
-  const pathname = usePathname();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -94,9 +91,12 @@ export default function Sidebar({
   const isAdminOrEditor = user?.role === 'admin' || user?.role === 'editor';
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-white text-[#4d4e4f] select-none">
+    <div
+      suppressHydrationWarning
+      className="flex flex-col h-full bg-white text-[#4d4e4f] select-none"
+    >
       {/* 1. Header del Sidebar */}
-      <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+      <div className="p-5 border-b border-gray-100 flex items-center justify-between shrink-0">
         <Link
           href="/comunidad/dashboard"
           onClick={onClose}
@@ -115,19 +115,19 @@ export default function Sidebar({
           </div>
         </Link>
 
-        {onClose && (
+        {onClose ? (
           <button
             type="button"
             onClick={onClose}
-            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-[#4d4e4f] hover:bg-slate-100 transition-colors"
+            className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-[#4d4e4f] hover:bg-slate-100 transition-colors"
             aria-label="Cerrar menú lateral"
           >
             <X className="w-5 h-5" />
           </button>
-        )}
+        ) : null}
       </div>
 
-      {/* 2. Cuerpo de Navegación y Accesos Rápidos (Scrollable si es necesario) */}
+      {/* 2. Cuerpo de Navegación y Accesos Rápidos (Scrollable) */}
       <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
         {/* Sección Principal */}
         <div>
@@ -180,7 +180,7 @@ export default function Sidebar({
               <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
             </Link>
 
-            {isAdminOrEditor && (
+            {isAdminOrEditor ? (
               <Link
                 href="/admin"
                 className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-purple-700 bg-purple-50/70 hover:bg-purple-100/70 border border-purple-100 transition-colors"
@@ -193,7 +193,7 @@ export default function Sidebar({
                   Admin
                 </span>
               </Link>
-            )}
+            ) : null}
           </div>
         </div>
 
@@ -210,7 +210,7 @@ export default function Sidebar({
       </div>
 
       {/* 3. Footer Absoluto: Perfil de Usuario (UserProfileItem) */}
-      <div className="mt-auto shrink-0 relative bg-white">
+      <div className="mt-auto shrink-0 relative bg-white border-t border-gray-100">
         <UserProfileItem
           user={user}
           loading={loading}
@@ -220,7 +220,7 @@ export default function Sidebar({
       </div>
 
       {/* Modal / Detalle de Perfil Interactivo al hacer clic en el UserProfileItem */}
-      {showProfileModal && (
+      {showProfileModal ? (
         <div
           className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4"
           onClick={() => setShowProfileModal(false)}
@@ -238,6 +238,7 @@ export default function Sidebar({
                 type="button"
                 onClick={() => setShowProfileModal(false)}
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                aria-label="Cerrar modal de perfil"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -253,24 +254,24 @@ export default function Sidebar({
               </div>
 
               <div className="space-y-2 text-xs text-slate-600 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                {user?.company && (
+                {user?.company ? (
                   <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                     <span suppressHydrationWarning className="truncate">{user.company}</span>
                   </div>
-                )}
-                {user?.phone && (
+                ) : null}
+                {user?.phone ? (
                   <div className="flex items-center gap-2">
                     <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                     <span suppressHydrationWarning>{user.phone}</span>
                   </div>
-                )}
-                {user?.country && (
+                ) : null}
+                {user?.country ? (
                   <div className="flex items-center gap-2">
                     <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                     <span suppressHydrationWarning>{user.country}</span>
                   </div>
-                )}
+                ) : null}
                 <div className="flex items-center gap-2 pt-1 border-t border-slate-200/60">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#3cac59] shrink-0" />
                   <span suppressHydrationWarning className="font-semibold text-slate-700">
@@ -293,22 +294,23 @@ export default function Sidebar({
             </div>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 
   return (
     <>
-      {/* Sidebar fijo en escritorio */}
+      {/* Sidebar fijo en escritorio y tablets (>= 768px) */}
       <aside
-        className={`hidden lg:flex flex-col w-72 h-screen sticky top-0 bg-white border-r border-gray-200 shadow-xs z-30 shrink-0 ${className}`}
+        suppressHydrationWarning
+        className={`hidden md:flex flex-col w-64 lg:w-72 h-screen sticky top-0 bg-white border-r border-gray-200 shadow-xs z-30 shrink-0 ${className}`}
       >
         {sidebarContent}
       </aside>
 
-      {/* Drawer móvil con overlay */}
-      {isOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex">
+      {/* Drawer móvil con overlay (< 768px) */}
+      {isOpen ? (
+        <div className="md:hidden fixed inset-0 z-50 flex">
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
             onClick={onClose}
@@ -317,7 +319,7 @@ export default function Sidebar({
             {sidebarContent}
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 }

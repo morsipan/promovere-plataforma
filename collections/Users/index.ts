@@ -59,6 +59,27 @@ export const Users: CollectionConfig = {
     // Eliminación restringida a Administrador
     delete: isAdmin,
   },
+  hooks: {
+    afterRead: [
+      async ({ doc, req }) => {
+        if (doc && doc.avatar && typeof doc.avatar === 'number' && req?.payload) {
+          try {
+            const media = await req.payload.findByID({
+              collection: 'media',
+              id: doc.avatar,
+              depth: 0,
+            });
+            if (media) {
+              doc.avatar = media;
+            }
+          } catch {
+            // Keep original doc if findByID fails
+          }
+        }
+        return doc;
+      },
+    ],
+  },
   fields: [
     {
       name: 'name',

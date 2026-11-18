@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import type { User, Media } from '@/payload-types';
+import { formatBlobUrl } from '@/lib/blob';
 
 export interface UserProfileItemProps {
   /**
    * Datos del usuario obtenidos de la sesión (Server Component o prop).
    * Si no se proporciona o es undefined, el componente consulta `/api/users/me`.
    */
-  user?: Partial<User> | null;
+  user?: Partial<User> | any | null;
   /**
    * Estado de carga explícito si se controla externamente.
    */
@@ -29,21 +30,24 @@ export interface UserProfileItemProps {
 }
 
 /**
- * Extrae la URL de la imagen del avatar en base al tipo de dato (Media, string o null).
+ * Extrae la URL de la imagen del avatar en base al tipo de dato (Media, string, objeto u id).
  */
-export function getAvatarUrl(avatar: (number | null) | Media | string | undefined): string | null {
+export function getAvatarUrl(avatar: any): string | null {
   if (!avatar) return null;
+
   if (typeof avatar === 'string' && avatar.trim().length > 0) {
-    return avatar;
+    return formatBlobUrl(avatar.trim());
   }
+
   if (typeof avatar === 'object' && avatar !== null) {
-    if (avatar.url && typeof avatar.url === 'string') {
-      return avatar.url;
+    if (avatar.url && typeof avatar.url === 'string' && avatar.url.trim().length > 0) {
+      return formatBlobUrl(avatar.url.trim());
     }
-    if (avatar.filename && typeof avatar.filename === 'string') {
-      return `/api/media/file/${avatar.filename}`;
+    if (avatar.filename && typeof avatar.filename === 'string' && avatar.filename.trim().length > 0) {
+      return `/api/media/file/${avatar.filename.trim()}`;
     }
   }
+
   return null;
 }
 
@@ -51,10 +55,10 @@ export function getAvatarUrl(avatar: (number | null) | Media | string | undefine
  * Obtiene la inicial en mayúscula a partir del nombre (o email si no hay nombre).
  */
 export function getInitial(name?: string | null, email?: string | null): string {
-  if (name && name.trim().length > 0) {
+  if (name && typeof name === 'string' && name.trim().length > 0) {
     return name.trim().charAt(0).toUpperCase();
   }
-  if (email && email.trim().length > 0) {
+  if (email && typeof email === 'string' && email.trim().length > 0) {
     return email.trim().charAt(0).toUpperCase();
   }
   return 'U';
@@ -64,7 +68,7 @@ export function getInitial(name?: string | null, email?: string | null): string 
  * Formatea y capitaliza el rol del usuario (ej. "Mayorista", "Admin").
  */
 export function formatRole(role?: string | null): string {
-  if (!role) return 'Usuario';
+  if (!role || typeof role !== 'string') return 'Usuario';
   const roleNames: Record<string, string> = {
     admin: 'Admin',
     editor: 'Editor',
@@ -85,13 +89,15 @@ export default function UserProfileItem({
   className = '',
   showChevron = false,
 }: UserProfileItemProps) {
-  const [user, setUser] = useState<Partial<User> | null>(initialUser ?? null);
+  const [user, setUser] = useState<Partial<User> | null>(
+    initialUser !== undefined ? initialUser : null
+  );
   const [isLoading, setIsLoading] = useState<boolean>(
     externalLoading ?? (initialUser === undefined)
   );
   const [imageError, setImageError] = useState<boolean>(false);
 
-  // Sincronizar o cargar sesión del usuario si no se proveyó inicialmente
+  // Sincronizar cambios en initialUser si cambia por navegación o SSR
   useEffect(() => {
     if (initialUser !== undefined) {
       setUser(initialUser);
@@ -149,6 +155,7 @@ export default function UserProfileItem({
   if (isLoading) {
     return (
       <div
+        suppressHydrationWarning
         className={`w-full border-t border-gray-200 p-4 flex items-center gap-3 animate-pulse bg-white/50 ${className}`}
         aria-busy="true"
         aria-label="Cargando perfil de usuario"
@@ -167,6 +174,7 @@ export default function UserProfileItem({
   if (!user) {
     return (
       <div
+        suppressHydrationWarning
         className={`w-full border-t border-gray-200 p-4 flex items-center gap-3 text-slate-400 text-xs italic ${className}`}
       >
         <span suppressHydrationWarning>Sesión no disponible</span>
@@ -174,14 +182,18 @@ export default function UserProfileItem({
     );
   }
 
-  const avatarUrl = !imageError ? getAvatarUrl(user.avatar) : null;
-  const initialLetter = getInitial(user.name, user.email);
-  const formattedRole = formatRole(user.role);
+  const currentUser = initialUser !== undefined && initialUser !== null ? initialUser : user;
+  const avatarUrl = !imageError ? getAvatarUrl(currentUser?.avatar) : null;
+  const initialLetter = getInitial(currentUser?.name, currentUser?.email);
+  const formattedRole = formatRole(currentUser?.role);
+  const displayName = currentUser?.name?.trim() || currentUser?.email?.trim() || 'Usuario';
+  const displayEmail = currentUser?.email?.trim() || '';
 
   return (
     <div
       role="button"
       tabIndex={0}
+      suppressHydrationWarning
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -189,24 +201,24 @@ export default function UserProfileItem({
           onClick?.();
         }
       }}
-      title={`Perfil de ${user.name || user.email}`}
+      title={`Perfil de ${displayName}`}
       className={`w-full border-t border-gray-200 p-4 hover:bg-[#f9f9f9] transition-colors cursor-pointer flex items-center gap-3 select-none text-left group ${className}`}
     >
       {/* A. Lógica del Avatar (Fallback) */}
       {avatarUrl ? (
         <Image
           src={avatarUrl}
-          alt={user.name || 'Foto de perfil'}
+          alt={displayName}
           width={40}
           height={40}
-          className="w-10 h-10 rounded-full object-cover shrink-0"
+          className="w-10 h-10 rounded-full object-cover shrink-0 border border-slate-200"
           onError={() => setImageError(true)}
-          unoptimized={avatarUrl.startsWith('/api/') || avatarUrl.startsWith('data:')}
+          unoptimized={true}
         />
       ) : (
         <div
           suppressHydrationWarning
-          className="w-10 h-10 rounded-full bg-[#3cac59] text-white flex items-center justify-center font-bold font-baloo shrink-0 text-base"
+          className="w-10 h-10 rounded-full bg-[#3cac59] text-white flex items-center justify-center font-bold font-baloo shrink-0 text-base shadow-xs"
           aria-hidden="true"
         >
           {initialLetter}
@@ -220,7 +232,7 @@ export default function UserProfileItem({
           suppressHydrationWarning
           className="font-roboto font-semibold text-sm text-[#4d4e4f] truncate leading-tight group-hover:text-black transition-colors"
         >
-          {user.name || user.email || 'Usuario'}
+          {displayName}
         </span>
 
         {/* Rol */}
@@ -232,17 +244,19 @@ export default function UserProfileItem({
         </span>
 
         {/* Email */}
-        <span
-          suppressHydrationWarning
-          className="text-xs text-gray-500 truncate leading-tight mt-0.5"
-          title={user.email || ''}
-        >
-          {user.email || ''}
-        </span>
+        {displayEmail ? (
+          <span
+            suppressHydrationWarning
+            className="text-xs text-gray-500 truncate leading-tight mt-0.5"
+            title={displayEmail}
+          >
+            {displayEmail}
+          </span>
+        ) : null}
       </div>
 
       {/* Indicador opcional de interactividad */}
-      {showChevron && (
+      {showChevron ? (
         <svg
           className="w-4 h-4 text-gray-400 group-hover:text-[#1b87c7] transition-colors shrink-0"
           fill="none"
@@ -252,7 +266,7 @@ export default function UserProfileItem({
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
-      )}
+      ) : null}
     </div>
   );
 }
