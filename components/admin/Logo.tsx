@@ -1,9 +1,15 @@
+'use client';
+
 import React from 'react';
 
 export const Logo: React.FC = () => {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 0' }}>
+    <div
+      suppressHydrationWarning
+      style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 0' }}
+    >
       <div
+        suppressHydrationWarning
         style={{
           width: '44px',
           height: '44px',
@@ -21,8 +27,12 @@ export const Logo: React.FC = () => {
       >
         P
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+      <div
+        suppressHydrationWarning
+        style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}
+      >
         <span
+          suppressHydrationWarning
           style={{
             fontSize: '22px',
             fontWeight: 900,
@@ -34,6 +44,7 @@ export const Logo: React.FC = () => {
           Promovêre
         </span>
         <span
+          suppressHydrationWarning
           style={{
             fontSize: '10px',
             fontWeight: 800,

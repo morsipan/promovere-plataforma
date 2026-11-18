@@ -54,6 +54,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     dateFormat: 'dd/MM/yyyy',
+    suppressHydrationWarning: true,
     importMap: {
       baseDir: path.resolve(dirname),
     },

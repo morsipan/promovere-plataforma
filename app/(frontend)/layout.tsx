@@ -43,7 +43,8 @@ export default function FrontendLayout({
   return (
     <html
       lang="es"
-      className={`${balooDa2.variable} ${roboto.variable} scroll-smooth`}
+      translate="no"
+      className={`${balooDa2.variable} ${roboto.variable} scroll-smooth notranslate`}
       suppressHydrationWarning
     >
       <body

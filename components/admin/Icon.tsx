@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
 
 export const Icon: React.FC = () => {
   return (
     <div
+      suppressHydrationWarning
       style={{
         width: '28px',
         height: '28px',
