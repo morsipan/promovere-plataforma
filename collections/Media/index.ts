@@ -1,9 +1,20 @@
+import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import type { CollectionConfig } from 'payload'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const staticDir = process.env.VERCEL
+  ? path.resolve('/tmp/media')
+  : path.resolve(dirname, '../../public/media')
+
+try {
+  if (!fs.existsSync(staticDir)) {
+    fs.mkdirSync(staticDir, { recursive: true })
+  }
+} catch {}
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -23,9 +34,7 @@ export const Media: CollectionConfig = {
   },
   upload: {
     // Si estamos en Vercel Serverless y aún no se configuró Blob/S3, usamos /tmp para evitar EROFS (read-only filesystem)
-    staticDir: process.env.VERCEL
-      ? path.resolve('/tmp/media')
-      : path.resolve(dirname, '../../public/media'),
+    staticDir,
     mimeTypes: [
       'image/*',
       'image/svg+xml',
