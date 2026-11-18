@@ -24,25 +24,60 @@ export const Header: GlobalConfig = {
   },
   fields: [
     {
-      name: 'logoText',
-      type: 'text',
-      label: 'Texto del Logotipo',
-      defaultValue: 'Promovêre',
-    },
-    {
-      name: 'tagline',
-      type: 'text',
-      label: 'Bajada del Logotipo',
-      defaultValue: 'Turismo LATAM',
-    },
-    {
-      name: 'logoImage',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Isotipo / Imagen de Marca (Opcional)',
+      type: 'collapsible',
+      label: 'Identidad Visual de Marca (Isotipo y Logotipo)',
       admin: {
-        description: 'Si no se adjunta, se renderiza el isotipo estilizado "P" oficial.',
+        initCollapsed: false,
       },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'logoImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: '1. Isotipo / Ícono de Marca (Símbolo)',
+              admin: {
+                width: '50%',
+                description: 'Ícono o símbolo gráfico (ej: el isotipo cuadrado de Promovêre). Si no se adjunta, se renderiza el isotipo estilizado "P".',
+              },
+            },
+            {
+              name: 'logoTypeImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: '2. Logotipo (Imagen del Logo completo)',
+              admin: {
+                width: '50%',
+                description: 'Imagen del logo completo (ej: logo-principal.svg). Si se adjunta, se muestra junto al isotipo.',
+              },
+            },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'logoText',
+              type: 'text',
+              label: 'Texto del Logotipo (Respaldo / Alt Text)',
+              defaultValue: 'Promovêre',
+              admin: { width: '50%' },
+            },
+            {
+              name: 'tagline',
+              type: 'text',
+              label: 'Bajada del Logotipo',
+              defaultValue: 'Turismo LATAM',
+              admin: {
+                width: '50%',
+                description: 'Visible cuando no se utiliza una imagen de logotipo.',
+              },
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'navItems',

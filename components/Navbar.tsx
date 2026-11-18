@@ -19,6 +19,7 @@ export interface NavbarProps {
     logoText?: string;
     tagline?: string;
     logoImage?: any;
+    logoTypeImage?: any;
     navItems?: NavItem[];
     ctaLabel?: string;
     ctaHref?: string;
@@ -37,7 +38,8 @@ export default function Navbar({ data }: NavbarProps) {
 
   const logoText = data?.logoText || siteConfig.name;
   const tagline = data?.tagline || 'Turismo LATAM';
-  const logoImageUrl = getMediaUrl(data?.logoImage, '');
+  const isotypeImageUrl = getMediaUrl(data?.logoImage, '');
+  const logoTypeImageUrl = getMediaUrl(data?.logoTypeImage, '');
   const items: Array<{ id?: string; label: string; href: string; newTab?: boolean | null }> =
     data?.navItems && data.navItems.length > 0 ? data.navItems : navLinks;
   const ctaLabel = data?.ctaLabel || 'Iniciar Sesión';
@@ -52,31 +54,54 @@ export default function Navbar({ data }: NavbarProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            {logoImageUrl ? (
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-md">
-                <Image src={logoImageUrl} alt={logoText} fill className="object-cover" />
+          {/* Logo & Marca */}
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group">
+            {/* 1. Isotipo / Ícono */}
+            {isotypeImageUrl ? (
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform shrink-0">
+                <Image
+                  src={isotypeImageUrl}
+                  alt={logoText || 'Promovêre Isotipo'}
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </div>
-            ) : (
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md shadow-[#1b87c7]/20 group-hover:scale-105 transition-transform">
+            ) : !logoTypeImageUrl ? (
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md shadow-[#1b87c7]/20 group-hover:scale-105 transition-transform shrink-0">
                 <span className="text-white font-black text-base tracking-tight">P</span>
               </div>
+            ) : null}
+
+            {/* 2. Logotipo: Imagen O Texto */}
+            {logoTypeImageUrl ? (
+              <div className={`relative h-8 sm:h-9 w-32 sm:w-44 transition-all duration-300 ${!scrolled ? 'drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]' : ''}`}>
+                <Image
+                  src={logoTypeImageUrl}
+                  alt={logoText || 'Promovêre'}
+                  fill
+                  className="object-contain object-left"
+                  priority
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col leading-tight">
+                <span
+                  className={`font-black text-xl tracking-tight transition-colors ${
+                    scrolled ? 'text-[#4d4e4f]' : 'text-white'
+                  }`}
+                >
+                  {logoText}
+                </span>
+                {tagline ? (
+                  <span
+                    className={`text-[10px] font-bold uppercase tracking-widest transition-colors text-[#3cac59]`}
+                  >
+                    {tagline}
+                  </span>
+                ) : null}
+              </div>
             )}
-            <div className="flex flex-col leading-tight">
-              <span
-                className={`font-black text-xl tracking-tight transition-colors ${scrolled ? 'text-[#4d4e4f]' : 'text-white'
-                  }`}
-              >
-                {logoText}
-              </span>
-              <span
-                className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${scrolled ? 'text-[#3cac59]' : 'text-[#3cac59]'
-                  }`}
-              >
-                {tagline}
-              </span>
-            </div>
           </Link>
 
           {/* Desktop Nav */}
