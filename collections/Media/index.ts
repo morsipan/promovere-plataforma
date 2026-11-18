@@ -49,7 +49,7 @@ export const Media: CollectionConfig = {
           if (doc.url.includes('.private.blob.vercel-storage.com/')) {
             const parts = doc.url.split('.private.blob.vercel-storage.com/');
             if (parts[1]) {
-              doc.url = `/api/blob-proxy/${parts[1]}`;
+              doc.url = `/api/media/file/${parts[1]}`;
             }
           }
         }
@@ -60,7 +60,7 @@ export const Media: CollectionConfig = {
               if (sizeObj.url.includes('.private.blob.vercel-storage.com/')) {
                 const parts = sizeObj.url.split('.private.blob.vercel-storage.com/');
                 if (parts[1]) {
-                  sizeObj.url = `/api/blob-proxy/${parts[1]}`;
+                  sizeObj.url = `/api/media/file/${parts[1]}`;
                 }
               }
             }

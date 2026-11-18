@@ -30,7 +30,7 @@ export function isVercelBlobEnabled(): boolean {
 }
 
 /**
- * Convierte URLs privadas de Vercel Blob en rutas locales de proxy (/api/blob-proxy/...)
+ * Convierte URLs privadas de Vercel Blob en rutas de entrega de medios (/api/media/file/...)
  * para que puedan ser visualizadas tanto en el panel de Payload CMS como en el frontend público.
  */
 export function formatBlobUrl(url: string | null | undefined): string {
@@ -39,7 +39,7 @@ export function formatBlobUrl(url: string | null | undefined): string {
   if (url.includes('.private.blob.vercel-storage.com/')) {
     const parts = url.split('.private.blob.vercel-storage.com/');
     if (parts[1]) {
-      return `/api/blob-proxy/${parts[1]}`;
+      return `/api/media/file/${parts[1]}`;
     }
   }
 
