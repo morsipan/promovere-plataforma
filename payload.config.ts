@@ -71,6 +71,7 @@ export default buildConfig({
         Logo: '/components/admin/Logo#Logo',
         Icon: '/components/admin/Icon#Icon',
       },
+      beforeNavLinks: ['/components/admin/AdminSidebarUser#AdminSidebarUser'],
     },
   },
   collections: [Pages, Users, CommunityContent, Media],
