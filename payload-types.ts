@@ -754,6 +754,18 @@ export interface Page {
            */
           theme: 'dark' | 'light';
           /**
+           * Define la separación vertical y presencia del banner.
+           */
+          height: 'small' | 'medium' | 'large';
+          /**
+           * Distribución espacial de los textos y botones.
+           */
+          layout: 'centered' | 'split';
+          /**
+           * Aplica efectos animados fluidos al entrar en pantalla.
+           */
+          enableAnimations?: boolean | null;
+          /**
            * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
            */
           backgroundColor?: ('blancoHumo' | 'grisOscuro' | 'verde' | 'azul') | null;
@@ -770,16 +782,16 @@ export interface Page {
          * Texto secundario en tipografía Roboto.
          */
         subtitle?: string | null;
-        cta?: {
-          label?: string | null;
-          url?: string | null;
-          /**
-           * Si se activa, muestra un botón circular únicamente con la flecha.
-           */
-          iconOnly?: boolean | null;
-        };
+        buttons?:
+          | {
+              label: string;
+              url: string;
+              style: 'primary' | 'secondary';
+              id?: string | null;
+            }[]
+          | null;
         /**
-         * Subí una tarjeta flotante, un logotipo (ej: Comunidad Promovêre) o un gráfico decorativo. Si está presente, el layout se dividirá en 2 columnas; de lo contrario, el texto se centrará.
+         * Subí una tarjeta flotante, un logotipo (ej: Comunidad Promovêre) o un gráfico decorativo.
          */
         secondaryGraphic?: (number | null) | Media;
         id?: string | null;
@@ -1482,17 +1494,21 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     backgroundStyle?: T;
                     theme?: T;
+                    height?: T;
+                    layout?: T;
+                    enableAnimations?: T;
                     backgroundColor?: T;
                     backgroundImage?: T;
                   };
               title?: T;
               subtitle?: T;
-              cta?:
+              buttons?:
                 | T
                 | {
                     label?: T;
                     url?: T;
-                    iconOnly?: T;
+                    style?: T;
+                    id?: T;
                   };
               secondaryGraphic?: T;
               id?: T;

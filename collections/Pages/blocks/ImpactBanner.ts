@@ -8,12 +8,12 @@ export const ImpactBannerBlock: Block = {
   },
   fields: [
     // =========================================================================
-    // 1. Grupo Apariencia (Fondo y Estilo)
+    // 1. Grupo Apariencia y Layout
     // =========================================================================
     {
       name: 'appearance',
       type: 'group',
-      label: 'Apariencia (Fondo y Estilo)',
+      label: 'Apariencia y Layout (Fondo, Alto y Disposición)',
       fields: [
         {
           type: 'row',
@@ -52,6 +52,52 @@ export const ImpactBannerBlock: Block = {
           ],
         },
         {
+          type: 'row',
+          fields: [
+            {
+              name: 'height',
+              type: 'select',
+              label: 'Altura del Banner',
+              defaultValue: 'medium',
+              required: true,
+              options: [
+                { label: 'Compacto / Small (py-12)', value: 'small' },
+                { label: 'Estándar / Medium (py-24)', value: 'medium' },
+                { label: 'Amplio / Large (py-32 / Hero)', value: 'large' },
+              ],
+              admin: {
+                width: '33.3%',
+                description: 'Define la separación vertical y presencia del banner.',
+              },
+            },
+            {
+              name: 'layout',
+              type: 'select',
+              label: 'Disposición del Contenido (Layout)',
+              defaultValue: 'centered',
+              required: true,
+              options: [
+                { label: 'Centrado (Todo el contenido al centro)', value: 'centered' },
+                { label: 'Split (Textos a la izquierda, botones/elementos a la derecha)', value: 'split' },
+              ],
+              admin: {
+                width: '33.3%',
+                description: 'Distribución espacial de los textos y botones.',
+              },
+            },
+            {
+              name: 'enableAnimations',
+              type: 'checkbox',
+              label: 'Activar animaciones de entrada (Framer Motion)',
+              defaultValue: true,
+              admin: {
+                width: '33.3%',
+                description: 'Aplica efectos animados fluidos al entrar en pantalla.',
+              },
+            },
+          ],
+        },
+        {
           name: 'backgroundColor',
           type: 'select',
           label: 'Color de Fondo Sólido',
@@ -85,7 +131,7 @@ export const ImpactBannerBlock: Block = {
     },
 
     // =========================================================================
-    // 2. Grupo Contenido Principal
+    // 2. Grupo Contenido Principal y CTAs
     // =========================================================================
     {
       name: 'title',
@@ -108,9 +154,21 @@ export const ImpactBannerBlock: Block = {
       },
     },
     {
-      name: 'cta',
-      type: 'group',
-      label: 'Llamado a la Acción (Botón CTA)',
+      name: 'buttons',
+      type: 'array',
+      label: 'Botones de Acción (CTAs)',
+      maxRows: 2,
+      labels: {
+        singular: 'Botón',
+        plural: 'Botones',
+      },
+      defaultValue: [
+        {
+          label: 'Conocer Más',
+          url: '#contacto',
+          style: 'primary',
+        },
+      ],
       fields: [
         {
           type: 'row',
@@ -119,28 +177,27 @@ export const ImpactBannerBlock: Block = {
               name: 'label',
               type: 'text',
               label: 'Texto del Botón',
-              defaultValue: 'Conocer Más',
-              admin: {
-                width: '40%',
-                condition: (_, siblingData) => !siblingData?.iconOnly,
-              },
+              required: true,
+              admin: { width: '40%' },
             },
             {
               name: 'url',
               type: 'text',
-              label: 'Enlace de Destino (URL o #seccion)',
-              defaultValue: '#contacto',
+              label: 'Enlace / URL de Destino',
+              required: true,
               admin: { width: '40%' },
             },
             {
-              name: 'iconOnly',
-              type: 'checkbox',
-              label: 'Solo Icono de Flecha (Newsletter/Compacto)',
-              defaultValue: false,
-              admin: {
-                width: '20%',
-                description: 'Si se activa, muestra un botón circular únicamente con la flecha.',
-              },
+              name: 'style',
+              type: 'select',
+              label: 'Estilo Visual',
+              defaultValue: 'primary',
+              required: true,
+              options: [
+                { label: 'Primario (Relleno Sólido)', value: 'primary' },
+                { label: 'Secundario (Outline / Borde)', value: 'secondary' },
+              ],
+              admin: { width: '20%' },
             },
           ],
         },
@@ -154,10 +211,10 @@ export const ImpactBannerBlock: Block = {
       name: 'secondaryGraphic',
       type: 'upload',
       relationTo: 'media',
-      label: 'Elemento Visual Secundario (Opcional a la derecha)',
+      label: 'Elemento Visual Secundario (Opcional)',
       admin: {
         description:
-          'Subí una tarjeta flotante, un logotipo (ej: Comunidad Promovêre) o un gráfico decorativo. Si está presente, el layout se dividirá en 2 columnas; de lo contrario, el texto se centrará.',
+          'Subí una tarjeta flotante, un logotipo (ej: Comunidad Promovêre) o un gráfico decorativo.',
       },
     },
   ],
