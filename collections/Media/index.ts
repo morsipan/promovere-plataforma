@@ -32,6 +32,34 @@ export const Media: CollectionConfig = {
     update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
     delete: ({ req: { user } }) => Boolean(user?.role === 'admin'),
   },
+  hooks: {
+    beforeOperation: [
+      () => {
+        try {
+          if (!fs.existsSync(staticDir)) {
+            fs.mkdirSync(staticDir, { recursive: true });
+          }
+        } catch (e) {}
+      },
+    ],
+    afterError: [
+      ({ error }) => {
+        console.error('PAYLOAD MEDIA ERROR:', error);
+        return {
+          response: {
+            errors: [
+              {
+                message: error?.message || 'Media upload error',
+                name: error?.name,
+                stack: error?.stack,
+              },
+            ],
+          },
+          status: 500,
+        };
+      },
+    ],
+  },
   upload: {
     // Si estamos en Vercel Serverless y aún no se configuró Blob/S3, usamos /tmp para evitar EROFS (read-only filesystem)
     staticDir,

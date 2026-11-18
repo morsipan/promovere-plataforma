@@ -52,6 +52,7 @@ const blobToken = rawBlobToken.trim().replace(/^["']|["']$/g, '');
 const isBlobEnabled = Boolean(blobToken && /^vercel_blob_rw_/i.test(blobToken));
 
 export default buildConfig({
+  debug: true,
   i18n: {
     supportedLanguages: { es },
     fallbackLanguage: 'es',

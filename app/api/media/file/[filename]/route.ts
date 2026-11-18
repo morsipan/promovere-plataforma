@@ -32,6 +32,7 @@ export async function GET(
     path.join(process.cwd(), 'public', 'assets', 'WebP', filename),
     path.join(process.cwd(), 'public', 'assets', filename),
     path.join('/tmp', 'media', filename),
+    path.join('/tmp', filename),
   ];
 
   for (const filePath of possiblePaths) {
