@@ -305,12 +305,12 @@ export default function PromovereAnimCounterSection({ data }: PromovereAnimCount
     count === 1
       ? 'grid-cols-1 max-w-md mx-auto'
       : count === 2
-      ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto'
-      : count === 3
-      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto'
-      : count === 4
-      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto'
-      : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5';
+        ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto'
+        : count === 3
+          ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto'
+          : count === 4
+            ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto'
+            : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5';
 
   return (
     <section id="contadores" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>

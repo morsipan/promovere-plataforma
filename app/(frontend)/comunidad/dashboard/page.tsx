@@ -25,6 +25,28 @@ import {
 
 export const dynamic = 'force-dynamic';
 
+function extractPlainText(content: any): string {
+  if (!content) return '';
+  if (typeof content === 'string') return content;
+  if (typeof content === 'object' && content.root?.children) {
+    try {
+      const texts: string[] = [];
+      const traverse = (node: any) => {
+        if (!node) return;
+        if (typeof node.text === 'string') texts.push(node.text);
+        if (Array.isArray(node.children)) {
+          node.children.forEach(traverse);
+        }
+      };
+      traverse(content.root);
+      return texts.join(' ').trim();
+    } catch {
+      return '';
+    }
+  }
+  return '';
+}
+
 export default async function ComunidadDashboardPage() {
   const payload = await getPayload({ config });
   const headersList = await headers();
@@ -232,7 +254,7 @@ export default async function ComunidadDashboardPage() {
                   </p>
 
                   <p className="text-xs text-white/80 leading-relaxed line-clamp-3 mb-4">
-                    {item.description}
+                    {extractPlainText(item.description)}
                   </p>
 
                   <div className="pt-3 border-t border-white/20 flex items-center justify-between text-xs text-white">
@@ -391,37 +413,47 @@ export default async function ComunidadDashboardPage() {
                       {item.title}
                     </h3>
                     <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 mb-4">
-                      {item.description}
+                      {extractPlainText(item.description)}
                     </p>
                   </div>
 
                   {/* Archivos Descargables */}
-                  <div className="pt-4 border-t border-slate-100">
-                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                      Descargas Disponibles ({item.downloadableFiles?.length || 0}):
-                    </span>
-                    {item.downloadableFiles && item.downloadableFiles.length > 0 ? (
-                      <div className="space-y-1.5">
-                        {item.downloadableFiles.map((file: any, idx: number) => (
-                          <a
-                            key={idx}
-                            href={file.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-[#f0f7fc] border border-slate-100 text-xs font-semibold text-[#4d4e4f] hover:text-[#1b87c7] transition-colors"
-                          >
-                            <span className="flex items-center gap-2 truncate">
-                              <FileText className="w-3.5 h-3.5 text-[#1b87c7] shrink-0" />
-                              <span className="truncate">{file.name}</span>
-                            </span>
-                            <Download className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          </a>
-                        ))}
+                  {(() => {
+                    const attachments = (Array.isArray(item.attachments) ? item.attachments : []).map((att: any) => ({
+                      name: typeof att === 'object' ? att.filename || att.alt || att.title || 'Archivo descargable' : 'Archivo descargable',
+                      url: typeof att === 'object' ? att.url || `/api/media/file/${att.filename}` : '',
+                    }));
+                    const allDownloads = [...(item.downloadableFiles || []), ...attachments].filter((d: any) => Boolean(d.url));
+
+                    return (
+                      <div className="pt-4 border-t border-slate-100">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                          Descargas Disponibles ({allDownloads.length}):
+                        </span>
+                        {allDownloads.length > 0 ? (
+                          <div className="space-y-1.5">
+                            {allDownloads.map((file: any, idx: number) => (
+                              <a
+                                key={idx}
+                                href={file.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between p-2 rounded-xl bg-slate-50 hover:bg-[#f0f7fc] border border-slate-100 text-xs font-semibold text-[#4d4e4f] hover:text-[#1b87c7] transition-colors"
+                              >
+                                <span className="flex items-center gap-2 truncate">
+                                  <FileText className="w-3.5 h-3.5 text-[#1b87c7] shrink-0" />
+                                  <span className="truncate">{file.name}</span>
+                                </span>
+                                <Download className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                              </a>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-slate-400 italic">No incluye adjuntos</span>
+                        )}
                       </div>
-                    ) : (
-                      <span className="text-xs text-slate-400 italic">No incluye adjuntos</span>
-                    )}
-                  </div>
+                    );
+                  })()}
                 </div>
               ))}
             </div>

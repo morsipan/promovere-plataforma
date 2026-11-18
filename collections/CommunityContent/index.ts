@@ -1,34 +1,75 @@
-import type { Access, CollectionConfig } from 'payload'
+import type { Access, CollectionConfig, Where } from 'payload'
+import {
+  lexicalEditor,
+  BoldFeature,
+  ItalicFeature,
+  UnderlineFeature,
+  LinkFeature,
+  UnorderedListFeature,
+  OrderedListFeature,
+  HeadingFeature,
+  ParagraphFeature,
+} from '@payloadcms/richtext-lexical'
 
-// Control de acceso para lectura del contenido de comunidad
+/**
+ * Control de Acceso para Lectura (Read Access Control):
+ * - Administradores y Editores de Promovêre: Visibilidad total (auditoría y gestión).
+ * - Usuarios no autenticados: CERO visibilidad (bloqueo total).
+ * - Operadores Mayoristas: Visualizan contenidos donde 'visibleFor' incluye 'mayorista'.
+ * - Agencias Minoristas: Visualizan contenidos donde 'visibleFor' incluye 'minorista',
+ *   con EXCLUSIÓN ESTRICTA Y ABSOLUTA de contenidos clasificados como 'contratos'
+ *   o títulos que contengan tarifarios confidenciales.
+ */
 export const canReadCommunityContent: Access = ({ req: { user } }) => {
   if (!user) return false
 
-  // Administradores y Editores de Promovêre tienen visibilidad completa
-  if (['admin', 'editor'].includes(user.role)) return true
-
-  // Operadores mayoristas ven contenido general y exclusivo mayorista
-  if (user.role === 'mayorista') {
-    return {
-      accessibleTo: {
-        in: ['all', 'mayorista'],
-      },
-    }
+  // Administradores y Editores internos tienen acceso completo
+  if (user.role && ['admin', 'editor'].includes(user.role)) {
+    return true
   }
 
-  // Agencias minoristas ven contenido general y exclusivo minorista
-  if (user.role === 'minorista') {
-    return {
-      accessibleTo: {
-        in: ['all', 'minorista'],
+  // Operadores mayoristas ven contenido segmentado para su rol
+  if (user.role === 'mayorista') {
+    const mayoristaQuery: Where = {
+      visibleFor: {
+        contains: 'mayorista',
       },
     }
+    return mayoristaQuery
+  }
+
+  // Agencias minoristas: Solo contenido permitido expresamente para minoristas
+  // Regla de Negocio: Bajo ninguna circunstancia pueden acceder a contratos ni tarifarios
+  if (user.role === 'minorista') {
+    const minoristaQuery: Where = {
+      and: [
+        {
+          visibleFor: {
+            contains: 'minorista',
+          },
+        },
+        {
+          category: {
+            not_equals: 'contratos',
+          },
+        },
+        {
+          title: {
+            not_like: '%tarif%',
+          },
+        },
+      ],
+    }
+    return minoristaQuery
   }
 
   return false
 }
 
-// Control de mutaciones: Solo administradores y editores internos
+/**
+ * Control de Acceso para Mutaciones (Create, Update, Delete):
+ * Restringido exclusivamente al equipo interno de Promovêre (admin y editor).
+ */
 export const canManageCommunityContent: Access = ({ req: { user } }) => {
   return Boolean(user?.role && ['admin', 'editor'].includes(user.role))
 }
@@ -36,15 +77,15 @@ export const canManageCommunityContent: Access = ({ req: { user } }) => {
 export const CommunityContent: CollectionConfig = {
   slug: 'community-content',
   labels: {
-    singular: 'Contenido de Comunidad',
-    plural: 'Contenidos de Comunidad',
+    singular: 'Contenido Privado de Comunidad',
+    plural: 'Contenidos Privados de Comunidad',
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'accessibleTo', 'updatedAt'],
+    defaultColumns: ['title', 'category', 'visibleFor', 'updatedAt'],
     group: 'Comunidad Trade',
     description:
-      'Recursos comerciales, manuales y herramientas para la Comunidad Promovêre. (Aviso: No publicar tarifas ni precios confidenciales).',
+      'Recursos privados, herramientas comerciales y documentación para la Comunidad Promovêre (Operadores Mayoristas y Agencias Minoristas).',
   },
   access: {
     read: canReadCommunityContent,
@@ -52,124 +93,134 @@ export const CommunityContent: CollectionConfig = {
     update: canManageCommunityContent,
     delete: canManageCommunityContent,
   },
+  hooks: {
+    beforeValidate: [
+      ({ data }) => {
+        if (!data) return data
+
+        const isContract = data.category === 'contratos'
+        const titleHasTariff = Boolean(
+          data.title &&
+          /(tarif|tarifa|precios?|contrato|acuerdo|confidencial)/i.test(data.title)
+        )
+
+        // Regla de Negocio Estricta:
+        // Contenidos categorizados como "contratos" o que contengan tarifarios
+        // quedan estrictamente limitados por defecto al rol "mayorista".
+        if (isContract || titleHasTariff) {
+          data.visibleFor = ['mayorista']
+        } else if (!data.visibleFor || (Array.isArray(data.visibleFor) && data.visibleFor.length === 0)) {
+          data.visibleFor = ['mayorista', 'minorista']
+        }
+
+        return data
+      },
+    ],
+  },
   fields: [
     {
       name: 'title',
       type: 'text',
-      label: 'Título del Recurso / Novedad',
+      label: 'Título de la Publicación',
       required: true,
+      admin: {
+        description: 'Nombre descriptivo del recurso, herramienta, promoción o contrato.',
+      },
     },
     {
       name: 'category',
       type: 'select',
       label: 'Categoría de Contenido',
       required: true,
-      defaultValue: 'promociones',
+      defaultValue: 'novedades',
       options: [
-        { label: 'Representaciones (Hoteles & Destinos)', value: 'representaciones' },
-        { label: 'Novedades (Promo News & Prensa)', value: 'novedades' },
-        { label: 'Herramientas de Gestión Comercial', value: 'herramientas' },
-        { label: 'Promociones & Acciones Trade', value: 'promociones' },
-        { label: 'Fichas Técnicas de Hoteles & Destinos', value: 'fichas' },
-        { label: 'Manuales de Venta & Presentaciones', value: 'manuales' },
-        { label: 'Capacitaciones & Webinars', value: 'capacitaciones' },
-        { label: 'Kits de Marketing & Redes Sociales', value: 'marketing' },
-      ],
-    },
-    {
-      type: 'row',
-      fields: [
-        {
-          name: 'brand',
-          type: 'text',
-          label: 'Marca / Cadena (para Representaciones)',
-          admin: { width: '50%' },
-        },
-        {
-          name: 'country',
-          type: 'text',
-          label: 'País / Región (para Representaciones)',
-          admin: { width: '50%' },
-        },
-      ],
-    },
-    {
-      name: 'image',
-      type: 'text',
-      label: 'URL de Imagen de Portada / Destino (para Representaciones o Novedades)',
-    },
-    {
-      name: 'accessibleTo',
-      type: 'select',
-      label: 'Nivel de Acceso / Segmentación',
-      required: true,
-      defaultValue: 'all',
-      options: [
-        {
-          label: 'Toda la Comunidad (Mayoristas y Minoristas)',
-          value: 'all',
-        },
-        {
-          label: 'Exclusivo para Operadores Mayoristas',
-          value: 'mayorista',
-        },
-        {
-          label: 'Exclusivo para Agencias Minoristas',
-          value: 'minorista',
-        },
+        { label: 'Herramientas', value: 'herramientas' },
+        { label: 'Material Comercial', value: 'material_comercial' },
+        { label: 'Novedades', value: 'novedades' },
+        { label: 'Promociones', value: 'promociones' },
+        { label: 'Contratos (Exclusivo Mayoristas)', value: 'contratos' },
       ],
       admin: {
         description:
-          'Define qué perfiles de la Comunidad pueden visualizar y descargar este recurso.',
+          'Seleccioná la categoría. Aviso: Los contratos y acuerdos quedan automáticamente restringidos al rol Mayorista.',
       },
     },
     {
       name: 'description',
-      type: 'textarea',
-      label: 'Descripción / Instrucciones Comerciales',
+      type: 'richText',
+      label: 'Descripción / Contenido (Rich Text Restringido)',
       required: true,
+      editor: lexicalEditor({
+        features: () => [
+          ParagraphFeature(),
+          HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+          BoldFeature(),
+          ItalicFeature(),
+          UnderlineFeature(),
+          LinkFeature({
+            enabledCollections: ['media'],
+          }),
+          UnorderedListFeature(),
+          OrderedListFeature(),
+        ],
+      }),
+      admin: {
+        description:
+          'Texto estructurado, especificaciones comerciales e instrucciones para el canal.',
+      },
+    },
+    {
+      name: 'attachments',
+      type: 'upload',
+      relationTo: 'media',
+      hasMany: true,
+      label: 'Archivos Adjuntos (Upload / Media Descargables)',
+      admin: {
+        description:
+          'Adjuntá los documentos comerciales, PDFs, fichas técnicas, contratos o kits descargables.',
+      },
+    },
+    {
+      name: 'visibleFor',
+      type: 'select',
+      hasMany: true,
+      label: 'Restricción de Visibilidad (Roles Permitidos)',
+      required: true,
+      defaultValue: ['mayorista', 'minorista'],
+      options: [
+        { label: 'Operador Mayorista (mayorista)', value: 'mayorista' },
+        { label: 'Agencia Minorista (minorista)', value: 'minorista' },
+      ],
+      admin: {
+        description:
+          'Selecciona qué perfiles de la Comunidad pueden visualizar y descargar este recurso.',
+      },
+    },
+    // Metadatos complementarios para potenciar la experiencia del dashboard
+    {
+      name: 'brand',
+      type: 'text',
+      label: 'Marca / Cadena Relacionada (Opcional)',
+      admin: {
+        position: 'sidebar',
+      },
     },
     {
       name: 'highlight',
       type: 'text',
-      label: 'Destacado / Tag (ej: Nuevo, Temporada 2026, Cupos Limitados)',
-    },
-    {
-      name: 'downloadableFiles',
-      type: 'array',
-      label: 'Archivos y Recursos Descargables',
-      fields: [
-        {
-          name: 'name',
-          type: 'text',
-          label: 'Nombre del Archivo / Documento',
-          required: true,
-        },
-        {
-          name: 'url',
-          type: 'text',
-          label: 'URL de Descarga directa (PDF, Presentación, Drive, etc.)',
-          required: true,
-        },
-        {
-          name: 'fileType',
-          type: 'select',
-          label: 'Tipo de Formato',
-          defaultValue: 'PDF',
-          options: [
-            { label: 'Documento PDF', value: 'PDF' },
-            { label: 'Presentación PPTX', value: 'PPTX' },
-            { label: 'Carpeta de Imágenes / Assets', value: 'ZIP' },
-            { label: 'Enlace / Video Webinar', value: 'VIDEO' },
-          ],
-        },
-      ],
+      label: 'Tag Destacado (ej: Nuevo, Vigente, Cupos Limitados)',
+      admin: {
+        position: 'sidebar',
+      },
     },
     {
       name: 'featured',
       type: 'checkbox',
-      label: 'Destacar en el Inicio del Dashboard',
+      label: 'Destacar en Dashboard',
       defaultValue: false,
+      admin: {
+        position: 'sidebar',
+      },
     },
   ],
 }

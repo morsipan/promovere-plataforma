@@ -10,6 +10,11 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
+// ==============================================================================
+// Promovêre CMS — Arquitectura Payload CMS 3.0 (Next.js 15 App Router)
+// Conexión nativa a Supabase PostgreSQL vía @payloadcms/db-postgres
+// Colecciones Privadas: Users (RBAC) y CommunityContent (Portal B2B)
+// ==============================================================================
 import { Users } from './collections/Users'
 import { Pages } from './collections/Pages'
 import { CommunityContent } from './collections/CommunityContent'
