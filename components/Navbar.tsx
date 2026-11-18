@@ -25,6 +25,7 @@ export interface NavbarProps {
     navItems?: NavItem[];
     ctaLabel?: string;
     ctaHref?: string;
+    ctaShowIcon?: boolean;
   } | null;
 }
 
@@ -141,7 +142,9 @@ export default function Navbar({ data }: NavbarProps) {
               suppressHydrationWarning
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] active:bg-[#0f5b89] shadow-lg shadow-[#1b87c7]/25 hover:-translate-y-0.5 transition-all duration-200"
             >
-              <Sparkles className="w-4 h-4 text-[#3cac59]" />
+              {data?.ctaShowIcon !== false && (
+                <Sparkles className="w-4 h-4 text-[#3cac59]" />
+              )}
               <span suppressHydrationWarning>{ctaLabel}</span>
             </Link>
           </div>
@@ -185,7 +188,9 @@ export default function Navbar({ data }: NavbarProps) {
               onClick={() => setIsOpen(false)}
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#1b87c7] text-white font-bold text-sm shadow-md shadow-[#1b87c7]/30"
             >
-              <Sparkles className="w-4 h-4 text-[#3cac59]" />
+              {data?.ctaShowIcon !== false && (
+                <Sparkles className="w-4 h-4 text-[#3cac59]" />
+              )}
               <span>{ctaLabel}</span>
               <ArrowUpRight className="w-4 h-4" />
             </Link>

@@ -8,6 +8,7 @@ interface HeroSectionProps {
   data?: {
     appearance?: AppearanceData;
     badge?: string;
+    showBadgeIcon?: boolean;
     preTitle?: string;
     highlightedWord?: string;
     titleSuffix?: string;
@@ -131,7 +132,9 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
         {/* Badge Institucional */}
         {badge ? (
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 shadow-sm ${sectionAppearance.badgeClass}`}>
-            <span className="w-2 h-2 rounded-full bg-[#3cac59] animate-pulse" />
+            {data?.showBadgeIcon !== false && (
+              <span className="w-2 h-2 rounded-full bg-[#3cac59] animate-pulse" />
+            )}
             <span className="text-xs sm:text-sm font-semibold tracking-wide uppercase font-sans">
               {badge}
             </span>

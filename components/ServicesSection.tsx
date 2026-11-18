@@ -10,10 +10,21 @@ import {
   TrendingUp,
   Globe,
   Star,
+  Building2,
+  Plane,
+  Handshake,
+  ShieldCheck,
+  Award,
+  Sparkles,
+  MapPin,
+  Heart,
+  Phone,
+  Tag,
   LucideIcon,
 } from 'lucide-react';
 import { servicesContent } from '@/data/content';
 import { resolveAppearance, AppearanceData } from '@/lib/appearance';
+import { getMediaUrl } from '@/lib/media';
 
 const iconMap: Record<string, LucideIcon> = {
   Briefcase,
@@ -25,6 +36,16 @@ const iconMap: Record<string, LucideIcon> = {
   TrendingUp,
   Globe,
   Star,
+  Building2,
+  Plane,
+  Handshake,
+  ShieldCheck,
+  Award,
+  Sparkles,
+  MapPin,
+  Heart,
+  Phone,
+  Tag,
 };
 
 interface ServiceItemCMS {
@@ -33,6 +54,7 @@ interface ServiceItemCMS {
   subtitle?: string;
   description: string;
   icon?: string;
+  customIcon?: any;
   highlights?: Array<{ item: string } | string>;
 }
 
@@ -101,7 +123,10 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service, index) => {
-            const Icon = (service.icon && iconMap[service.icon]) || Briefcase;
+            const customIcon = 'customIcon' in service ? (service as ServiceItemCMS).customIcon : undefined;
+            const customIconUrl = getMediaUrl(customIcon, '');
+            const hasIcon = service.icon !== 'none' || Boolean(customIconUrl);
+            const Icon = service.icon && service.icon !== 'none' ? iconMap[service.icon] || Briefcase : null;
             const isAccentExplicit = Boolean(data?.appearance?.accentColor);
             const isGreenAccent = isAccentExplicit
               ? data?.appearance?.accentColor === 'verde'
@@ -120,16 +145,29 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
               >
                 <div>
                   {/* Icon Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div
-                      className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors duration-300 ${
-                        isGreenAccent
-                          ? 'bg-[#3cac59]/10 text-[#3cac59] group-hover:bg-[#3cac59] group-hover:text-white'
-                          : 'bg-[#1b87c7]/10 text-[#1b87c7] group-hover:bg-[#1b87c7] group-hover:text-white'
-                      }`}
-                    >
-                      <Icon className="w-7 h-7" />
-                    </div>
+                  <div className={`flex items-center ${hasIcon ? 'justify-between' : 'justify-end'} mb-6`}>
+                    {hasIcon && (
+                      <div
+                        className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors duration-300 ${
+                          isGreenAccent
+                            ? 'bg-[#3cac59]/10 text-[#3cac59] group-hover:bg-[#3cac59] group-hover:text-white'
+                            : 'bg-[#1b87c7]/10 text-[#1b87c7] group-hover:bg-[#1b87c7] group-hover:text-white'
+                        }`}
+                      >
+                        {customIconUrl ? (
+                          <div className="relative w-7 h-7">
+                            <Image
+                              src={customIconUrl}
+                              alt={service.title}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                        ) : Icon ? (
+                          <Icon className="w-7 h-7" />
+                        ) : null}
+                      </div>
+                    )}
                     <span className={`text-xs font-bold tracking-widest uppercase ${sectionAppearance.isDark ? 'text-white/40' : 'text-gray-300'}`}>
                       {String(index + 1).padStart(2, '0')}
                     </span>

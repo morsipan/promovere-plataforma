@@ -14,13 +14,28 @@ export const HeroBlock: Block = {
       defaultOverlayOpacity: 'media',
     }),
     {
-      name: 'badge',
-      type: 'text',
-      label: 'Badge / Etiqueta Superior',
-      defaultValue: 'Especialistas en Promoción Turística en LATAM',
-      admin: {
-        description: 'Texto de la píldora informativa superior.',
-      },
+      type: 'row',
+      fields: [
+        {
+          name: 'badge',
+          type: 'text',
+          label: 'Badge / Etiqueta Superior',
+          defaultValue: 'Especialistas en Promoción Turística en LATAM',
+          admin: {
+            width: '70%',
+            description: 'Texto de la píldora informativa superior.',
+          },
+        },
+        {
+          name: 'showBadgeIcon',
+          type: 'checkbox',
+          label: 'Mostrar Ícono del Badge',
+          defaultValue: true,
+          admin: {
+            width: '30%',
+          },
+        },
+      ],
     },
     {
       type: 'row',
