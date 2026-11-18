@@ -724,8 +724,18 @@ export interface Page {
         fullBleed?: boolean | null;
         title?: string | null;
         subtitle?: string | null;
-        buttonLabel?: string | null;
+        /**
+         * Define si el enlace se activa únicamente en el botón CTA o en toda la superficie del banner.
+         */
+        linkType?: ('cta' | 'full') | null;
+        /**
+         * Destino al hacer clic (ej. /contacto o https://...).
+         */
         buttonHref?: string | null;
+        /**
+         * Etiqueta del botón (opcional si es elemento completo).
+         */
+        buttonLabel?: string | null;
         newTab?: boolean | null;
         contentAlignment?: ('left' | 'center' | 'right') | null;
         caption?: string | null;
@@ -1412,8 +1422,9 @@ export interface PagesSelect<T extends boolean = true> {
               fullBleed?: T;
               title?: T;
               subtitle?: T;
-              buttonLabel?: T;
+              linkType?: T;
               buttonHref?: T;
+              buttonLabel?: T;
               newTab?: T;
               contentAlignment?: T;
               caption?: T;

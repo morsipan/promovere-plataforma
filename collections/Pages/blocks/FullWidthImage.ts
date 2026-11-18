@@ -3,8 +3,8 @@ import type { Block } from 'payload'
 export const FullWidthImageBlock: Block = {
   slug: 'fullWidthImage',
   labels: {
-    singular: 'Módulo de Imagen Full-Width (Ancho Completo)',
-    plural: 'Módulos de Imagen Full-Width',
+    singular: 'Módulo de Banner / Imagen Full-Width (Ancho Completo)',
+    plural: 'Módulos de Banner / Imagen Full-Width',
   },
   fields: [
     {
@@ -95,23 +95,43 @@ export const FullWidthImageBlock: Block = {
       type: 'row',
       fields: [
         {
-          name: 'buttonLabel',
-          type: 'text',
-          label: 'Texto del Botón CTA (Opcional)',
-          admin: { width: '33.3%' },
+          name: 'linkType',
+          type: 'select',
+          label: 'Comportamiento del Enlace',
+          defaultValue: 'cta',
+          options: [
+            { label: 'Enlace en botón CTA (solo cliqueable en el botón)', value: 'cta' },
+            { label: 'Enlace en elemento completo (todo el banner es cliqueable)', value: 'full' },
+          ],
+          admin: {
+            width: '30%',
+            description: 'Define si el enlace se activa únicamente en el botón CTA o en toda la superficie del banner.',
+          },
         },
         {
           name: 'buttonHref',
           type: 'text',
-          label: 'Enlace del Botón (Opcional)',
-          admin: { width: '33.3%' },
+          label: 'URL de Enlace / Destino (Opcional)',
+          admin: {
+            width: '30%',
+            description: 'Destino al hacer clic (ej. /contacto o https://...).',
+          },
+        },
+        {
+          name: 'buttonLabel',
+          type: 'text',
+          label: 'Texto del Botón CTA (Opcional)',
+          admin: {
+            width: '25%',
+            description: 'Etiqueta del botón (opcional si es elemento completo).',
+          },
         },
         {
           name: 'newTab',
           type: 'checkbox',
-          label: 'Abrir enlace en nueva pestaña',
+          label: 'Abrir en nueva pestaña',
           defaultValue: false,
-          admin: { width: '33.3%' },
+          admin: { width: '15%' },
         },
       ],
     },
