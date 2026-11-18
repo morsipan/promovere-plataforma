@@ -1,3 +1,5 @@
+import { formatBlobUrl } from './blob';
+
 /**
  * Utilidades para extraer y formatear URLs y textos alternativos de campos Upload de Payload CMS.
  * Es compatible tanto con objetos poblados { url, alt, ... } como con URLs directas de respaldo.
@@ -15,14 +17,14 @@ export function getMediaUrl(media: unknown, fallback: string = ''): string {
     ) {
       return fallback;
     }
-    return media;
+    return formatBlobUrl(media);
   }
 
   // Si es un objeto poblado de la colección Media
   if (typeof media === 'object' && media !== null) {
     const mediaObj = media as { url?: string; filename?: string };
     if (typeof mediaObj.url === 'string' && mediaObj.url.trim().length > 0) {
-      return mediaObj.url;
+      return formatBlobUrl(mediaObj.url);
     }
   }
 

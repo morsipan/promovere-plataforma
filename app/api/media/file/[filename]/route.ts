@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { get } from '@vercel/blob';
+import { getVercelBlobToken, isVercelBlobEnabled } from '@/lib/blob';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,7 +26,7 @@ export async function GET(
     return new NextResponse('Invalid filename', { status: 400 });
   }
 
-  // Rutas donde buscar el archivo estático
+  // 1. Rutas locales donde buscar el archivo estático
   const possiblePaths = [
     path.join(process.cwd(), 'public', 'media', filename),
     path.join(process.cwd(), 'public', 'assets', 'PNG', filename),
@@ -50,8 +52,34 @@ export async function GET(
           },
         });
       } catch (err) {
-        console.error('Error al servir archivo multimedia:', err);
+        console.error('Error al servir archivo multimedia local:', err);
       }
+    }
+  }
+
+  // 2. Si no está en disco y Vercel Blob está habilitado, intentar obtenerlo de Blob
+  if (isVercelBlobEnabled()) {
+    try {
+      const token = getVercelBlobToken();
+      const result = await get(filename, {
+        access: 'private',
+        token,
+      });
+
+      if (result && result.stream) {
+        const headers = new Headers();
+        headers.set('Content-Type', result.blob.contentType || 'application/octet-stream');
+        headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+        if (result.blob.etag) headers.set('ETag', result.blob.etag);
+        if (result.blob.size) headers.set('Content-Length', String(result.blob.size));
+
+        return new Response(result.stream as any, {
+          status: 200,
+          headers,
+        });
+      }
+    } catch (blobErr) {
+      console.error('Error al consultar blob en media file endpoint:', blobErr);
     }
   }
 

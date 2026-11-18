@@ -42,6 +42,33 @@ export const Media: CollectionConfig = {
         } catch (e) {}
       },
     ],
+    afterRead: [
+      ({ doc }) => {
+        if (!doc) return doc;
+        if (doc.url && typeof doc.url === 'string') {
+          if (doc.url.includes('.private.blob.vercel-storage.com/')) {
+            const parts = doc.url.split('.private.blob.vercel-storage.com/');
+            if (parts[1]) {
+              doc.url = `/api/blob-proxy/${parts[1]}`;
+            }
+          }
+        }
+        if (doc.sizes && typeof doc.sizes === 'object') {
+          for (const key of Object.keys(doc.sizes)) {
+            const sizeObj = doc.sizes[key];
+            if (sizeObj?.url && typeof sizeObj.url === 'string') {
+              if (sizeObj.url.includes('.private.blob.vercel-storage.com/')) {
+                const parts = sizeObj.url.split('.private.blob.vercel-storage.com/');
+                if (parts[1]) {
+                  sizeObj.url = `/api/blob-proxy/${parts[1]}`;
+                }
+              }
+            }
+          }
+        }
+        return doc;
+      },
+    ],
     afterError: [
       ({ error }) => {
         console.error('PAYLOAD MEDIA ERROR:', error);

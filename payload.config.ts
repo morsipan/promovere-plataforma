@@ -17,6 +17,7 @@ import { Media } from './collections/Media'
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
 import { SiteSettings } from './globals/SiteSettings'
+import { getVercelBlobToken, getBlobAccess, isVercelBlobEnabled } from './lib/blob'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -39,17 +40,10 @@ const isPostgres =
   (databaseUri.startsWith('postgres://') || databaseUri.startsWith('postgresql://')) &&
   !databaseUri.includes('your-project-ref')
 
-// Detección dinámica y sanitización de token de Vercel Blob (limpia posibles comillas o espacios)
-const rawBlobToken =
-  process.env.BLOB_READ_WRITE_TOKEN ||
-  process.env.VERCEL_BLOB_READ_WRITE_TOKEN ||
-  Object.entries(process.env).find(
-    ([k]) => k.endsWith('_READ_WRITE_TOKEN') || (k.includes('BLOB') && k.includes('TOKEN'))
-  )?.[1] ||
-  '';
-
-const blobToken = rawBlobToken.trim().replace(/^["']|["']$/g, '');
-const isBlobEnabled = Boolean(blobToken && /^vercel_blob_rw_/i.test(blobToken));
+// Detección dinámica y sanitización de token de Vercel Blob
+const blobToken = getVercelBlobToken();
+const isBlobEnabled = isVercelBlobEnabled();
+const blobAccess = getBlobAccess();
 
 export default buildConfig({
   debug: true,
@@ -83,6 +77,7 @@ export default buildConfig({
         media: true,
       },
       token: blobToken,
+      access: blobAccess as 'public',
     }),
     // 2. Almacenamiento en S3 / Supabase Storage (se activa si se proveen claves S3 en el entorno)
     s3Storage({
