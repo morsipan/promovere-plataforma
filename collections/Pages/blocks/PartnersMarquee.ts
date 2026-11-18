@@ -39,6 +39,7 @@ export const PartnersMarqueeBlock: Block = {
             {
               name: 'animationType',
               type: 'select',
+              enumName: 'enum_pm_anim_type',
               label: 'Tipo de Animación',
               defaultValue: 'infinite-scroll',
               required: true,
@@ -61,6 +62,7 @@ export const PartnersMarqueeBlock: Block = {
             {
               name: 'animationSpeed',
               type: 'select',
+              enumName: 'enum_pm_anim_speed',
               label: 'Velocidad de Animación',
               defaultValue: 'normal',
               required: true,
@@ -89,6 +91,7 @@ export const PartnersMarqueeBlock: Block = {
         {
           name: 'colorMode',
           type: 'select',
+          enumName: 'enum_pm_color_mode',
           label: 'Modo de Color de los Logos',
           defaultValue: 'grayscale-hover',
           required: true,

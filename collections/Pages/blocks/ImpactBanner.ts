@@ -21,6 +21,7 @@ export const ImpactBannerBlock: Block = {
             {
               name: 'backgroundStyle',
               type: 'select',
+              enumName: 'enum_ib_bg_style',
               label: 'Estilo de Fondo',
               defaultValue: 'gradient',
               required: true,
@@ -37,6 +38,7 @@ export const ImpactBannerBlock: Block = {
             {
               name: 'theme',
               type: 'select',
+              enumName: 'enum_ib_theme',
               label: 'Contraste de Textos (Tema)',
               defaultValue: 'dark',
               required: true,
@@ -57,6 +59,7 @@ export const ImpactBannerBlock: Block = {
             {
               name: 'height',
               type: 'select',
+              enumName: 'enum_ib_height',
               label: 'Altura del Banner',
               defaultValue: 'medium',
               required: true,
@@ -73,6 +76,7 @@ export const ImpactBannerBlock: Block = {
             {
               name: 'layout',
               type: 'select',
+              enumName: 'enum_ib_layout',
               label: 'Disposición del Contenido (Layout)',
               defaultValue: 'centered',
               required: true,
@@ -100,6 +104,7 @@ export const ImpactBannerBlock: Block = {
         {
           name: 'backgroundColor',
           type: 'select',
+          enumName: 'enum_ib_bg_color',
           label: 'Color de Fondo Sólido',
           defaultValue: 'azul',
           options: [
@@ -190,6 +195,7 @@ export const ImpactBannerBlock: Block = {
             {
               name: 'style',
               type: 'select',
+              enumName: 'enum_ib_btn_style',
               label: 'Estilo Visual',
               defaultValue: 'primary',
               required: true,
