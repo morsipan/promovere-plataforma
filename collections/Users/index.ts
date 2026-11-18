@@ -40,7 +40,7 @@ export const Users: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'email', 'role', 'company', 'createdAt'],
+    defaultColumns: ['name', 'email', 'role', 'avatar', 'company', 'createdAt'],
     group: 'Configuración & Accesos',
     description: 'Gestión centralizada de credenciales, roles y permisos de acceso para el equipo interno y la Comunidad Promovêre.',
   },
@@ -65,6 +65,15 @@ export const Users: CollectionConfig = {
       type: 'text',
       label: 'Nombre y Apellido',
       required: true,
+    },
+    {
+      name: 'avatar',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Foto de Perfil / Avatar',
+      admin: {
+        description: 'Foto de perfil o avatar del usuario para el portal privado de la Comunidad.',
+      },
     },
     {
       name: 'role',

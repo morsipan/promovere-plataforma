@@ -158,6 +158,7 @@ export interface Page {
          * Texto de la píldora informativa superior.
          */
         badge?: string | null;
+        showBadgeIcon?: boolean | null;
         /**
          * Texto inicial antes de la palabra destacada (ej: "Somos").
          */
@@ -218,8 +219,13 @@ export interface Page {
               title: string;
               subtitle?: string | null;
               description: string;
+              /**
+               * Cargá aquí el elemento de branding o ilustración característica de Promovêre. Si no se carga nada ni se elige ícono, la tarjeta no ocupará espacio visual en la cabecera.
+               */
+              image?: (number | null) | Media;
               icon?:
                 | (
+                    | 'none'
                     | 'Briefcase'
                     | 'Megaphone'
                     | 'Users'
@@ -229,8 +235,22 @@ export interface Page {
                     | 'TrendingUp'
                     | 'Globe'
                     | 'Star'
+                    | 'Building2'
+                    | 'Plane'
+                    | 'Handshake'
+                    | 'ShieldCheck'
+                    | 'Award'
+                    | 'Sparkles'
+                    | 'MapPin'
+                    | 'Heart'
+                    | 'Phone'
+                    | 'Tag'
                   )
                 | null;
+              /**
+               * Subí un archivo SVG o PNG pequeño si deseas un ícono personalizado dentro del recuadro estándar.
+               */
+              customIcon?: (number | null) | Media;
               highlights?:
                 | {
                     item: string;
@@ -690,6 +710,29 @@ export interface Page {
         blockName?: string | null;
         blockType: 'communityLanding';
       }
+    | {
+        /**
+         * Imagen horizontal de alta calidad para ocupar el ancho completo.
+         */
+        image: number | Media;
+        /**
+         * Si se adjunta, se mostrará en pantallas móviles en lugar de la imagen de escritorio.
+         */
+        mobileImage?: (number | null) | Media;
+        height?: ('auto' | 'small' | 'medium' | 'large' | 'screen') | null;
+        overlay?: ('none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand') | null;
+        fullBleed?: boolean | null;
+        title?: string | null;
+        subtitle?: string | null;
+        buttonLabel?: string | null;
+        buttonHref?: string | null;
+        newTab?: boolean | null;
+        contentAlignment?: ('left' | 'center' | 'right') | null;
+        caption?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'fullWidthImage';
+      }
   )[];
   meta?: {
     title?: string | null;
@@ -724,16 +767,28 @@ export interface Media {
   focalY?: number | null;
 }
 /**
+ * Gestión centralizada de credenciales, roles y permisos de acceso para el equipo interno y la Comunidad Promovêre.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
   name: string;
+  /**
+   * Foto de perfil o avatar del usuario para el portal privado de la Comunidad.
+   */
+  avatar?: (number | null) | Media;
+  /**
+   * Define los permisos del usuario. Roles "admin" y "editor" tienen acceso a /admin. Roles "mayorista" y "minorista" acceden exclusivamente al portal privado de la Comunidad.
+   */
   role: 'admin' | 'editor' | 'mayorista' | 'minorista';
   company?: string | null;
   phone?: string | null;
   country?: string | null;
+  /**
+   * Marca si la cuenta fue validada formalmente por el equipo comercial de Promovêre.
+   */
   verified?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -756,40 +811,49 @@ export interface User {
   collection: 'users';
 }
 /**
- * Recursos comerciales, manuales y herramientas para la Comunidad Promovêre. (Aviso: No publicar tarifas ni precios confidenciales).
+ * Recursos privados, herramientas comerciales y documentación para la Comunidad Promovêre (Operadores Mayoristas y Agencias Minoristas).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "community-content".
  */
 export interface CommunityContent {
   id: number;
-  title: string;
-  category:
-    | 'representaciones'
-    | 'novedades'
-    | 'herramientas'
-    | 'promociones'
-    | 'fichas'
-    | 'manuales'
-    | 'capacitaciones'
-    | 'marketing';
-  brand?: string | null;
-  country?: string | null;
-  image?: string | null;
   /**
-   * Define qué perfiles de la Comunidad pueden visualizar y descargar este recurso.
+   * Nombre descriptivo del recurso, herramienta, promoción o contrato.
    */
-  accessibleTo: 'all' | 'mayorista' | 'minorista';
-  description: string;
+  title: string;
+  /**
+   * Seleccioná la categoría. Aviso: Los contratos y acuerdos quedan automáticamente restringidos al rol Mayorista.
+   */
+  category: 'herramientas' | 'material_comercial' | 'novedades' | 'promociones' | 'contratos';
+  /**
+   * Texto estructurado, especificaciones comerciales e instrucciones para el canal.
+   */
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Adjuntá los documentos comerciales, PDFs, fichas técnicas, contratos o kits descargables.
+   */
+  attachments?: (number | Media)[] | null;
+  /**
+   * Selecciona qué perfiles de la Comunidad pueden visualizar y descargar este recurso.
+   */
+  visibleFor: ('mayorista' | 'minorista')[];
+  brand?: string | null;
   highlight?: string | null;
-  downloadableFiles?:
-    | {
-        name: string;
-        url: string;
-        fileType?: ('PDF' | 'PPTX' | 'ZIP' | 'VIDEO') | null;
-        id?: string | null;
-      }[]
-    | null;
   featured?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -901,6 +965,7 @@ export interface PagesSelect<T extends boolean = true> {
                     backgroundImage?: T;
                   };
               badge?: T;
+              showBadgeIcon?: T;
               preTitle?: T;
               highlightedWord?: T;
               titleSuffix?: T;
@@ -938,7 +1003,9 @@ export interface PagesSelect<T extends boolean = true> {
                     title?: T;
                     subtitle?: T;
                     description?: T;
+                    image?: T;
                     icon?: T;
+                    customIcon?: T;
                     highlights?:
                       | T
                       | {
@@ -1335,6 +1402,24 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        fullWidthImage?:
+          | T
+          | {
+              image?: T;
+              mobileImage?: T;
+              height?: T;
+              overlay?: T;
+              fullBleed?: T;
+              title?: T;
+              subtitle?: T;
+              buttonLabel?: T;
+              buttonHref?: T;
+              newTab?: T;
+              contentAlignment?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   meta?:
     | T
@@ -1352,6 +1437,7 @@ export interface PagesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  avatar?: T;
   role?: T;
   company?: T;
   phone?: T;
@@ -1382,20 +1468,11 @@ export interface UsersSelect<T extends boolean = true> {
 export interface CommunityContentSelect<T extends boolean = true> {
   title?: T;
   category?: T;
-  brand?: T;
-  country?: T;
-  image?: T;
-  accessibleTo?: T;
   description?: T;
+  attachments?: T;
+  visibleFor?: T;
+  brand?: T;
   highlight?: T;
-  downloadableFiles?:
-    | T
-    | {
-        name?: T;
-        url?: T;
-        fileType?: T;
-        id?: T;
-      };
   featured?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1466,12 +1543,27 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
-  logoText?: string | null;
-  tagline?: string | null;
   /**
-   * Si no se adjunta, se renderiza el isotipo estilizado "P" oficial.
+   * Ícono o símbolo gráfico (ej: el isotipo cuadrado de Promovêre). Si no se adjunta, se renderiza el isotipo estilizado "P".
    */
   logoImage?: (number | null) | Media;
+  /**
+   * Imagen del logo completo (ej: logo-principal.svg para fondo claro con scroll).
+   */
+  logoTypeImage?: (number | null) | Media;
+  /**
+   * Isotipo para fondo transparente / hero inicial. Si se omite, se usa el isotipo principal.
+   */
+  logoImageTransparent?: (number | null) | Media;
+  /**
+   * Versión del logotipo (ej: logo blanco/claro) que se muestra al entrar al sitio cuando el navbar es transparente.
+   */
+  logoTypeImageTransparent?: (number | null) | Media;
+  logoText?: string | null;
+  /**
+   * Visible cuando no se utiliza una imagen de logotipo.
+   */
+  tagline?: string | null;
   navItems?:
     | {
         label: string;
@@ -1482,6 +1574,7 @@ export interface Header {
     | null;
   ctaLabel?: string | null;
   ctaHref?: string | null;
+  ctaShowIcon?: boolean | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1493,6 +1586,14 @@ export interface Header {
  */
 export interface Footer {
   id: number;
+  /**
+   * Ícono gráfico para el pie de página. Si se omite, se muestra el isotipo estándar.
+   */
+  logoImage?: (number | null) | Media;
+  /**
+   * Imagen del logo completo (ej: logo en blanco/color para fondo oscuro del footer).
+   */
+  logoTypeImage?: (number | null) | Media;
   brandDescription?: string | null;
   columns?:
     | {
@@ -1541,9 +1642,12 @@ export interface SiteSetting {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
+  logoImage?: T;
+  logoTypeImage?: T;
+  logoImageTransparent?: T;
+  logoTypeImageTransparent?: T;
   logoText?: T;
   tagline?: T;
-  logoImage?: T;
   navItems?:
     | T
     | {
@@ -1554,6 +1658,7 @@ export interface HeaderSelect<T extends boolean = true> {
       };
   ctaLabel?: T;
   ctaHref?: T;
+  ctaShowIcon?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1563,6 +1668,8 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  logoImage?: T;
+  logoTypeImage?: T;
   brandDescription?: T;
   columns?:
     | T

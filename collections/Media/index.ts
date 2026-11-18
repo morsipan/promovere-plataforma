@@ -28,8 +28,8 @@ export const Media: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
-    update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
     delete: ({ req: { user } }) => Boolean(user?.role === 'admin'),
   },
   hooks: {

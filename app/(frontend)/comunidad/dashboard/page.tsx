@@ -2,9 +2,7 @@ import { getPayload } from 'payload';
 import config from '@payload-config';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
 import Image from 'next/image';
-import LogoutButton from '@/components/comunidad/LogoutButton';
 import { representationsContent } from '@/data/content';
 import {
   Building2,
@@ -112,87 +110,38 @@ export default async function ComunidadDashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-[#4d4e4f]">
-      {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo e Identidad */}
-            <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center gap-3 group">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center text-white shadow-md shadow-[#1b87c7]/20 group-hover:scale-105 transition-transform">
-                  <Building2 className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-xl font-black text-[#4d4e4f] tracking-tight block leading-none">
-                    Promovêre
-                  </span>
-                  <span className="text-[11px] font-bold text-[#1b87c7] uppercase tracking-wider block mt-1">
-                    Comunidad Trade
-                  </span>
-                </div>
-              </Link>
-            </div>
+    <div className="space-y-12">
+      {/* Banner de Bienvenida y Políticas B2B */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#113d5b] via-[#0e496d] to-[#1b87c7] text-white p-8 sm:p-10 shadow-xl shadow-[#113d5b]/10">
+        <div className="relative z-10 max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold uppercase tracking-wider mb-4">
+            <Sparkles className="w-3.5 h-3.5 text-[#3cac59]" />
+            Portal Exclusivo para Profesionales de Turismo
+          </div>
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
+            Bienvenido, {user.name?.split(' ')[0] || 'Colega'}
+          </h1>
+          <p className="text-sm sm:text-base text-white/90 leading-relaxed font-light mb-6">
+            Espacio exclusivo para Operadores Mayoristas y Agencias de Viajes. Aquí encontrarás el catálogo oficial de destinos representados, fichas técnicas, promociones vigentes y herramientas comerciales de apoyo.
+          </p>
 
-            {/* Perfil del Usuario & Logout */}
-            <div className="flex items-center gap-3 sm:gap-6">
-              <div className="hidden sm:flex flex-col text-right">
-                <span className="text-sm font-bold text-[#4d4e4f] truncate max-w-[200px]">
-                  {user.name || user.email}
-                </span>
-                <span className="text-xs text-slate-500 font-medium truncate max-w-[200px]">
-                  {user.company || 'Profesional de Turismo'}
-                </span>
-              </div>
-
-              {/* Badge de Rol */}
-              <div
-                className={`px-3 py-1 rounded-full text-xs font-bold border ${currentRole.color} shadow-xs flex items-center gap-1.5`}
-              >
-                <span className={`w-2 h-2 rounded-full ${currentRole.badge}`} />
-                <span>{currentRole.label}</span>
-              </div>
-
-              {/* Botón Cerrar Sesión */}
-              <LogoutButton />
-            </div>
+          {/* Aviso de Confidencialidad y Precios */}
+          <div className="flex items-start gap-3 p-4 rounded-2xl bg-black/20 border border-white/15 backdrop-blur-sm text-xs sm:text-sm text-slate-200">
+            <Shield className="w-5 h-5 text-[#3cac59] shrink-0 mt-0.5" />
+            <span>
+              <strong>Política de Seguridad B2B:</strong> Por normativas de confidencialidad del trade, este portal <strong>no publica tarifas ni precios confidenciales al público</strong>. Los materiales están destinados a soporte de ventas, formación y cotización directa con operadores habilitados.
+            </span>
           </div>
         </div>
-      </header>
 
-      {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-        {/* Banner de Bienvenida y Políticas B2B */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#113d5b] via-[#0e496d] to-[#1b87c7] text-white p-8 sm:p-10 shadow-xl shadow-[#113d5b]/10">
-          <div className="relative z-10 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold uppercase tracking-wider mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-[#3cac59]" />
-              Portal Exclusivo para Profesionales de Turismo
-            </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
-              Bienvenido, {user.name?.split(' ')[0] || 'Colega'}
-            </h1>
-            <p className="text-sm sm:text-base text-white/90 leading-relaxed font-light mb-6">
-              Espacio exclusivo para Operadores Mayoristas y Agencias de Viajes. Aquí encontrarás el catálogo oficial de destinos representados, fichas técnicas, promociones vigentes y herramientas comerciales de apoyo.
-            </p>
+        {/* Decorative Pattern */}
+        <div className="absolute -right-10 -bottom-10 w-80 h-80 rounded-full bg-white/5 blur-2xl pointer-events-none" />
+      </div>
 
-            {/* Aviso de Confidencialidad y Precios */}
-            <div className="flex items-start gap-3 p-4 rounded-2xl bg-black/20 border border-white/15 backdrop-blur-sm text-xs sm:text-sm text-slate-200">
-              <Shield className="w-5 h-5 text-[#3cac59] shrink-0 mt-0.5" />
-              <span>
-                <strong>Política de Seguridad B2B:</strong> Por normativas de confidencialidad del trade, este portal <strong>no publica tarifas ni precios confidenciales al público</strong>. Los materiales están destinados a soporte de ventas, formación y cotización directa con operadores habilitados.
-              </span>
-            </div>
-          </div>
-
-          {/* Decorative Pattern */}
-          <div className="absolute -right-10 -bottom-10 w-80 h-80 rounded-full bg-white/5 blur-2xl pointer-events-none" />
-        </div>
-
-        {/* ======================================================== */}
-        {/* 1. CATÁLOGO DE REPRESENTACIONES OFICIALES (EXCLUSIVO) */}
-        {/* ======================================================== */}
-        <div>
+      {/* ======================================================== */}
+      {/* 1. CATÁLOGO DE REPRESENTACIONES OFICIALES (EXCLUSIVO) */}
+      {/* ======================================================== */}
+      <section id="representaciones" className="scroll-mt-24">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#3cac59] mb-1">
@@ -274,12 +223,12 @@ export default async function ComunidadDashboardPage() {
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* ======================================================== */}
         {/* 2. NOVEDADES (PROMO NEWS & PRENSA) */}
         {/* ======================================================== */}
-        <div>
+        <section id="novedades" className="scroll-mt-24">
           <div className="flex items-center justify-between mb-6">
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1b87c7] mb-1">
@@ -357,12 +306,12 @@ export default async function ComunidadDashboardPage() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* ======================================================== */}
         {/* 3. HERRAMIENTAS DE GESTIÓN & DESCARGAS COMERCIALES */}
         {/* ======================================================== */}
-        <div>
+        <section id="herramientas" className="scroll-mt-24">
           <div className="flex items-center justify-between mb-6">
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#3cac59] mb-1">
@@ -458,8 +407,7 @@ export default async function ComunidadDashboardPage() {
               ))}
             </div>
           )}
-        </div>
-      </main>
+        </section>
     </div>
   );
 }
