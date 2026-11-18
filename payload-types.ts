@@ -798,6 +798,40 @@ export interface Page {
         blockName?: string | null;
         blockType: 'impactBanner';
       }
+    | {
+        title?: string | null;
+        subtitle?: string | null;
+        animationBehavior: {
+          /**
+           * Elegí entre un carrusel que corre continuamente o una rotación periódica de grupos de logos con fade.
+           */
+          animationType: 'infinite-scroll' | 'batch-fade';
+          /**
+           * Ajusta la velocidad del carrusel o el intervalo entre lotes.
+           */
+          animationSpeed: 'slow' | 'normal' | 'fast';
+        };
+        imageStyles: {
+          /**
+           * En escala de grises brinda una estética uniforme y elegante, mostrando el color original al pasar el cursor.
+           */
+          colorMode: 'grayscale-hover' | 'always-color';
+        };
+        logos: {
+          /**
+           * Se recomienda logo horizontal con fondo transparente.
+           */
+          logo: number | Media;
+          /**
+           * URL a la que se redirigirá al hacer clic (ej: https://ejemplo.com).
+           */
+          link?: string | null;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'partnersMarquee';
+      }
   )[];
   meta?: {
     title?: string | null;
@@ -1511,6 +1545,32 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               secondaryGraphic?: T;
+              id?: T;
+              blockName?: T;
+            };
+        partnersMarquee?:
+          | T
+          | {
+              title?: T;
+              subtitle?: T;
+              animationBehavior?:
+                | T
+                | {
+                    animationType?: T;
+                    animationSpeed?: T;
+                  };
+              imageStyles?:
+                | T
+                | {
+                    colorMode?: T;
+                  };
+              logos?:
+                | T
+                | {
+                    logo?: T;
+                    link?: T;
+                    id?: T;
+                  };
               id?: T;
               blockName?: T;
             };

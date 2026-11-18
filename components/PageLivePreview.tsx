@@ -21,6 +21,7 @@ import RichTextSection from '@/components/blocks/RichTextSection';
 import PromovereAnimCounterSection from '@/components/blocks/PromovereAnimCounterSection';
 import FullWidthImageSection from '@/components/blocks/FullWidthImageSection';
 import ImpactBanner from '@/components/blocks/ImpactBanner';
+import PartnersMarquee from '@/components/blocks/PartnersMarquee';
 
 export interface PageLivePreviewProps {
   initialData: any;
@@ -119,6 +120,8 @@ export default function PageLivePreview({
         return <FullWidthImageSection key={`block-${index}`} data={block} />;
       case 'impactBanner':
         return <ImpactBanner key={`block-${index}`} data={block} />;
+      case 'partnersMarquee':
+        return <PartnersMarquee key={`block-${index}`} data={block} />;
       default:
         return null;
     }

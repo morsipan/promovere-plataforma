@@ -17,6 +17,7 @@ import { PromovereAnimCounterBlock } from './blocks/PromovereAnimCounter'
 import { CommunityLandingBlock } from './blocks/CommunityLanding'
 import { FullWidthImageBlock } from './blocks/FullWidthImage'
 import { ImpactBannerBlock } from './blocks/ImpactBanner'
+import { PartnersMarqueeBlock } from './blocks/PartnersMarquee'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -154,6 +155,7 @@ export const Pages: CollectionConfig = {
         CommunityLandingBlock,
         FullWidthImageBlock,
         ImpactBannerBlock,
+        PartnersMarqueeBlock,
       ],
     },
   ],
