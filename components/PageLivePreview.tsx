@@ -20,6 +20,7 @@ import TimelineSection from '@/components/blocks/TimelineSection';
 import RichTextSection from '@/components/blocks/RichTextSection';
 import PromovereAnimCounterSection from '@/components/blocks/PromovereAnimCounterSection';
 import FullWidthImageSection from '@/components/blocks/FullWidthImageSection';
+import ImpactBanner from '@/components/blocks/ImpactBanner';
 
 export interface PageLivePreviewProps {
   initialData: any;
@@ -116,6 +117,8 @@ export default function PageLivePreview({
         return <PromovereAnimCounterSection key={`block-${index}`} data={block} />;
       case 'fullWidthImage':
         return <FullWidthImageSection key={`block-${index}`} data={block} />;
+      case 'impactBanner':
+        return <ImpactBanner key={`block-${index}`} data={block} />;
       default:
         return null;
     }

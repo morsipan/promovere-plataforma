@@ -743,6 +743,49 @@ export interface Page {
         blockName?: string | null;
         blockType: 'fullWidthImage';
       }
+    | {
+        appearance: {
+          /**
+           * Elegí entre un gradiente de marca, un color corporativo plano o una foto de fondo.
+           */
+          backgroundStyle: 'gradient' | 'solid' | 'image';
+          /**
+           * Garantiza la legibilidad según la oscuridad del fondo elegido.
+           */
+          theme: 'dark' | 'light';
+          /**
+           * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
+           */
+          backgroundColor?: ('blancoHumo' | 'grisOscuro' | 'verde' | 'azul') | null;
+          /**
+           * Imagen horizontal en alta resolución. Se aplicará con cobertura total y un overlay oscuro para proteger el contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        /**
+         * Texto principal en tipografía Baloo Da 2 (H2).
+         */
+        title: string;
+        /**
+         * Texto secundario en tipografía Roboto.
+         */
+        subtitle?: string | null;
+        cta?: {
+          label?: string | null;
+          url?: string | null;
+          /**
+           * Si se activa, muestra un botón circular únicamente con la flecha.
+           */
+          iconOnly?: boolean | null;
+        };
+        /**
+         * Subí una tarjeta flotante, un logotipo (ej: Comunidad Promovêre) o un gráfico decorativo. Si está presente, el layout se dividirá en 2 columnas; de lo contrario, el texto se centrará.
+         */
+        secondaryGraphic?: (number | null) | Media;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'impactBanner';
+      }
   )[];
   meta?: {
     title?: string | null;
@@ -1428,6 +1471,30 @@ export interface PagesSelect<T extends boolean = true> {
               newTab?: T;
               contentAlignment?: T;
               caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        impactBanner?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundStyle?: T;
+                    theme?: T;
+                    backgroundColor?: T;
+                    backgroundImage?: T;
+                  };
+              title?: T;
+              subtitle?: T;
+              cta?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    iconOnly?: T;
+                  };
+              secondaryGraphic?: T;
               id?: T;
               blockName?: T;
             };
