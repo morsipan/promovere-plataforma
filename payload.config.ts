@@ -39,14 +39,17 @@ const isPostgres =
   (databaseUri.startsWith('postgres://') || databaseUri.startsWith('postgresql://')) &&
   !databaseUri.includes('your-project-ref')
 
-// Detección dinámica de token de Vercel Blob (acepta BLOB_READ_WRITE_TOKEN o cualquier variable terminada en _READ_WRITE_TOKEN)
-const blobToken =
+// Detección dinámica y sanitización de token de Vercel Blob (limpia posibles comillas o espacios)
+const rawBlobToken =
   process.env.BLOB_READ_WRITE_TOKEN ||
   process.env.VERCEL_BLOB_READ_WRITE_TOKEN ||
   Object.entries(process.env).find(
     ([k]) => k.endsWith('_READ_WRITE_TOKEN') || (k.includes('BLOB') && k.includes('TOKEN'))
   )?.[1] ||
   '';
+
+const blobToken = rawBlobToken.trim().replace(/^["']|["']$/g, '');
+const isBlobEnabled = Boolean(blobToken && /^vercel_blob_rw_/i.test(blobToken));
 
 export default buildConfig({
   i18n: {
@@ -72,9 +75,9 @@ export default buildConfig({
   collections: [Pages, Users, CommunityContent, Media],
   globals: [Header, Footer, SiteSettings],
   plugins: [
-    // 1. Almacenamiento en Vercel Blob (se activa si existe token de Blob)
+    // 1. Almacenamiento en Vercel Blob (se activa si existe token válido de Blob)
     vercelBlobStorage({
-      enabled: Boolean(blobToken),
+      enabled: isBlobEnabled,
       collections: {
         media: true,
       },
