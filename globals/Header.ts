@@ -13,7 +13,7 @@ export const Header: GlobalConfig = {
       ({ doc }) => {
         try {
           revalidatePath('/', 'layout');
-        } catch (e) {}
+        } catch (e) { }
         return doc;
       },
     ],
@@ -24,58 +24,49 @@ export const Header: GlobalConfig = {
   },
   fields: [
     {
-      type: 'collapsible',
-      label: 'Identidad Visual de Marca (Isotipo y Logotipo)',
-      admin: {
-        initCollapsed: false,
-      },
+      type: 'row',
       fields: [
         {
-          type: 'row',
-          fields: [
-            {
-              name: 'logoImage',
-              type: 'upload',
-              relationTo: 'media',
-              label: '1. Isotipo / Ícono de Marca (Símbolo)',
-              admin: {
-                width: '50%',
-                description: 'Ícono o símbolo gráfico (ej: el isotipo cuadrado de Promovêre). Si no se adjunta, se renderiza el isotipo estilizado "P".',
-              },
-            },
-            {
-              name: 'logoTypeImage',
-              type: 'upload',
-              relationTo: 'media',
-              label: '2. Logotipo (Imagen del Logo completo)',
-              admin: {
-                width: '50%',
-                description: 'Imagen del logo completo (ej: logo-principal.svg). Si se adjunta, se muestra junto al isotipo.',
-              },
-            },
-          ],
+          name: 'logoImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: '1. Isotipo / Ícono de Marca (Símbolo)',
+          admin: {
+            width: '50%',
+            description: 'Ícono o símbolo gráfico (ej: el isotipo cuadrado de Promovêre). Si no se adjunta, se renderiza el isotipo estilizado "P".',
+          },
         },
         {
-          type: 'row',
-          fields: [
-            {
-              name: 'logoText',
-              type: 'text',
-              label: 'Texto del Logotipo (Respaldo / Alt Text)',
-              defaultValue: 'Promovêre',
-              admin: { width: '50%' },
-            },
-            {
-              name: 'tagline',
-              type: 'text',
-              label: 'Bajada del Logotipo',
-              defaultValue: 'Turismo LATAM',
-              admin: {
-                width: '50%',
-                description: 'Visible cuando no se utiliza una imagen de logotipo.',
-              },
-            },
-          ],
+          name: 'logoTypeImage',
+          type: 'upload',
+          relationTo: 'media',
+          label: '2. Logotipo (Imagen del Logo completo)',
+          admin: {
+            width: '50%',
+            description: 'Imagen del logo completo (ej: logo-principal.svg). Si se adjunta, se muestra junto al isotipo.',
+          },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'logoText',
+          type: 'text',
+          label: 'Texto del Logotipo (Respaldo / Alt Text)',
+          defaultValue: 'Promovêre',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'tagline',
+          type: 'text',
+          label: 'Bajada del Logotipo',
+          defaultValue: 'Turismo LATAM',
+          admin: {
+            width: '50%',
+            description: 'Visible cuando no se utiliza una imagen de logotipo.',
+          },
         },
       ],
     },

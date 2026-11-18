@@ -56,14 +56,17 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
   const renderTitle = () => {
     if (preTitle || highlightedWord) {
       return (
-        <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
-          {preTitle ? `${preTitle} ` : null}
+        <h1
+          suppressHydrationWarning
+          className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}
+        >
+          {preTitle ? <span>{preTitle}&nbsp;</span> : null}
           {highlightedWord ? (
             <span className={`${sectionAppearance.accentTextClass} font-heading drop-shadow-md`}>
               {highlightedWord}
             </span>
           ) : null}
-          {titleSuffix ? ` ${titleSuffix}` : null}
+          {titleSuffix ? <span>&nbsp;{titleSuffix}</span> : null}
         </h1>
       );
     }
@@ -71,18 +74,24 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
     if (fallbackTitle && fallbackTitle.includes('Promovêre')) {
       const [before, after] = fallbackTitle.split('Promovêre');
       return (
-        <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
-          {before || null}
+        <h1
+          suppressHydrationWarning
+          className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}
+        >
+          {before ? <span>{before}&nbsp;</span> : null}
           <span className={`${sectionAppearance.accentTextClass} font-heading drop-shadow-md`}>
             Promovêre
           </span>
-          {after || null}
+          {after ? <span>&nbsp;{after}</span> : null}
         </h1>
       );
     }
 
     return (
-      <h1 className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}>
+      <h1
+        suppressHydrationWarning
+        className={`text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none ${sectionAppearance.titleClass}`}
+      >
         {fallbackTitle}
       </h1>
     );

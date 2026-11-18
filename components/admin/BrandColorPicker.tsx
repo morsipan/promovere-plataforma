@@ -55,7 +55,7 @@ export const BrandColorPicker: React.FC<{
         gap: '6px',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div suppressHydrationWarning style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <label
           style={{
             fontSize: '13px',

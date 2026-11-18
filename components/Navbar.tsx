@@ -47,6 +47,7 @@ export default function Navbar({ data }: NavbarProps) {
 
   return (
     <header
+      suppressHydrationWarning
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
         ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100'
         : 'bg-transparent'
@@ -55,7 +56,7 @@ export default function Navbar({ data }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo & Marca */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group">
+          <Link href="/" suppressHydrationWarning className="flex items-center gap-2.5 sm:gap-3 group">
             {/* 1. Isotipo / Ícono */}
             {isotypeImageUrl ? (
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform shrink-0">
@@ -85,8 +86,9 @@ export default function Navbar({ data }: NavbarProps) {
                 />
               </div>
             ) : (
-              <div className="flex flex-col leading-tight">
+              <div suppressHydrationWarning className="flex flex-col leading-tight">
                 <span
+                  suppressHydrationWarning
                   className={`font-black text-xl tracking-tight transition-colors ${
                     scrolled ? 'text-[#4d4e4f]' : 'text-white'
                   }`}
@@ -95,6 +97,7 @@ export default function Navbar({ data }: NavbarProps) {
                 </span>
                 {tagline ? (
                   <span
+                    suppressHydrationWarning
                     className={`text-[10px] font-bold uppercase tracking-widest transition-colors text-[#3cac59]`}
                   >
                     {tagline}
@@ -105,7 +108,7 @@ export default function Navbar({ data }: NavbarProps) {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+          <nav suppressHydrationWarning className="hidden md:flex items-center gap-1 lg:gap-2">
             {items.map((link) => (
               <a
                 key={link.href}
@@ -126,16 +129,18 @@ export default function Navbar({ data }: NavbarProps) {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href={ctaHref}
+              suppressHydrationWarning
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] active:bg-[#0f5b89] shadow-lg shadow-[#1b87c7]/25 hover:-translate-y-0.5 transition-all duration-200"
             >
               <Sparkles className="w-4 h-4 text-[#3cac59]" />
-              <span>{ctaLabel}</span>
+              <span suppressHydrationWarning>{ctaLabel}</span>
             </Link>
           </div>
 
           {/* Mobile menu button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
+            suppressHydrationWarning
             className={`md:hidden p-2 rounded-lg transition-colors ${scrolled
               ? 'text-[#4d4e4f] hover:bg-gray-100'
               : 'text-white hover:bg-white/10'

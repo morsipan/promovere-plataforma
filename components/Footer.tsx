@@ -89,7 +89,7 @@ export default function Footer({ data, settings }: FooterProps) {
   ].filter((s) => Boolean(s.href));
 
   return (
-    <footer className="bg-[#4d4e4f] text-gray-300 border-t border-white/10">
+    <footer suppressHydrationWarning className="bg-[#4d4e4f] text-gray-300 border-t border-white/10">
       {/* Top section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
