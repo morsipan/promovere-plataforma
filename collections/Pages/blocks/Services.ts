@@ -58,12 +58,23 @@ export const ServicesBlock: Block = {
           type: 'row',
           fields: [
             {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Imagen de Branding / Elemento Visual',
+              admin: {
+                width: '50%',
+                description:
+                  'Cargá aquí el elemento de branding o ilustración característica de Promovêre. Si no se carga nada ni se elige ícono, la tarjeta no ocupará espacio visual en la cabecera.',
+              },
+            },
+            {
               name: 'icon',
               type: 'select',
-              label: 'Ícono Representativo',
-              defaultValue: 'Briefcase',
+              label: 'Ícono Representativo (Alternativa si no hay imagen)',
+              defaultValue: 'none',
               options: [
-                { label: 'Ninguno (Sin ícono)', value: 'none' },
+                { label: 'Ninguno (Sin ícono ni espacio reservado)', value: 'none' },
                 { label: 'Maletín / Negocios (Briefcase)', value: 'Briefcase' },
                 { label: 'Megáfono / Marketing (Megaphone)', value: 'Megaphone' },
                 { label: 'Usuarios / Comunidad (Users)', value: 'Users' },
@@ -86,17 +97,17 @@ export const ServicesBlock: Block = {
               ],
               admin: { width: '50%' },
             },
-            {
-              name: 'customIcon',
-              type: 'upload',
-              relationTo: 'media',
-              label: 'Ícono Personalizado (SVG / Imagen Opcional)',
-              admin: {
-                width: '50%',
-                description: 'Si subes un archivo SVG o PNG aquí, se usará en lugar del ícono predefinido.',
-              },
-            },
           ],
+        },
+        {
+          name: 'customIcon',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Ícono SVG / PNG Personalizado (Opcional)',
+          admin: {
+            description:
+              'Subí un archivo SVG o PNG pequeño si deseas un ícono personalizado dentro del recuadro estándar.',
+          },
         },
         {
           name: 'highlights',

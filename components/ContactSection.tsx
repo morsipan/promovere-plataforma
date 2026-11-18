@@ -111,7 +111,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
               sectionAppearance.isDark ? 'bg-white/10 border-white/15 text-white' : 'bg-[#f9f9f9] border-gray-200/80 text-[#4d4e4f]'
             }`}>
               <div className="flex items-center gap-2 mb-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#3cac59]" />
+                <span className={`w-2.5 h-2.5 rounded-full ${sectionAppearance.accentBgClass}`} />
                 <h3 className={`text-lg font-bold ${sectionAppearance.titleClass}`}>
                   Oficinas Centrales en Buenos Aires
                 </h3>
@@ -123,11 +123,11 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
               <div className="space-y-4">
                 {/* Dirección */}
                 <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors">
-                  <div className="w-10 h-10 rounded-lg bg-[#1b87c7]/10 text-[#1b87c7] flex items-center justify-center flex-shrink-0">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${sectionAppearance.accentIconBgClass}`}>
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block font-sans">
+                    <span className={`text-[11px] font-bold ${sectionAppearance.accentTextClass} uppercase tracking-wider block font-sans`}>
                       Dirección Comercial
                     </span>
                     <p className="text-xs sm:text-sm font-semibold text-[#4d4e4f]">
@@ -143,11 +143,11 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
 
                 {/* Teléfono */}
                 <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors">
-                  <div className="w-10 h-10 rounded-lg bg-[#1b87c7]/10 text-[#1b87c7] flex items-center justify-center flex-shrink-0">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${sectionAppearance.accentIconBgClass}`}>
                     <Phone className="w-5 h-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block font-sans">
+                    <span className={`text-[11px] font-bold ${sectionAppearance.accentTextClass} uppercase tracking-wider block font-sans`}>
                       Teléfono / WhatsApp Trade
                     </span>
                     <a
@@ -161,11 +161,11 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
 
                 {/* Correo Electrónico */}
                 <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white border border-gray-100 hover:border-[#1b87c7]/30 transition-colors">
-                  <div className="w-10 h-10 rounded-lg bg-[#1b87c7]/10 text-[#1b87c7] flex items-center justify-center flex-shrink-0">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${sectionAppearance.accentIconBgClass}`}>
                     <Mail className="w-5 h-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block font-sans">
+                    <span className={`text-[11px] font-bold ${sectionAppearance.accentTextClass} uppercase tracking-wider block font-sans`}>
                       Correo Electrónico
                     </span>
                     <a
@@ -343,7 +343,7 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-[#1b87c7] hover:bg-[#1571a8] active:bg-[#0f5b89] text-white font-bold text-sm sm:text-base shadow-lg shadow-[#1b87c7]/25 hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className={`w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-xl font-bold text-sm sm:text-base transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed ${sectionAppearance.buttonClass}`}
                 >
                   {loading ? (
                     <>

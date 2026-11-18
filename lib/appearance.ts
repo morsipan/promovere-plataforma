@@ -36,10 +36,13 @@ export interface SectionAppearance {
   subtitleClass: string;
   bodyClass: string;
   badgeClass: string;
+  badgeIconClass: string;
   buttonClass: string;
+  secondaryButtonClass: string;
   accentTextClass: string;
   accentBgClass: string;
   accentBorderClass: string;
+  accentIconBgClass: string;
   cardClass: string;
   cardTitleClass: string;
   cardSubtextClass: string;
@@ -169,6 +172,30 @@ export function resolveAppearance(
   };
   const badgeClass = badgeClasses[badge] || (isDark ? badgeClasses.blanco : badgeClasses.verde);
 
+  const badgeIconClasses: Record<BadgeColorKey, string> = {
+    verde: 'text-[#3cac59]',
+    azul: 'text-[#1b87c7]',
+    gris: isDark ? 'text-white' : 'text-[#4d4e4f]',
+    blanco: isDark ? 'text-white' : 'text-[#4d4e4f]',
+  };
+  const badgeIconClass = badgeIconClasses[badge] || (isDark ? 'text-white' : 'text-[#3cac59]');
+
+  const accentIconBgClasses: Record<AccentColorKey, string> = {
+    azul: 'bg-[#1b87c7]/10 text-[#1b87c7] group-hover:bg-[#1b87c7] group-hover:text-white',
+    verde: 'bg-[#3cac59]/10 text-[#3cac59] group-hover:bg-[#3cac59] group-hover:text-white',
+    grisOscuro: isDark
+      ? 'bg-white/10 text-white group-hover:bg-white group-hover:text-[#4d4e4f]'
+      : 'bg-[#4d4e4f]/10 text-[#4d4e4f] group-hover:bg-[#4d4e4f] group-hover:text-white',
+    blanco: isDark
+      ? 'bg-white/20 text-white group-hover:bg-white group-hover:text-[#4d4e4f]'
+      : 'bg-white text-[#4d4e4f] shadow-xs group-hover:bg-[#1b87c7] group-hover:text-white',
+  };
+  const accentIconBgClass = accentIconBgClasses[accent] || accentIconBgClasses.azul;
+
+  const secondaryButtonClass = isDark
+    ? 'bg-white/10 hover:bg-white/20 text-white border border-white/25 backdrop-blur-sm'
+    : 'bg-[#4d4e4f]/10 hover:bg-[#4d4e4f]/15 text-[#4d4e4f] border border-[#4d4e4f]/20';
+
   // Tarjetas internas
   const cardClass = isDark
     ? 'bg-white/10 border-white/15 text-white backdrop-blur-md hover:bg-white/15 shadow-md'
@@ -192,10 +219,13 @@ export function resolveAppearance(
     subtitleClass,
     bodyClass,
     badgeClass,
+    badgeIconClass,
     buttonClass,
+    secondaryButtonClass,
     accentTextClass,
     accentBgClass,
     accentBorderClass,
+    accentIconBgClass,
     cardClass,
     cardTitleClass,
     cardSubtextClass,

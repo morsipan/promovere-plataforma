@@ -90,7 +90,7 @@ export default function TimelineSection({ data }: TimelineSectionProps) {
             <div
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}
             >
-              <Calendar className="w-3.5 h-3.5 text-[#3cac59]" />
+              <Calendar className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
               {badge}
             </div>
           ) : null}
@@ -117,11 +117,11 @@ export default function TimelineSection({ data }: TimelineSectionProps) {
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="px-3.5 py-1 rounded-xl bg-[#1b87c7] text-white font-black text-sm shadow-xs">
+                  <span className={`px-3.5 py-1 rounded-xl text-white font-black text-sm shadow-xs ${sectionAppearance.accentBgClass}`}>
                     {item.year}
                   </span>
                   {item.tag ? (
-                    <span className="text-xs font-bold text-[#3cac59] uppercase tracking-wider">
+                    <span className={`text-xs font-bold uppercase tracking-wider ${sectionAppearance.accentTextClass}`}>
                       {item.tag}
                     </span>
                   ) : null}
@@ -135,8 +135,8 @@ export default function TimelineSection({ data }: TimelineSectionProps) {
                 </p>
               </div>
 
-              <div className={`mt-6 pt-4 border-t ${sectionAppearance.borderClass} flex items-center gap-2 text-xs font-semibold text-[#1b87c7]`}>
-                <Flag className="w-3.5 h-3.5 text-[#3cac59]" />
+              <div className={`mt-6 pt-4 border-t ${sectionAppearance.borderClass} flex items-center gap-2 text-xs font-semibold ${sectionAppearance.accentTextClass}`}>
+                <Flag className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
                 <span>Hito Consolidado</span>
               </div>
             </div>

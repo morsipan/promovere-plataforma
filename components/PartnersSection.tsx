@@ -60,7 +60,7 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
         <div className="text-center max-w-3xl mx-auto mb-16">
           {badge ? (
             <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 font-sans ${sectionAppearance.badgeClass}`}>
-              <Handshake className="w-3.5 h-3.5" />
+              <Handshake className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
               {badge}
             </div>
           ) : null}

@@ -84,7 +84,7 @@ export default function FAQSection({ data }: FAQSectionProps) {
         <div className="text-center mb-16">
           {badge ? (
             <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}>
-              <HelpCircle className="w-3.5 h-3.5 text-[#3cac59]" />
+              <HelpCircle className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
               {badge}
             </div>
           ) : null}
@@ -117,7 +117,7 @@ export default function FAQSection({ data }: FAQSectionProps) {
                 >
                   <span className={sectionAppearance.cardTitleClass}>{item.question}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-[#1b87c7] transition-transform duration-300 flex-shrink-0 ${
+                    className={`w-5 h-5 ${sectionAppearance.accentTextClass} transition-transform duration-300 flex-shrink-0 ${
                       isOpen ? 'transform rotate-180' : ''
                     }`}
                   />

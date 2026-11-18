@@ -78,7 +78,7 @@ export default function StatsSection({ data }: StatsSectionProps) {
             <div
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}
             >
-              <TrendingUp className="w-3.5 h-3.5 text-[#3cac59]" />
+              <TrendingUp className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
               {badge}
             </div>
           ) : null}
@@ -103,7 +103,7 @@ export default function StatsSection({ data }: StatsSectionProps) {
               key={index}
               className={`rounded-3xl p-8 border transition-all duration-300 hover:-translate-y-1 text-center ${sectionAppearance.cardClass}`}
             >
-              <div className="text-4xl sm:text-5xl font-black text-[#1b87c7] mb-2 tracking-tight">
+              <div className={`text-4xl sm:text-5xl font-black mb-2 tracking-tight ${sectionAppearance.accentTextClass}`}>
                 {stat.value}
               </div>
               <div className={`text-base font-bold mb-2 ${sectionAppearance.cardTitleClass}`}>

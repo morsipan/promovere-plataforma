@@ -54,6 +54,7 @@ interface ServiceItemCMS {
   subtitle?: string;
   description: string;
   icon?: string;
+  image?: any;
   customIcon?: any;
   highlights?: Array<{ item: string } | string>;
 }
@@ -123,14 +124,16 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service, index) => {
+            const imageMedia = 'image' in service ? (service as ServiceItemCMS).image : undefined;
+            const imageUrl = getMediaUrl(imageMedia, '');
             const customIcon = 'customIcon' in service ? (service as ServiceItemCMS).customIcon : undefined;
             const customIconUrl = getMediaUrl(customIcon, '');
-            const hasIcon = service.icon !== 'none' || Boolean(customIconUrl);
-            const Icon = service.icon && service.icon !== 'none' ? iconMap[service.icon] || Briefcase : null;
-            const isAccentExplicit = Boolean(data?.appearance?.accentColor);
-            const isGreenAccent = isAccentExplicit
-              ? data?.appearance?.accentColor === 'verde'
-              : index % 2 === 1;
+
+            const hasIcon = Boolean(service.icon && service.icon !== 'none');
+            const Icon = hasIcon ? iconMap[service.icon!] || null : null;
+
+            const hasBrandingImage = Boolean(imageUrl);
+            const hasVisual = hasBrandingImage || Boolean(customIconUrl) || Boolean(Icon);
 
             const highlights: string[] = Array.isArray(service.highlights)
               ? service.highlights
@@ -144,46 +147,57 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
                 className={`group relative rounded-2xl p-7 sm:p-8 border transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${sectionAppearance.cardClass}`}
               >
                 <div>
-                  {/* Icon Header */}
-                  <div className={`flex items-center ${hasIcon ? 'justify-between' : 'justify-end'} mb-6`}>
-                    {hasIcon && (
-                      <div
-                        className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors duration-300 ${
-                          isGreenAccent
-                            ? 'bg-[#3cac59]/10 text-[#3cac59] group-hover:bg-[#3cac59] group-hover:text-white'
-                            : 'bg-[#1b87c7]/10 text-[#1b87c7] group-hover:bg-[#1b87c7] group-hover:text-white'
-                        }`}
-                      >
-                        {customIconUrl ? (
-                          <div className="relative w-7 h-7">
-                            <Image
-                              src={customIconUrl}
-                              alt={service.title}
-                              fill
-                              className="object-contain"
-                            />
-                          </div>
-                        ) : Icon ? (
-                          <Icon className="w-7 h-7" />
-                        ) : null}
-                      </div>
-                    )}
-                    <span className={`text-xs font-bold tracking-widest uppercase ${sectionAppearance.isDark ? 'text-white/40' : 'text-gray-300'}`}>
+                  {/* Visual Header (Branding Image o Ícono) */}
+                  {hasVisual ? (
+                    <div className="flex items-center justify-between mb-6">
+                      {hasBrandingImage ? (
+                        <div className="relative h-14 sm:h-16 w-auto max-w-[160px] flex items-center">
+                          <Image
+                            src={imageUrl}
+                            alt={service.title}
+                            width={160}
+                            height={64}
+                            className="max-h-14 sm:max-h-16 w-auto object-contain object-left"
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors duration-300 ${sectionAppearance.accentIconBgClass}`}
+                        >
+                          {customIconUrl ? (
+                            <div className="relative w-7 h-7">
+                              <Image
+                                src={customIconUrl}
+                                alt={service.title}
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                          ) : Icon ? (
+                            <Icon className="w-7 h-7" />
+                          ) : null}
+                        </div>
+                      )}
+                      <span className={`text-xs font-bold tracking-widest uppercase ${sectionAppearance.isDark ? 'text-white/40' : 'text-gray-300'}`}>
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+                  ) : (
+                    /* Si no se coloca ni imagen ni ícono, no ocupa ningún espacio vertical */
+                    <span className={`absolute top-6 right-6 text-xs font-bold tracking-widest uppercase ${sectionAppearance.isDark ? 'text-white/40' : 'text-gray-300'}`}>
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                  </div>
+                  )}
 
                   {/* Title & Subtitle */}
                   {service.subtitle ? (
                     <span
-                      className={`text-xs font-bold tracking-wider uppercase mb-1.5 block ${
-                        isGreenAccent ? 'text-[#3cac59]' : 'text-[#1b87c7]'
-                      }`}
+                      className={`text-xs font-bold tracking-wider uppercase mb-1.5 block ${sectionAppearance.accentTextClass}`}
                     >
                       {service.subtitle}
                     </span>
                   ) : null}
-                  <h3 className={`text-xl font-bold mb-3 group-hover:text-[#1b87c7] transition-colors ${sectionAppearance.cardTitleClass}`}>
+                  <h3 className={`text-xl font-bold mb-3 transition-colors ${sectionAppearance.cardTitleClass}`}>
                     {service.title}
                   </h3>
                   <p className={`text-sm leading-relaxed mb-6 ${sectionAppearance.cardSubtextClass}`}>
@@ -200,9 +214,7 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
                         className={`flex items-center gap-2 text-xs font-medium ${sectionAppearance.isDark ? 'text-white/90' : 'text-[#4d4e4f]/90'}`}
                       >
                         <CheckCircle2
-                          className={`w-3.5 h-3.5 flex-shrink-0 ${
-                            isGreenAccent ? 'text-[#3cac59]' : 'text-[#1b87c7]'
-                          }`}
+                          className={`w-3.5 h-3.5 flex-shrink-0 ${sectionAppearance.accentTextClass}`}
                         />
                         <span>{highlight}</span>
                       </div>

@@ -86,7 +86,7 @@ export default function GallerySection({ data }: GallerySectionProps) {
             <div
               className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}
             >
-              <Camera className="w-3.5 h-3.5 text-[#3cac59]" />
+              <Camera className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
               {badge}
             </div>
           ) : null}

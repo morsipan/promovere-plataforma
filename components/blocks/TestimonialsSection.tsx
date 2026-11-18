@@ -82,7 +82,7 @@ export default function TestimonialsSection({ data }: TestimonialsSectionProps) 
         <div className="text-center max-w-3xl mx-auto mb-16">
           {badge ? (
             <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}>
-              <Quote className="w-3.5 h-3.5 text-[#3cac59]" />
+              <Quote className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
               {badge}
             </div>
           ) : null}
@@ -128,7 +128,7 @@ export default function TestimonialsSection({ data }: TestimonialsSectionProps) 
                   <h4 className={`text-sm font-bold leading-tight ${sectionAppearance.cardTitleClass}`}>
                     {item.author}
                   </h4>
-                  <p className="text-xs text-[#1b87c7] font-semibold mt-0.5">
+                  <p className={`text-xs font-semibold mt-0.5 ${sectionAppearance.accentTextClass}`}>
                     {item.role}
                   </p>
                   <p className={`text-[11px] font-medium opacity-75 ${sectionAppearance.cardSubtextClass}`}>

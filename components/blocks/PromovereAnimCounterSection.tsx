@@ -335,7 +335,7 @@ export default function PromovereAnimCounterSection({ data }: PromovereAnimCount
               <div
                 className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.badgeClass}`}
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#3cac59]" />
+                <Sparkles className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
                 {badge}
               </div>
             ) : null}

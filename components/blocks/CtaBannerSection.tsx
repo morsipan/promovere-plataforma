@@ -67,7 +67,7 @@ export default function CtaBannerSection({ data }: CtaBannerSectionProps) {
               <div
                 className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-6 ${sectionAppearance.badgeClass}`}
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#3cac59]" />
+                <Sparkles className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
                 {badge}
               </div>
             ) : null}
@@ -94,7 +94,7 @@ export default function CtaBannerSection({ data }: CtaBannerSectionProps) {
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href={primaryButtonHref}
-                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] active:bg-[#0f5b89] transition-all shadow-lg shadow-[#1b87c7]/30 hover:-translate-y-0.5"
+                className={`inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 ${sectionAppearance.buttonClass}`}
               >
                 <Compass className="w-4 h-4" />
                 {primaryButtonLabel}
@@ -104,9 +104,9 @@ export default function CtaBannerSection({ data }: CtaBannerSectionProps) {
               {secondaryButtonLabel ? (
                 <a
                   href={secondaryButtonHref}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/25 backdrop-blur-sm transition-all hover:-translate-y-0.5"
+                  className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 ${sectionAppearance.secondaryButtonClass}`}
                 >
-                  <Sparkles className="w-4 h-4 text-[#3cac59]" />
+                  <Sparkles className={`w-4 h-4 ${sectionAppearance.accentTextClass}`} />
                   {secondaryButtonLabel}
                 </a>
               ) : null}

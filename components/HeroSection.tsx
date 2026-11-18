@@ -38,10 +38,11 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
   const cta2Label = data?.cta2Label || heroContent.cta2.label;
   const cta2Href = data?.cta2Href || '/comunidad/login';
 
-  // Obtener URL de imagen de fondo (prioriza la subida en apariencia, luego en bloque, luego default)
+  const explicitBgColor = data?.appearance?.backgroundColor;
+  const hasUploadedImage = Boolean(data?.appearance?.backgroundImage || data?.backgroundImage || data?.backgroundImageUrl);
   const backgroundImageUrl =
     sectionAppearance.backgroundImageUrl ||
-    getMediaUrl(data?.backgroundImage, data?.backgroundImageUrl || heroContent.backgroundImage);
+    getMediaUrl(data?.backgroundImage, data?.backgroundImageUrl || (hasUploadedImage || !explicitBgColor ? heroContent.backgroundImage : ''));
 
   const backgroundImageAlt = getMediaAlt(
     data?.appearance?.backgroundImage || data?.backgroundImage,
@@ -133,7 +134,7 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
         {badge ? (
           <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-8 shadow-sm ${sectionAppearance.badgeClass}`}>
             {data?.showBadgeIcon !== false && (
-              <span className="w-2 h-2 rounded-full bg-[#3cac59] animate-pulse" />
+              <span className={`w-2 h-2 rounded-full ${sectionAppearance.badgeIconClass.includes('text-[#3cac59]') ? 'bg-[#3cac59]' : sectionAppearance.accentBgClass} animate-pulse`} />
             )}
             <span className="text-xs sm:text-sm font-semibold tracking-wide uppercase font-sans">
               {badge}
@@ -169,13 +170,9 @@ export default function HeroSection({ data }: HeroSectionProps = {}) {
           {cta2Label ? (
             <a
               href={cta2Href}
-              className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-base border backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 ${
-                sectionAppearance.isDark
-                  ? 'bg-white/10 hover:bg-white/20 text-white border-white/30'
-                  : 'bg-[#4d4e4f]/10 hover:bg-[#4d4e4f]/15 text-[#4d4e4f] border-[#4d4e4f]/20'
-              }`}
+              className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5 ${sectionAppearance.secondaryButtonClass}`}
             >
-              <Sparkles className="w-5 h-5 text-[#3cac59]" />
+              <Sparkles className={`w-5 h-5 ${sectionAppearance.accentTextClass}`} />
               <span>{cta2Label}</span>
             </a>
           ) : null}

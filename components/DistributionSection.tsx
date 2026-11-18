@@ -87,8 +87,8 @@ export default function DistributionSection({ data }: DistributionSectionProps =
           {/* Left Column: Content (7 cols) */}
           <div className="lg:col-span-7">
             {badge ? (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-[#3cac59] text-xs font-bold uppercase tracking-wider mb-6">
-                <Globe className="w-3.5 h-3.5" />
+              <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-6 ${sectionAppearance.badgeClass}`}>
+                <Globe className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
                 {badge}
               </div>
             ) : null}
@@ -110,12 +110,12 @@ export default function DistributionSection({ data }: DistributionSectionProps =
               {stats.map((stat, idx) => (
                 <div
                   key={stat.label || `stat-${idx}`}
-                  className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-[#1b87c7]/50 transition-colors"
+                  className={`p-5 rounded-2xl border transition-colors ${sectionAppearance.cardClass}`}
                 >
-                  <div className="text-3xl sm:text-4xl font-black text-[#3cac59] mb-1 font-heading">
+                  <div className={`text-3xl sm:text-4xl font-black mb-1 font-heading ${sectionAppearance.accentTextClass}`}>
                     {stat.value}
                   </div>
-                  <div className="text-white/70 text-xs sm:text-sm font-medium leading-tight font-sans">
+                  <div className={`text-xs sm:text-sm font-medium leading-tight font-sans ${sectionAppearance.cardSubtextClass}`}>
                     {stat.label}
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export default function DistributionSection({ data }: DistributionSectionProps =
               {cta1Label ? (
                 <a
                   href={cta1Href}
-                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#1b87c7] text-white font-bold text-sm hover:bg-[#1571a8] transition-all shadow-lg shadow-[#1b87c7]/30 hover:-translate-y-0.5"
+                  className={`inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 ${sectionAppearance.buttonClass}`}
                 >
                   <span>{cta1Label}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -136,7 +136,7 @@ export default function DistributionSection({ data }: DistributionSectionProps =
               {cta2Label ? (
                 <a
                   href={cta2Href}
-                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 text-white font-bold text-sm border border-white/20 hover:bg-white/20 transition-all"
+                  className={`inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all ${sectionAppearance.secondaryButtonClass}`}
                 >
                   {cta2Label}
                 </a>
@@ -145,13 +145,13 @@ export default function DistributionSection({ data }: DistributionSectionProps =
           </div>
 
           {/* Right Column: Country Badges & Network Visual (5 cols) */}
-          <div className="lg:col-span-5 bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#3cac59] mb-4">
+          <div className={`lg:col-span-5 rounded-3xl p-6 sm:p-8 backdrop-blur-md border ${sectionAppearance.cardClass}`}>
+            <div className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wider mb-4 ${sectionAppearance.accentTextClass}`}>
               <MapPin className="w-4 h-4" />
               <span>Mercados Clave Cubiertos en LATAM</span>
             </div>
 
-            <p className="text-xs text-white/70 mb-6">
+            <p className={`text-xs mb-6 ${sectionAppearance.cardSubtextClass}`}>
               Relación comercial directa con los principales turoperadores mayoristas y redes de agencias de viajes:
             </p>
 
@@ -159,25 +159,29 @@ export default function DistributionSection({ data }: DistributionSectionProps =
               {distributionContent.countries.map((country) => (
                 <span
                   key={country}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 text-xs font-semibold text-white transition-colors"
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-colors ${
+                    sectionAppearance.isDark
+                      ? 'bg-white/10 hover:bg-white/20 border-white/10 text-white'
+                      : 'bg-gray-100 hover:bg-gray-200 border-gray-200 text-[#4d4e4f]'
+                  }`}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#3cac59]" />
+                  <span className={`w-1.5 h-1.5 rounded-full ${sectionAppearance.accentBgClass}`} />
                   {country}
                 </span>
               ))}
             </div>
 
-            <div className="pt-4 border-t border-white/10 space-y-2 text-xs text-white/80">
+            <div className={`pt-4 border-t ${sectionAppearance.borderClass} space-y-2 text-xs ${sectionAppearance.cardSubtextClass}`}>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#3cac59]" />
+                <CheckCircle2 className={`w-4 h-4 ${sectionAppearance.accentTextClass}`} />
                 <span>Capacitaciones presenciales y online periódicas</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#3cac59]" />
+                <CheckCircle2 className={`w-4 h-4 ${sectionAppearance.accentTextClass}`} />
                 <span>Acuerdos comerciales y de marketing cooperado</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#3cac59]" />
+                <CheckCircle2 className={`w-4 h-4 ${sectionAppearance.accentTextClass}`} />
                 <span>Soporte comercial in situ en eventos del trade</span>
               </div>
             </div>
