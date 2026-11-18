@@ -108,20 +108,21 @@ export const Header: GlobalConfig = {
       ],
     },
     {
-      type: 'collapsible',
-      label: 'Botón de Acción Principal (CTA)',
+      type: 'row',
       fields: [
         {
           name: 'ctaLabel',
           type: 'text',
-          label: 'Texto del Botón',
+          label: 'Texto del Botón CTA',
           defaultValue: 'Comunidad Trade',
+          admin: { width: '50%' },
         },
         {
           name: 'ctaHref',
           type: 'text',
-          label: 'Enlace del Botón',
+          label: 'Enlace del Botón CTA',
           defaultValue: '/comunidad/login',
+          admin: { width: '50%' },
         },
       ],
     },
