@@ -63,7 +63,10 @@ export default function DashboardLayout({
           {/* Acciones de cabecera */}
           <div className="flex items-center gap-3">
             {user?.role && (
-              <span className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 capitalize">
+              <span
+                suppressHydrationWarning
+                className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 capitalize"
+              >
                 {user.role}
               </span>
             )}

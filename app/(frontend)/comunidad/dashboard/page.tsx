@@ -118,8 +118,8 @@ export default async function ComunidadDashboardPage() {
             <Sparkles className="w-3.5 h-3.5 text-[#3cac59]" />
             Portal Exclusivo para Profesionales de Turismo
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
-            Bienvenido, {user.name?.split(' ')[0] || 'Colega'}
+          <h1 suppressHydrationWarning className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
+            {`Bienvenido, ${user.name?.split(' ')[0] || 'Colega'}`}
           </h1>
           <p className="text-sm sm:text-base text-white/90 leading-relaxed font-light mb-6">
             Espacio exclusivo para Operadores Mayoristas y Agencias de Viajes. Aquí encontrarás el catálogo oficial de destinos representados, fichas técnicas, promociones vigentes y herramientas comerciales de apoyo.
@@ -321,8 +321,8 @@ export default async function ComunidadDashboardPage() {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
                 Herramientas de Gestión Comercial
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Documentos y manuales filtrados estrictamente según tu nivel de acceso ({currentRole.label}).
+              <p suppressHydrationWarning className="text-xs sm:text-sm text-slate-500 mt-1">
+                {`Documentos y manuales filtrados estrictamente según tu nivel de acceso (${currentRole.label}).`}
               </p>
             </div>
           </div>
@@ -376,8 +376,8 @@ export default async function ComunidadDashboardPage() {
 
                     return (
                       <div className="pt-4 border-t border-slate-100">
-                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                          Descargas Disponibles ({allDownloads.length}):
+                        <span suppressHydrationWarning className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                          {`Descargas Disponibles (${allDownloads.length}):`}
                         </span>
                         {allDownloads.length > 0 ? (
                           <div className="space-y-1.5">

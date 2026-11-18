@@ -169,7 +169,7 @@ export default function UserProfileItem({
       <div
         className={`w-full border-t border-gray-200 p-4 flex items-center gap-3 text-slate-400 text-xs italic ${className}`}
       >
-        <span>Sesión no disponible</span>
+        <span suppressHydrationWarning>Sesión no disponible</span>
       </div>
     );
   }
@@ -205,6 +205,7 @@ export default function UserProfileItem({
         />
       ) : (
         <div
+          suppressHydrationWarning
           className="w-10 h-10 rounded-full bg-[#3cac59] text-white flex items-center justify-center font-bold font-baloo shrink-0 text-base"
           aria-hidden="true"
         >
@@ -215,17 +216,24 @@ export default function UserProfileItem({
       {/* B. Datos del Usuario */}
       <div className="flex flex-col min-w-0 flex-1">
         {/* Nombre */}
-        <span className="font-roboto font-semibold text-sm text-[#4d4e4f] truncate leading-tight group-hover:text-black transition-colors">
+        <span
+          suppressHydrationWarning
+          className="font-roboto font-semibold text-sm text-[#4d4e4f] truncate leading-tight group-hover:text-black transition-colors"
+        >
           {user.name || user.email || 'Usuario'}
         </span>
 
         {/* Rol */}
-        <span className="text-xs font-medium text-[#3cac59] leading-tight mt-0.5">
+        <span
+          suppressHydrationWarning
+          className="text-xs font-medium text-[#3cac59] leading-tight mt-0.5"
+        >
           {formattedRole}
         </span>
 
         {/* Email */}
         <span
+          suppressHydrationWarning
           className="text-xs text-gray-500 truncate leading-tight mt-0.5"
           title={user.email || ''}
         >

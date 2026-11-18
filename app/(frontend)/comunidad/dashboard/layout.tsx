@@ -19,5 +19,17 @@ export default async function ComunidadDashboardLayout({
     redirect('/comunidad/login');
   }
 
-  return <DashboardLayout user={user}>{children}</DashboardLayout>;
+  const cleanUser = {
+    id: user.id,
+    name: user.name || '',
+    email: user.email || '',
+    role: user.role,
+    avatar: user.avatar || null,
+    company: user.company || null,
+    phone: user.phone || null,
+    country: user.country || null,
+    verified: Boolean(user.verified),
+  };
+
+  return <DashboardLayout user={cleanUser}>{children}</DashboardLayout>;
 }

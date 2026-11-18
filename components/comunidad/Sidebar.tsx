@@ -256,25 +256,25 @@ export default function Sidebar({
                 {user?.company && (
                   <div className="flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span className="truncate">{user.company}</span>
+                    <span suppressHydrationWarning className="truncate">{user.company}</span>
                   </div>
                 )}
                 {user?.phone && (
                   <div className="flex items-center gap-2">
                     <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>{user.phone}</span>
+                    <span suppressHydrationWarning>{user.phone}</span>
                   </div>
                 )}
                 {user?.country && (
                   <div className="flex items-center gap-2">
                     <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>{user.country}</span>
+                    <span suppressHydrationWarning>{user.country}</span>
                   </div>
                 )}
                 <div className="flex items-center gap-2 pt-1 border-t border-slate-200/60">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#3cac59] shrink-0" />
-                  <span className="font-semibold text-slate-700">
-                    Cuenta Verificada Trade ({formatRole(user?.role)})
+                  <span suppressHydrationWarning className="font-semibold text-slate-700">
+                    {`Cuenta Verificada Trade (${formatRole(user?.role)})`}
                   </span>
                 </div>
               </div>
