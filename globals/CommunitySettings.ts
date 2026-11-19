@@ -289,6 +289,94 @@ export const CommunitySettings: GlobalConfig = {
                     },
                   ],
                 },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'welcomeTextColor',
+                      type: 'select',
+                      enumName: 'enum_cs_wel_txt',
+                      label: 'Color de Texto — Banner de Bienvenida',
+                      defaultValue: 'blanco',
+                      options: [
+                        { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
+                        { label: 'Blanco Humo (#f9f9f9)', value: 'blancoHumo' },
+                        { label: 'Gris Antracita (#4d4e4f)', value: 'grisOscuro' },
+                        { label: 'Azul Brillante (#1b87c7)', value: 'azul' },
+                        { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
+                      ],
+                      admin: {
+                        width: '50%',
+                        components: {
+                          Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                        },
+                      },
+                    },
+                    {
+                      name: 'alertTextColor',
+                      type: 'select',
+                      enumName: 'enum_cs_alr_txt',
+                      label: 'Color de Texto — Cintillo de Aviso',
+                      defaultValue: 'blanco',
+                      options: [
+                        { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
+                        { label: 'Blanco Humo (#f9f9f9)', value: 'blancoHumo' },
+                        { label: 'Gris Antracita (#4d4e4f)', value: 'grisOscuro' },
+                        { label: 'Azul Brillante (#1b87c7)', value: 'azul' },
+                        { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
+                      ],
+                      admin: {
+                        width: '50%',
+                        components: {
+                          Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                        },
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'whatsappTextColor',
+                      type: 'select',
+                      enumName: 'enum_cs_wa_txt',
+                      label: 'Color de Texto — Banner de WhatsApp',
+                      defaultValue: 'blanco',
+                      options: [
+                        { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
+                        { label: 'Blanco Humo (#f9f9f9)', value: 'blancoHumo' },
+                        { label: 'Gris Antracita (#4d4e4f)', value: 'grisOscuro' },
+                        { label: 'Azul Brillante (#1b87c7)', value: 'azul' },
+                        { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
+                      ],
+                      admin: {
+                        width: '50%',
+                        components: {
+                          Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                        },
+                      },
+                    },
+                    {
+                      name: 'headingTextColor',
+                      type: 'select',
+                      enumName: 'enum_cs_hdg_txt',
+                      label: 'Color de Títulos de Secciones del Portal',
+                      defaultValue: 'grisOscuro',
+                      options: [
+                        { label: 'Gris Antracita (#4d4e4f)', value: 'grisOscuro' },
+                        { label: 'Azul Brillante (#1b87c7)', value: 'azul' },
+                        { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
+                      ],
+                      admin: {
+                        width: '50%',
+                        components: {
+                          Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                        },
+                      },
+                    },
+                  ],
+                },
               ],
             },
           ],

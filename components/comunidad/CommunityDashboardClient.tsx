@@ -130,6 +130,10 @@ export interface DashboardCommunitySettings {
     whatsappStyle?: 'verde-gradiente' | 'verde' | 'azul' | 'grisOscuro' | null;
     cardStyle?: 'elevated' | 'bordered' | 'soft' | null;
     accentColor?: 'azul' | 'verde' | null;
+    welcomeTextColor?: 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde' | null;
+    alertTextColor?: 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde' | null;
+    whatsappTextColor?: 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde' | null;
+    headingTextColor?: 'grisOscuro' | 'azul' | 'verde' | null;
   };
   adBannerTop?: any[] | null;
   adBannerMiddle?: any[] | null;
@@ -326,6 +330,19 @@ export default function CommunityDashboardClient({
     soft: 'bg-[#f9f9f9] border border-slate-200/60 hover:bg-white hover:shadow-md',
   }[styles?.cardStyle || 'elevated'];
 
+  const textColorMap: Record<string, string> = {
+    blanco: 'text-white',
+    blancoHumo: 'text-[#f9f9f9]',
+    grisOscuro: 'text-[#4d4e4f]',
+    azul: 'text-[#1b87c7]',
+    verde: 'text-[#3cac59]',
+  };
+
+  const welcomeTextClass = textColorMap[styles?.welcomeTextColor || 'blanco'] || 'text-white';
+  const alertTextClass = textColorMap[styles?.alertTextColor || 'blanco'] || 'text-white';
+  const whatsappTextClass = textColorMap[styles?.whatsappTextColor || 'blanco'] || 'text-white';
+  const headingTextClass = textColorMap[styles?.headingTextColor || 'grisOscuro'] || 'text-[#4d4e4f]';
+
   // =========================================================================
   // Separación de Herramientas vs Notas de Blog (Herramientas Importantes)
   // =========================================================================
@@ -462,7 +479,7 @@ export default function CommunityDashboardClient({
                   <Compass className="w-4 h-4" />
                   <span>Marcas y Destinos de Excelencia</span>
                 </div>
-                <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
+                <h2 className={`font-baloo text-2xl sm:text-3xl font-extrabold ${headingTextClass} tracking-tight`}>
                   Catálogo de Representaciones Oficiales
                 </h2>
               </div>
@@ -607,7 +624,7 @@ export default function CommunityDashboardClient({
                   <Tag className="w-4 h-4" />
                   <span>Beneficios Comerciales Vigentes</span>
                 </div>
-                <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
+                <h2 className={`font-baloo text-2xl sm:text-3xl font-extrabold ${headingTextClass} tracking-tight`}>
                   Promociones e Incentivos Trade
                 </h2>
               </div>
@@ -769,7 +786,7 @@ export default function CommunityDashboardClient({
                   <FolderOpen className="w-4 h-4" />
                   <span>Herramientas Comerciales & Inteligentes</span>
                 </div>
-                <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
+                <h2 className={`font-baloo text-2xl sm:text-3xl font-extrabold ${headingTextClass} tracking-tight`}>
                   Herramientas de la Comunidad
                 </h2>
               </div>
@@ -1038,7 +1055,7 @@ export default function CommunityDashboardClient({
                   <Video className="w-4 h-4" />
                   <span>Capacitaciones en Video & On-Demand</span>
                 </div>
-                <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
+                <h2 className={`font-baloo text-2xl sm:text-3xl font-extrabold ${headingTextClass} tracking-tight`}>
                   Webinars Exclusivos
                 </h2>
               </div>
@@ -1137,7 +1154,7 @@ export default function CommunityDashboardClient({
                   <BookOpen className="w-4 h-4" />
                   <span>Notas de Blog & Información Clave</span>
                 </div>
-                <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
+                <h2 className={`font-baloo text-2xl sm:text-3xl font-extrabold ${headingTextClass} tracking-tight`}>
                   Herramientas Importantes
                 </h2>
               </div>
@@ -1256,11 +1273,11 @@ export default function CommunityDashboardClient({
       {/* 0. AVISO URGENTE / CINTILLO SUPERIOR */}
       {alertBanner?.enabled && alertBanner?.message && (
         <div
-          className={`rounded-2xl ${alertBgClass} text-white px-5 py-3.5 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3`}
+          className={`rounded-2xl ${alertBgClass} ${alertTextClass} px-5 py-3.5 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3`}
         >
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-              <Megaphone className="w-4 h-4 text-white" />
+              <Megaphone className="w-4 h-4" />
             </div>
             <p className="text-xs sm:text-sm font-semibold leading-snug">{alertBanner.message}</p>
           </div>
@@ -1280,7 +1297,7 @@ export default function CommunityDashboardClient({
 
       {/* 1. PRIMER ELEMENTO: BANNER DE BIENVENIDA + CONFIGURACIÓN DE PERFIL Y ORDEN */}
       <div
-        className={`relative overflow-hidden rounded-3xl ${welcomeBgClass} text-white p-7 sm:p-10 shadow-xl`}
+        className={`relative overflow-hidden rounded-3xl ${welcomeBgClass} ${welcomeTextClass} p-7 sm:p-10 shadow-xl`}
       >
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-start justify-between gap-6">
           <div className="max-w-3xl">
@@ -1294,7 +1311,7 @@ export default function CommunityDashboardClient({
             >
               {`Bienvenido, ${userName}`}
             </h1>
-            <p className="text-sm sm:text-base text-white/90 leading-relaxed font-light mb-6">
+            <p className="text-sm sm:text-base opacity-90 leading-relaxed font-light mb-6">
               {welcome?.subtitle ||
                 'Espacio exclusivo para Operadores Mayoristas y Agencias de Viajes. Aquí encontrarás el catálogo oficial de destinos representados, fichas técnicas, promociones vigentes y herramientas comerciales de apoyo.'}
             </p>
@@ -1341,7 +1358,7 @@ export default function CommunityDashboardClient({
       {/* CANAL DE WHATSAPP TRADE */}
       {whatsapp?.enabled !== false && whatsapp?.whatsappUrl && (
         <section
-          className={`relative overflow-hidden rounded-3xl ${whatsappBgClass} text-white p-7 sm:p-9 shadow-xl`}
+          className={`relative overflow-hidden rounded-3xl ${whatsappBgClass} ${whatsappTextClass} p-7 sm:p-9 shadow-xl`}
         >
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="max-w-2xl">
@@ -1352,7 +1369,7 @@ export default function CommunityDashboardClient({
               <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold mb-2 leading-tight">
                 {whatsapp.title || 'Sumate al Canal Oficial de WhatsApp Trade'}
               </h2>
-              <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
+              <p className="text-xs sm:text-sm opacity-90 leading-relaxed">
                 {whatsapp.description ||
                   'Recibí alertas instantáneas de promociones, cupos de Fam Tours, lanzamientos hoteleros y novedades comerciales directo en tu teléfono.'}
               </p>

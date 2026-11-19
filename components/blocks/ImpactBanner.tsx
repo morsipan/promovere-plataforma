@@ -20,9 +20,10 @@ export interface ImpactBannerData {
     backgroundColor?: 'blancoHumo' | 'grisOscuro' | 'verde' | 'azul' | string;
     backgroundImage?: any;
     theme?: 'dark' | 'light';
-    height?: 'small' | 'medium' | 'large';
+    height?: 'natural' | 'small' | 'medium' | 'large';
     layout?: 'centered' | 'split';
     enableAnimations?: boolean;
+    enableHoverEffect?: boolean;
   };
   title?: string;
   subtitle?: string;
@@ -39,9 +40,10 @@ export interface ImpactBannerData {
   backgroundColor?: string;
   backgroundImage?: any;
   theme?: 'dark' | 'light';
-  height?: 'small' | 'medium' | 'large';
+  height?: 'natural' | 'small' | 'medium' | 'large';
   layout?: 'centered' | 'split';
   enableAnimations?: boolean;
+  enableHoverEffect?: boolean;
 }
 
 export interface ImpactBannerProps {
@@ -58,12 +60,15 @@ export default function ImpactBanner({ data, className = '' }: ImpactBannerProps
   const height = appearance?.height || data?.height || 'medium';
   const layout = appearance?.layout || data?.layout || 'centered';
   const enableAnimations = appearance?.enableAnimations ?? data?.enableAnimations ?? true;
+  const enableHover = appearance?.enableHoverEffect ?? data?.enableHoverEffect ?? true;
 
   const backgroundImageUrl = getMediaUrl(appearance?.backgroundImage);
   const backgroundImageAlt = getMediaAlt(
     appearance?.backgroundImage,
     data?.title || 'Fondo Banner de Impacto Promovêre'
   );
+  const isNaturalImageHeight =
+    height === 'natural' && backgroundStyle === 'image' && Boolean(backgroundImageUrl);
 
   // 2. Extracción de contenidos y botones
   const title = data?.title || 'Impulsa tu presencia turística en toda América Latina';
@@ -100,11 +105,14 @@ export default function ImpactBanner({ data, className = '' }: ImpactBannerProps
   const hasSecondaryGraphic = Boolean(secondaryGraphicUrl && secondaryGraphicUrl.trim().length > 0);
 
   // 4. Mapeo de alturas (Padding vertical)
-  const heightClasses = {
-    small: 'py-10 sm:py-12',
-    medium: 'py-16 sm:py-20 md:py-24',
-    large: 'py-24 sm:py-28 md:py-32 lg:min-h-[500px] flex items-center',
-  }[height] || 'py-16 sm:py-20 md:py-24';
+  const heightClasses = isNaturalImageHeight
+    ? 'h-auto'
+    : {
+        natural: 'py-8 sm:py-10',
+        small: 'py-10 sm:py-12',
+        medium: 'py-16 sm:py-20 md:py-24',
+        large: 'py-24 sm:py-28 md:py-32 lg:min-h-[500px] flex items-center',
+      }[height] || 'py-16 sm:py-20 md:py-24';
 
   // 5. Mapeo de fondos corporativos
   const solidColorClasses: Record<string, string> = {
@@ -141,12 +149,20 @@ export default function ImpactBanner({ data, className = '' }: ImpactBannerProps
     let btnStyleClasses = '';
     if (isPrimary) {
       btnStyleClasses = isDark
-        ? 'bg-white text-[#1b87c7] hover:bg-[#f9f9f9] hover:text-[#4d4e4f] shadow-xl shadow-black/15'
-        : 'bg-[#1b87c7] text-white hover:bg-[#156d9f] shadow-lg shadow-[#1b87c7]/25';
+        ? `bg-white text-[#1b87c7] ${
+            enableHover ? 'hover:bg-[#f9f9f9] hover:text-[#4d4e4f]' : ''
+          } shadow-xl shadow-black/15`
+        : `bg-[#1b87c7] text-white ${
+            enableHover ? 'hover:bg-[#156d9f]' : ''
+          } shadow-lg shadow-[#1b87c7]/25`;
     } else {
       btnStyleClasses = isDark
-        ? 'border-2 border-white/90 text-white hover:bg-white/15 hover:border-white shadow-sm'
-        : 'border-2 border-[#1b87c7] text-[#1b87c7] hover:bg-[#1b87c7]/10 shadow-sm';
+        ? `border-2 border-white/90 text-white ${
+            enableHover ? 'hover:bg-white/15 hover:border-white' : ''
+          } shadow-sm`
+        : `border-2 border-[#1b87c7] text-[#1b87c7] ${
+            enableHover ? 'hover:bg-[#1b87c7]/10' : ''
+          } shadow-sm`;
     }
 
     return (
@@ -155,10 +171,16 @@ export default function ImpactBanner({ data, className = '' }: ImpactBannerProps
         href={btn.url}
         target={isExternal ? '_blank' : undefined}
         rel={isExternal ? 'noopener noreferrer' : undefined}
-        className={`group font-sans inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:px-8 sm:py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer ${btnStyleClasses}`}
+        className={`group font-sans inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:px-8 sm:py-4 rounded-full font-bold text-sm sm:text-base cursor-pointer ${
+          enableHover ? 'transition-all duration-300 hover:scale-105 active:scale-95' : ''
+        } ${btnStyleClasses}`}
       >
         <span>{btn.label}</span>
-        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1" />
+        <ArrowRight
+          className={`w-4 h-4 sm:w-5 sm:h-5 ${
+            enableHover ? 'transition-transform duration-300 group-hover:translate-x-1' : ''
+          }`}
+        />
       </Link>
     );
   };
@@ -171,17 +193,28 @@ export default function ImpactBanner({ data, className = '' }: ImpactBannerProps
     >
       {/* Fondo de Imagen Fotográfica con Overlay oscuro */}
       {backgroundStyle === 'image' && backgroundImageUrl && (
-        <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-          <Image
-            src={backgroundImageUrl}
-            alt={backgroundImageAlt}
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-            priority={false}
-          />
-          <div className="absolute inset-0 bg-black/45 backdrop-blur-[1px]" />
-        </div>
+        isNaturalImageHeight ? (
+          <div className="relative w-full z-0">
+            <img
+              src={backgroundImageUrl}
+              alt={backgroundImageAlt}
+              className="block w-full h-auto max-w-full object-contain mx-auto"
+            />
+            <div className="absolute inset-0 bg-black/40" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+            <Image
+              src={backgroundImageUrl}
+              alt={backgroundImageAlt}
+              fill
+              sizes="100vw"
+              className="object-cover object-center"
+              priority={false}
+            />
+            <div className="absolute inset-0 bg-black/45 backdrop-blur-[1px]" />
+          </div>
+        )
       )}
 
       {/* Efectos decorativos de iluminación ambiental para fondo gradiente */}
@@ -199,7 +232,11 @@ export default function ImpactBanner({ data, className = '' }: ImpactBannerProps
       )}
 
       {/* Contenedor principal centrado max-w-7xl */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div
+        className={`${
+          isNaturalImageHeight ? 'absolute inset-0 flex items-center' : 'relative'
+        } z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}
+      >
         {layout === 'centered' ? (
           // ===================================================================
           // LAYOUT 1: Centrado (Todo el contenido al centro)

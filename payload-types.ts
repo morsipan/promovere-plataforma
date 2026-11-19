@@ -727,9 +727,10 @@ export interface Page {
          * Si se adjunta, se mostrará en pantallas móviles en lugar de la imagen de escritorio.
          */
         mobileImage?: (number | null) | Media;
-        height?: ('auto' | 'small' | 'medium' | 'large' | 'screen') | null;
+        height?: ('natural' | 'auto' | 'small' | 'medium' | 'large' | 'screen') | null;
         overlay?: ('none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand') | null;
         fullBleed?: boolean | null;
+        enableHoverEffect?: boolean | null;
         title?: string | null;
         subtitle?: string | null;
         /**
@@ -762,17 +763,21 @@ export interface Page {
            */
           theme: 'dark' | 'light';
           /**
-           * Define la separación vertical y presencia del banner.
+           * Define la separación vertical o respeta el 100% de la proporción de la imagen.
            */
-          height: 'small' | 'medium' | 'large';
+          height: 'natural' | 'small' | 'medium' | 'large';
           /**
            * Distribución espacial de los textos y botones.
            */
           layout: 'centered' | 'split';
           /**
-           * Aplica efectos animados fluidos al entrar en pantalla.
+           * Efecto Framer Motion al entrar.
            */
           enableAnimations?: boolean | null;
+          /**
+           * Desmarcar para quitar zoom/hover.
+           */
+          enableHoverEffect?: boolean | null;
           /**
            * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
            */
@@ -790,6 +795,9 @@ export interface Page {
          * Texto secundario en tipografía Roboto.
          */
         subtitle?: string | null;
+        /**
+         * Agregá 1 botón principal o un segundo botón CTA secundario (estilo Outline) si necesitás dos acciones.
+         */
         buttons?:
           | {
               label: string;
@@ -1714,6 +1722,7 @@ export interface PagesSelect<T extends boolean = true> {
               height?: T;
               overlay?: T;
               fullBleed?: T;
+              enableHoverEffect?: T;
               title?: T;
               subtitle?: T;
               linkType?: T;
@@ -1736,6 +1745,7 @@ export interface PagesSelect<T extends boolean = true> {
                     height?: T;
                     layout?: T;
                     enableAnimations?: T;
+                    enableHoverEffect?: T;
                     backgroundColor?: T;
                     backgroundImage?: T;
                   };
@@ -2112,6 +2122,10 @@ export interface CommunitySetting {
     whatsappStyle?: ('verde-gradiente' | 'verde' | 'azul' | 'grisOscuro') | null;
     cardStyle?: ('elevated' | 'bordered' | 'soft') | null;
     accentColor?: ('azul' | 'verde') | null;
+    welcomeTextColor?: ('blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde') | null;
+    alertTextColor?: ('blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde') | null;
+    whatsappTextColor?: ('blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde') | null;
+    headingTextColor?: ('grisOscuro' | 'azul' | 'verde') | null;
   };
   /**
    * Cargá un Banner Full-Width o Banner de Impacto para mostrar en la zona superior del dashboard.
@@ -2127,9 +2141,10 @@ export interface CommunitySetting {
              * Si se adjunta, se mostrará en pantallas móviles en lugar de la imagen de escritorio.
              */
             mobileImage?: (number | null) | Media;
-            height?: ('auto' | 'small' | 'medium' | 'large' | 'screen') | null;
+            height?: ('natural' | 'auto' | 'small' | 'medium' | 'large' | 'screen') | null;
             overlay?: ('none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand') | null;
             fullBleed?: boolean | null;
+            enableHoverEffect?: boolean | null;
             title?: string | null;
             subtitle?: string | null;
             /**
@@ -2162,17 +2177,21 @@ export interface CommunitySetting {
                */
               theme: 'dark' | 'light';
               /**
-               * Define la separación vertical y presencia del banner.
+               * Define la separación vertical o respeta el 100% de la proporción de la imagen.
                */
-              height: 'small' | 'medium' | 'large';
+              height: 'natural' | 'small' | 'medium' | 'large';
               /**
                * Distribución espacial de los textos y botones.
                */
               layout: 'centered' | 'split';
               /**
-               * Aplica efectos animados fluidos al entrar en pantalla.
+               * Efecto Framer Motion al entrar.
                */
               enableAnimations?: boolean | null;
+              /**
+               * Desmarcar para quitar zoom/hover.
+               */
+              enableHoverEffect?: boolean | null;
               /**
                * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
                */
@@ -2190,6 +2209,9 @@ export interface CommunitySetting {
              * Texto secundario en tipografía Roboto.
              */
             subtitle?: string | null;
+            /**
+             * Agregá 1 botón principal o un segundo botón CTA secundario (estilo Outline) si necesitás dos acciones.
+             */
             buttons?:
               | {
                   label: string;
@@ -2222,9 +2244,10 @@ export interface CommunitySetting {
              * Si se adjunta, se mostrará en pantallas móviles en lugar de la imagen de escritorio.
              */
             mobileImage?: (number | null) | Media;
-            height?: ('auto' | 'small' | 'medium' | 'large' | 'screen') | null;
+            height?: ('natural' | 'auto' | 'small' | 'medium' | 'large' | 'screen') | null;
             overlay?: ('none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand') | null;
             fullBleed?: boolean | null;
+            enableHoverEffect?: boolean | null;
             title?: string | null;
             subtitle?: string | null;
             /**
@@ -2257,17 +2280,21 @@ export interface CommunitySetting {
                */
               theme: 'dark' | 'light';
               /**
-               * Define la separación vertical y presencia del banner.
+               * Define la separación vertical o respeta el 100% de la proporción de la imagen.
                */
-              height: 'small' | 'medium' | 'large';
+              height: 'natural' | 'small' | 'medium' | 'large';
               /**
                * Distribución espacial de los textos y botones.
                */
               layout: 'centered' | 'split';
               /**
-               * Aplica efectos animados fluidos al entrar en pantalla.
+               * Efecto Framer Motion al entrar.
                */
               enableAnimations?: boolean | null;
+              /**
+               * Desmarcar para quitar zoom/hover.
+               */
+              enableHoverEffect?: boolean | null;
               /**
                * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
                */
@@ -2285,6 +2312,9 @@ export interface CommunitySetting {
              * Texto secundario en tipografía Roboto.
              */
             subtitle?: string | null;
+            /**
+             * Agregá 1 botón principal o un segundo botón CTA secundario (estilo Outline) si necesitás dos acciones.
+             */
             buttons?:
               | {
                   label: string;
@@ -2317,9 +2347,10 @@ export interface CommunitySetting {
              * Si se adjunta, se mostrará en pantallas móviles en lugar de la imagen de escritorio.
              */
             mobileImage?: (number | null) | Media;
-            height?: ('auto' | 'small' | 'medium' | 'large' | 'screen') | null;
+            height?: ('natural' | 'auto' | 'small' | 'medium' | 'large' | 'screen') | null;
             overlay?: ('none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand') | null;
             fullBleed?: boolean | null;
+            enableHoverEffect?: boolean | null;
             title?: string | null;
             subtitle?: string | null;
             /**
@@ -2352,17 +2383,21 @@ export interface CommunitySetting {
                */
               theme: 'dark' | 'light';
               /**
-               * Define la separación vertical y presencia del banner.
+               * Define la separación vertical o respeta el 100% de la proporción de la imagen.
                */
-              height: 'small' | 'medium' | 'large';
+              height: 'natural' | 'small' | 'medium' | 'large';
               /**
                * Distribución espacial de los textos y botones.
                */
               layout: 'centered' | 'split';
               /**
-               * Aplica efectos animados fluidos al entrar en pantalla.
+               * Efecto Framer Motion al entrar.
                */
               enableAnimations?: boolean | null;
+              /**
+               * Desmarcar para quitar zoom/hover.
+               */
+              enableHoverEffect?: boolean | null;
               /**
                * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
                */
@@ -2380,6 +2415,9 @@ export interface CommunitySetting {
              * Texto secundario en tipografía Roboto.
              */
             subtitle?: string | null;
+            /**
+             * Agregá 1 botón principal o un segundo botón CTA secundario (estilo Outline) si necesitás dos acciones.
+             */
             buttons?:
               | {
                   label: string;
@@ -2514,6 +2552,10 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
         whatsappStyle?: T;
         cardStyle?: T;
         accentColor?: T;
+        welcomeTextColor?: T;
+        alertTextColor?: T;
+        whatsappTextColor?: T;
+        headingTextColor?: T;
       };
   adBannerTop?:
     | T
@@ -2526,6 +2568,7 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
               height?: T;
               overlay?: T;
               fullBleed?: T;
+              enableHoverEffect?: T;
               title?: T;
               subtitle?: T;
               linkType?: T;
@@ -2548,6 +2591,7 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
                     height?: T;
                     layout?: T;
                     enableAnimations?: T;
+                    enableHoverEffect?: T;
                     backgroundColor?: T;
                     backgroundImage?: T;
                   };
@@ -2577,6 +2621,7 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
               height?: T;
               overlay?: T;
               fullBleed?: T;
+              enableHoverEffect?: T;
               title?: T;
               subtitle?: T;
               linkType?: T;
@@ -2599,6 +2644,7 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
                     height?: T;
                     layout?: T;
                     enableAnimations?: T;
+                    enableHoverEffect?: T;
                     backgroundColor?: T;
                     backgroundImage?: T;
                   };
@@ -2628,6 +2674,7 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
               height?: T;
               overlay?: T;
               fullBleed?: T;
+              enableHoverEffect?: T;
               title?: T;
               subtitle?: T;
               linkType?: T;
@@ -2650,6 +2697,7 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
                     height?: T;
                     layout?: T;
                     enableAnimations?: T;
+                    enableHoverEffect?: T;
                     backgroundColor?: T;
                     backgroundImage?: T;
                   };

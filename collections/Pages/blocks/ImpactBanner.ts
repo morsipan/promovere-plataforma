@@ -64,13 +64,14 @@ export const ImpactBannerBlock: Block = {
               defaultValue: 'medium',
               required: true,
               options: [
+                { label: '100% Altura Real de la Imagen (Proporción exacta, ej: 1200x150)', value: 'natural' },
                 { label: 'Compacto / Small (py-12)', value: 'small' },
                 { label: 'Estándar / Medium (py-24)', value: 'medium' },
                 { label: 'Amplio / Large (py-32 / Hero)', value: 'large' },
               ],
               admin: {
                 width: '33.3%',
-                description: 'Define la separación vertical y presencia del banner.',
+                description: 'Define la separación vertical o respeta el 100% de la proporción de la imagen.',
               },
             },
             {
@@ -92,11 +93,21 @@ export const ImpactBannerBlock: Block = {
             {
               name: 'enableAnimations',
               type: 'checkbox',
-              label: 'Activar animaciones de entrada (Framer Motion)',
+              label: 'Animaciones de entrada',
               defaultValue: true,
               admin: {
-                width: '33.3%',
-                description: 'Aplica efectos animados fluidos al entrar en pantalla.',
+                width: '16.6%',
+                description: 'Efecto Framer Motion al entrar.',
+              },
+            },
+            {
+              name: 'enableHoverEffect',
+              type: 'checkbox',
+              label: 'Efecto hover',
+              defaultValue: true,
+              admin: {
+                width: '16.7%',
+                description: 'Desmarcar para quitar zoom/hover.',
               },
             },
           ],
@@ -161,11 +172,15 @@ export const ImpactBannerBlock: Block = {
     {
       name: 'buttons',
       type: 'array',
-      label: 'Botones de Acción (CTAs)',
+      label: 'Botones CTA (Primario y Secundario Opcional — Máx. 2)',
       maxRows: 2,
       labels: {
-        singular: 'Botón',
-        plural: 'Botones',
+        singular: 'Botón CTA',
+        plural: 'Botones CTA',
+      },
+      admin: {
+        description:
+          'Agregá 1 botón principal o un segundo botón CTA secundario (estilo Outline) si necesitás dos acciones.',
       },
       defaultValue: [
         {

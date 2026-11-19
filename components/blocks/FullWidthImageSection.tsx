@@ -7,9 +7,10 @@ import { getMediaUrl, getMediaAlt } from '@/lib/media';
 export interface FullWidthImageData {
   image?: any;
   mobileImage?: any;
-  height?: 'auto' | 'small' | 'medium' | 'large' | 'screen';
+  height?: 'natural' | 'auto' | 'small' | 'medium' | 'large' | 'screen';
   overlay?: 'none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand';
   fullBleed?: boolean;
+  enableHoverEffect?: boolean;
   title?: string;
   subtitle?: string;
   linkType?: 'cta' | 'full';
@@ -30,15 +31,18 @@ export default function FullWidthImageSection({ data }: FullWidthImageSectionPro
   const altText = getMediaAlt(data?.image, data?.title || 'Banner institucional Promovêre');
 
   const height = data?.height || 'medium';
+  const isNaturalHeight = height === 'natural';
   const overlay = data?.overlay || 'none';
-  const fullBleed = data?.fullBleed !== false; // por defecto true
+  const fullBleed = data?.fullBleed !== false;
+  const enableHover = data?.enableHoverEffect !== false;
   const alignment = data?.contentAlignment || 'center';
   const linkType = data?.linkType || 'cta';
   const hasHref = Boolean(data?.buttonHref && data?.buttonHref.trim().length > 0);
   const isFullElementLink = linkType === 'full' && hasHref;
 
-  // Alturas predefinidas
+  // Alturas predefinidas (cuando no es 'natural')
   const heightClasses = {
+    natural: 'h-auto',
     auto: 'min-h-[320px] aspect-video sm:aspect-[21/9]',
     small: 'h-[280px] sm:h-[360px]',
     medium: 'h-[420px] sm:h-[540px]',
@@ -69,73 +73,110 @@ export default function FullWidthImageSection({ data }: FullWidthImageSectionPro
     return (
       <section className={fullBleed ? 'w-full' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'}>
         <div
-          className={`relative w-full ${heightClasses} ${
+          className={`relative w-full ${isNaturalHeight ? 'min-h-[160px]' : heightClasses} ${
             !fullBleed ? 'rounded-2xl' : ''
           } bg-gradient-to-tr from-[#1b87c7]/15 to-[#3cac59]/15 border-2 border-dashed border-[#1b87c7]/30 flex flex-col items-center justify-center p-6 text-center`}
         >
           <div className="w-12 h-12 rounded-xl bg-[#1b87c7]/10 text-[#1b87c7] flex items-center justify-center font-bold text-xl mb-3">
             🖼️
           </div>
-          <p className="font-bold text-[#4d4e4f] text-base mb-1">Módulo de Banner / Imagen Full-Width</p>
+          <p className="font-bold text-[#4d4e4f] text-base mb-1">
+            Módulo de Banner / Imagen Full-Width
+          </p>
           <p className="text-xs text-[#4d4e4f]/70 max-w-sm">
-            Adjuntá una imagen desde el panel de administración para mostrarla aquí en ancho completo.
+            Adjuntá una imagen desde el panel de administración para mostrarla aquí en ancho
+            completo.
           </p>
         </div>
       </section>
     );
   }
 
-  // Contenido interno del banner (imágenes, overlay, textos, botón y créditos)
+  const hoverImageClass =
+    isFullElementLink && enableHover
+      ? 'transition-transform duration-700 ease-out group-hover:scale-105'
+      : '';
+
+  const hoverOverlayClass =
+    isFullElementLink && enableHover ? 'transition-opacity duration-300 group-hover:opacity-90' : '';
+
+  const ctaHoverClasses = enableHover
+    ? 'hover:bg-[#34984e] hover:scale-105 active:scale-95 transition-all duration-200'
+    : '';
+
+  const fullCtaHoverClasses = enableHover
+    ? 'group-hover:bg-[#34984e] group-hover:scale-105 transition-all duration-200'
+    : '';
+
+  const arrowHoverClasses = enableHover
+    ? 'transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+    : '';
+
+  // Contenido interno del banner
   const bannerInner = (
     <>
-      {/* Imagen Desktop */}
-      <div className="hidden sm:block absolute inset-0 w-full h-full overflow-hidden">
-        <Image
-          src={desktopImageUrl}
-          alt={altText}
-          fill
-          sizes="100vw"
-          className={`object-cover object-center ${
-            isFullElementLink ? 'transition-transform duration-700 ease-out group-hover:scale-105' : ''
-          }`}
-          priority={height === 'large' || height === 'screen'}
-        />
-      </div>
-
-      {/* Imagen Mobile (o desktop fallback) */}
-      <div className="block sm:hidden absolute inset-0 w-full h-full overflow-hidden">
-        <Image
-          src={mobileImageUrl}
-          alt={altText}
-          fill
-          sizes="100vw"
-          className={`object-cover object-center ${
-            isFullElementLink ? 'transition-transform duration-700 ease-out group-hover:scale-105' : ''
-          }`}
-        />
-      </div>
+      {isNaturalHeight ? (
+        /* Modo 100% Altura Real de la Imagen (ej: 1200x150 escalado proporcional sin recortes) */
+        <>
+          <img
+            src={desktopImageUrl}
+            alt={altText}
+            className={`hidden sm:block w-full h-auto max-w-full object-contain mx-auto ${hoverImageClass}`}
+          />
+          <img
+            src={mobileImageUrl}
+            alt={altText}
+            className={`block sm:hidden w-full h-auto max-w-full object-contain mx-auto ${hoverImageClass}`}
+          />
+        </>
+      ) : (
+        /* Modos de altura fija / panorámica con next/image fill */
+        <>
+          <div className="hidden sm:block absolute inset-0 w-full h-full overflow-hidden">
+            <Image
+              src={desktopImageUrl}
+              alt={altText}
+              fill
+              sizes="100vw"
+              className={`object-cover object-center ${hoverImageClass}`}
+              priority={height === 'large' || height === 'screen'}
+            />
+          </div>
+          <div className="block sm:hidden absolute inset-0 w-full h-full overflow-hidden">
+            <Image
+              src={mobileImageUrl}
+              alt={altText}
+              fill
+              sizes="100vw"
+              className={`object-cover object-center ${hoverImageClass}`}
+            />
+          </div>
+        </>
+      )}
 
       {/* Capa de contraste / degradado si está activa */}
       {overlay !== 'none' && (
-        <div
-          className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${overlayClasses} ${
-            isFullElementLink ? 'group-hover:opacity-90' : ''
-          }`}
-        />
+        <div className={`absolute inset-0 w-full h-full ${overlayClasses} ${hoverOverlayClass}`} />
       )}
 
       {/* Contenido superpuesto opcional (Título, Subtítulo, Botón) */}
       {hasContent && (
-        <div className="relative z-10 w-full h-full flex flex-col justify-center max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 py-12 pointer-events-none">
+        <div
+          className={`${
+            isNaturalHeight ? 'absolute inset-0' : 'relative'
+          } z-10 w-full h-full flex flex-col justify-center max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 ${
+            isNaturalHeight ? 'py-4' : 'py-12'
+          } pointer-events-none`}
+        >
           <div className={`flex flex-col max-w-2xl ${alignContainerClasses}`}>
             {data?.title && (
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-3 drop-shadow-md">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-2 drop-shadow-md">
                 {data.title}
               </h2>
             )}
 
             {data?.subtitle && (
-              <p className="text-sm sm:text-lg text-white/90 font-medium leading-relaxed mb-6 drop-shadow-sm max-w-xl">
+              <p className="text-xs sm:text-base text-white/90 font-medium leading-relaxed mb-4 drop-shadow-sm max-w-xl">
                 {data.subtitle}
               </p>
             )}
@@ -143,9 +184,11 @@ export default function FullWidthImageSection({ data }: FullWidthImageSectionPro
             {/* Caso 1: Enlace en elemento completo con etiqueta de botón visible */}
             {isFullElementLink && data?.buttonLabel && (
               <div className="pointer-events-auto">
-                <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#3cac59] text-white font-bold text-sm sm:text-base shadow-lg shadow-[#3cac59]/30 group-hover:bg-[#34984e] group-hover:scale-105 transition-all duration-200">
+                <div
+                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#3cac59] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#3cac59]/30 ${fullCtaHoverClasses}`}
+                >
                   <span>{data.buttonLabel}</span>
-                  <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  <ArrowUpRight className={`w-4 h-4 ${arrowHoverClasses}`} />
                 </div>
               </div>
             )}
@@ -157,7 +200,7 @@ export default function FullWidthImageSection({ data }: FullWidthImageSectionPro
                   href={data.buttonHref}
                   target={data.newTab ? '_blank' : undefined}
                   rel={data.newTab ? 'noopener noreferrer' : undefined}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#3cac59] text-white font-bold text-sm sm:text-base hover:bg-[#34984e] shadow-lg shadow-[#3cac59]/30 hover:scale-105 active:scale-95 transition-all duration-200"
+                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#3cac59] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#3cac59]/30 ${ctaHoverClasses}`}
                 >
                   <span>{data.buttonLabel}</span>
                   <ArrowUpRight className="w-4 h-4" />
@@ -170,7 +213,7 @@ export default function FullWidthImageSection({ data }: FullWidthImageSectionPro
 
       {/* Pie de foto / Crédito discreto en la esquina inferior */}
       {data?.caption && (
-        <div className="absolute bottom-3 right-4 z-10 text-[11px] font-medium text-white/70 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-md pointer-events-none select-none">
+        <div className="absolute bottom-2.5 right-3.5 z-10 text-[11px] font-medium text-white/75 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-md pointer-events-none select-none">
           {data.caption}
         </div>
       )}
@@ -194,7 +237,7 @@ export default function FullWidthImageSection({ data }: FullWidthImageSectionPro
           target={data?.newTab ? '_blank' : undefined}
           rel={data?.newTab ? 'noopener noreferrer' : undefined}
           aria-label={data?.title || data?.buttonLabel || altText}
-          className={`${containerClasses} block group cursor-pointer`}
+          className={`${containerClasses} block ${enableHover ? 'group' : ''} cursor-pointer`}
         >
           {bannerInner}
         </Link>
