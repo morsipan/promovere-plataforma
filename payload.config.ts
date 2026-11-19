@@ -72,6 +72,7 @@ export default buildConfig({
         Icon: '/components/admin/Icon#Icon',
       },
       beforeNavLinks: ['/components/admin/AdminSidebarUser#AdminSidebarUser'],
+      afterLogin: ['/components/admin/AdminRememberMe#AdminRememberMe'],
     },
   },
   collections: [Pages, Users, CommunityContent, Media],

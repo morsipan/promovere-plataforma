@@ -33,8 +33,8 @@ export const Users: CollectionConfig = {
     plural: 'Usuarios',
   },
   auth: {
-    // Autenticación nativa segura con token JWT y protección contra fuerza bruta
-    tokenExpiration: 7200, // 2 horas
+    // Autenticación nativa segura con token JWT (hasta 30 días para "Recordar cuenta") y protección contra fuerza bruta
+    tokenExpiration: 60 * 60 * 24 * 30, // 30 días
     maxLoginAttempts: 5,
     lockTime: 600000, // 10 minutos de bloqueo preventivo
   },

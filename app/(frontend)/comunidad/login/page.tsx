@@ -1,17 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Sparkles, Building2 } from 'lucide-react';
+
+const REMEMBERED_EMAIL_KEY = 'promovere_remembered_email';
 
 export default function ComunidadLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const savedEmail = window.localStorage.getItem(REMEMBERED_EMAIL_KEY);
+      if (savedEmail) {
+        setEmail(savedEmail);
+        setRememberMe(true);
+      }
+    } catch {
+      // localStorage no disponible
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,18 +33,28 @@ export default function ComunidadLoginPage() {
     setError(null);
 
     try {
-      const res = await fetch('/api/users/login', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, rememberMe }),
       });
 
       const data = await res.json();
 
       if (!res.ok || !data.user) {
         throw new Error(data.errors?.[0]?.message || 'Credenciales inválidas o cuenta no registrada.');
+      }
+
+      try {
+        if (rememberMe) {
+          window.localStorage.setItem(REMEMBERED_EMAIL_KEY, email.trim());
+        } else {
+          window.localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+        }
+      } catch {
+        // Ignorar errores de storage
       }
 
       // Redirigir al dashboard protegido de la comunidad
@@ -101,6 +125,8 @@ export default function ComunidadLoginPage() {
                 </div>
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -120,6 +146,8 @@ export default function ComunidadLoginPage() {
                 </div>
                 <input
                   type="password"
+                  name="password"
+                  autoComplete="current-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -127,6 +155,38 @@ export default function ComunidadLoginPage() {
                   className="block w-full pl-10 pr-4 py-3 text-sm rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#1b87c7] focus:border-transparent outline-none transition-all placeholder:text-slate-300"
                 />
               </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-0.5">
+              <label
+                htmlFor="remember-me"
+                className="inline-flex items-center gap-2.5 cursor-pointer select-none group"
+              >
+                <input
+                  id="remember-me"
+                  name="rememberMe"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setRememberMe(checked);
+                    if (!checked) {
+                      try {
+                        window.localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+                      } catch {
+                        // Ignorar errores de storage
+                      }
+                    }
+                  }}
+                  className="w-4 h-4 rounded border-slate-300 text-[#1b87c7] focus:ring-2 focus:ring-[#1b87c7]/30 accent-[#1b87c7] cursor-pointer transition-colors"
+                />
+                <span className="text-xs font-medium text-[#4d4e4f]/85 group-hover:text-[#1b87c7] transition-colors">
+                  Recordar mi cuenta
+                </span>
+              </label>
+              <span className="text-[11px] text-slate-400">
+                Sesión extendida (30 días)
+              </span>
             </div>
 
             <button
