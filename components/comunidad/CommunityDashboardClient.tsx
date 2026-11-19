@@ -23,12 +23,10 @@ import {
   X,
   Filter,
   Tag,
-  Calendar,
   Clock,
-  Video,
-  UserCheck,
 } from 'lucide-react';
 import { getMediaUrl } from '@/lib/media';
+import CommunityEventsCalendar from './CommunityEventsCalendar';
 
 export interface DashboardPromotion {
   id: string | number;
@@ -59,6 +57,7 @@ export interface DashboardEvent {
   coverImage?: any;
   materialAttachment?: any;
   representation?: any;
+  featured?: boolean | null;
 }
 
 export interface DashboardRepresentation {
@@ -135,21 +134,6 @@ const PROMO_TYPE_LABELS: Record<string, string> = {
   early_booking: 'Early Booking',
 };
 
-const MODALITY_META: Record<string, { label: string; badgeClass: string }> = {
-  webinar: {
-    label: 'Webinar en Vivo',
-    badgeClass: 'bg-[#1b87c7]/10 text-[#1b87c7] border-[#1b87c7]/25',
-  },
-  presencial: {
-    label: 'Evento Presencial',
-    badgeClass: 'bg-[#3cac59]/10 text-[#266f39] border-[#3cac59]/25',
-  },
-  on_demand: {
-    label: 'Grabado On-Demand',
-    badgeClass: 'bg-purple-50 text-purple-700 border-purple-200',
-  },
-};
-
 function getDaysRemaining(dateIso?: string | null): number | null {
   if (!dateIso) return null;
   const target = new Date(dateIso);
@@ -215,7 +199,6 @@ export default function CommunityDashboardClient({
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedRepId, setSelectedRepId] = useState<string>('all');
   const [showExpiredPromos, setShowExpiredPromos] = useState(false);
-  const [eventFilter, setEventFilter] = useState<'all' | 'upcoming' | 'on_demand'>('all');
 
   // Promociones vigentes vs vencidas
   const { activePromotions, expiredPromotionsCount } = useMemo(() => {
@@ -232,15 +215,6 @@ export default function CommunityDashboardClient({
     }
     return { activePromotions: active, expiredPromotionsCount: expiredCount };
   }, [promotions, showExpiredPromos]);
-
-  // Eventos filtrados por modalidad
-  const filteredEvents = useMemo(() => {
-    if (eventFilter === 'all') return events;
-    if (eventFilter === 'on_demand') {
-      return events.filter((ev) => ev.modality === 'on_demand' || Boolean(ev.recordingUrl));
-    }
-    return events.filter((ev) => ev.modality !== 'on_demand');
-  }, [events, eventFilter]);
 
   const canSeeContracts = userRole !== 'minorista';
 
@@ -718,177 +692,9 @@ export default function CommunityDashboardClient({
       </section>
 
       {/* ==================================================================== */}
-      {/* 2C. EVENTOS, WEBINARS Y CAPACITACIONES (Agenda + On-Demand)           */}
+      {/* 2C. EVENTOS & FAM TOURS (Calendario Izquierda + Destacados Derecha)   */}
       {/* ==================================================================== */}
-      <section id="eventos" className="scroll-mt-24">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-          <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1b87c7] mb-1">
-              <Calendar className="w-4 h-4" />
-              <span>Formación Continua & Agenda</span>
-            </div>
-            <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
-              Eventos, Webinars y Capacitaciones
-            </h2>
-          </div>
-
-          {/* Filtro rápido de modalidad */}
-          <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 self-start sm:self-auto">
-            {[
-              { id: 'all', label: 'Todos' },
-              { id: 'upcoming', label: 'En Vivo / Presencial' },
-              { id: 'on_demand', label: 'On-Demand' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setEventFilter(tab.id as any)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  eventFilter === tab.id
-                    ? 'bg-[#1b87c7] text-white shadow-xs'
-                    : 'text-[#4d4e4f]/75 hover:bg-slate-100'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {filteredEvents.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-8 text-center">
-            <p className="text-sm font-semibold text-[#4d4e4f]">
-              No hay eventos o capacitaciones en esta categoría por el momento.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredEvents.map((ev) => {
-              const modMeta = MODALITY_META[ev.modality] || {
-                label: ev.modality,
-                badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
-              };
-              const coverSrc = getMediaUrl(ev.coverImage);
-              const materialUrl = getMediaUrl(ev.materialAttachment);
-              const repLabel =
-                typeof ev.representation === 'object' && ev.representation !== null
-                  ? `${ev.representation.title} (${ev.representation.brand})`
-                  : null;
-
-              return (
-                <article
-                  key={String(ev.id)}
-                  className="bg-white rounded-3xl border border-slate-200/90 shadow-xs hover:shadow-lg transition-all overflow-hidden flex flex-col justify-between"
-                >
-                  <div>
-                    {coverSrc && (
-                      <div className="relative h-44 w-full overflow-hidden bg-slate-100">
-                        <img
-                          src={coverSrc}
-                          alt={ev.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover object-center"
-                        />
-                      </div>
-                    )}
-
-                    <div className="p-6">
-                      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                        <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border ${modMeta.badgeClass}`}
-                        >
-                          {ev.modality === 'on_demand' ? (
-                            <Video className="w-3 h-3" />
-                          ) : (
-                            <Calendar className="w-3 h-3" />
-                          )}
-                          <span>{modMeta.label}</span>
-                        </span>
-
-                        {ev.eventDate && (
-                          <span className="inline-flex items-center gap-1 text-xs font-bold text-[#4d4e4f] bg-slate-100 px-2.5 py-1 rounded-lg">
-                            <Clock className="w-3 h-3 text-[#1b87c7]" />
-                            <span>{formatDateAR(ev.eventDate, true)} hs</span>
-                          </span>
-                        )}
-                      </div>
-
-                      {repLabel && (
-                        <p className="text-xs font-semibold text-[#1b87c7] flex items-center gap-1 mb-1">
-                          <Building2 className="w-3.5 h-3.5" />
-                          <span>{repLabel}</span>
-                        </p>
-                      )}
-
-                      <h3 className="font-baloo text-xl font-extrabold text-[#4d4e4f] leading-snug mb-2">
-                        {ev.title}
-                      </h3>
-
-                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
-                        {ev.description}
-                      </p>
-
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-500">
-                        {ev.locationOrPlatform && (
-                          <span className="inline-flex items-center gap-1">
-                            <MapPin className="w-3.5 h-3.5 text-[#3cac59]" />
-                            <span>{ev.locationOrPlatform}</span>
-                          </span>
-                        )}
-                        {ev.speaker && (
-                          <span className="inline-flex items-center gap-1">
-                            <UserCheck className="w-3.5 h-3.5 text-[#1b87c7]" />
-                            <span>{ev.speaker}</span>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="px-6 pb-5 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
-                    {ev.registrationUrl && ev.modality !== 'on_demand' && (
-                      <a
-                        href={ev.registrationUrl}
-                        target={ev.registrationUrl.startsWith('http') ? '_blank' : undefined}
-                        rel={ev.registrationUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1b87c7] hover:bg-[#156d9f] text-white text-xs font-bold transition-colors"
-                      >
-                        <span>Inscribirme</span>
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-
-                    {ev.recordingUrl && (
-                      <a
-                        href={ev.recordingUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#4d4e4f] hover:bg-[#38393a] text-white text-xs font-bold transition-colors"
-                      >
-                        <PlayCircle className="w-3.5 h-3.5 text-[#3cac59]" />
-                        <span>Ver Grabación</span>
-                      </a>
-                    )}
-
-                    {materialUrl && (
-                      <a
-                        href={materialUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        download
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#4d4e4f] text-xs font-bold transition-colors"
-                      >
-                        <Download className="w-3.5 h-3.5 text-[#1b87c7]" />
-                        <span>Presentación</span>
-                      </a>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-      </section>
+      <CommunityEventsCalendar events={events} />
 
       {/* ==================================================================== */}
       {/* 3. BIBLIOTECA DE RECURSOS, NOVEDADES Y HERRAMIENTAS (Con Filtros)     */}

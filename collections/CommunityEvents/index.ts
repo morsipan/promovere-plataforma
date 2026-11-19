@@ -67,6 +67,7 @@ export const CommunityEvents: CollectionConfig = {
           options: [
             { label: 'Webinar en Vivo', value: 'webinar' },
             { label: 'Evento / Workshop Presencial', value: 'presencial' },
+            { label: 'Fam Tour / Fam Trip', value: 'fam_trip' },
             { label: 'Capacitación Grabada (On-Demand)', value: 'on_demand' },
           ],
           admin: { width: '50%' },
@@ -190,6 +191,16 @@ export const CommunityEvents: CollectionConfig = {
         { label: 'Borrador / Oculto', value: 'draft' },
       ],
       admin: { position: 'sidebar' },
+    },
+    {
+      name: 'featured',
+      type: 'checkbox',
+      label: 'Destacar Evento (Columna Derecha)',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Muestra este evento en el listado destacado junto al calendario.',
+      },
     },
   ],
 }

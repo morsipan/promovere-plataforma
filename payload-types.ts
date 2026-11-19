@@ -1099,7 +1099,7 @@ export interface CommunityEvent {
    * Ej: Webinar: Novedades de Atelier Playa Mujeres 2026.
    */
   title: string;
-  modality: 'webinar' | 'presencial' | 'on_demand';
+  modality: 'webinar' | 'presencial' | 'fam_trip' | 'on_demand';
   eventDate?: string | null;
   /**
    * Ej: Zoom, Google Meet, Buenos Aires — Hotel Alvear, YouTube.
@@ -1123,6 +1123,10 @@ export interface CommunityEvent {
   visibleFor: ('mayorista' | 'minorista')[];
   representation?: (number | null) | Representation;
   status: 'active' | 'draft';
+  /**
+   * Muestra este evento en el listado destacado junto al calendario.
+   */
+  featured?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1881,6 +1885,7 @@ export interface CommunityEventsSelect<T extends boolean = true> {
   visibleFor?: T;
   representation?: T;
   status?: T;
+  featured?: T;
   updatedAt?: T;
   createdAt?: T;
 }

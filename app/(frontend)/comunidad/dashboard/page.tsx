@@ -173,6 +173,7 @@ export default async function ComunidadDashboardPage() {
         coverImage: doc.coverImage ?? null,
         materialAttachment: doc.materialAttachment ?? null,
         representation: doc.representation ?? null,
+        featured: Boolean(doc.featured),
       }));
     }
 
