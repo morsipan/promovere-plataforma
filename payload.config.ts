@@ -19,6 +19,8 @@ import { Users } from './collections/Users'
 import { Pages } from './collections/Pages'
 import { CommunityContent } from './collections/CommunityContent'
 import { Representations } from './collections/Representations'
+import { CommunityPromotions } from './collections/CommunityPromotions'
+import { CommunityEvents } from './collections/CommunityEvents'
 import { Media } from './collections/Media'
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
@@ -77,7 +79,15 @@ export default buildConfig({
       afterLogin: ['/components/admin/AdminRememberMe#AdminRememberMe'],
     },
   },
-  collections: [Pages, Users, Representations, CommunityContent, Media],
+  collections: [
+    Pages,
+    Users,
+    Representations,
+    CommunityContent,
+    CommunityPromotions,
+    CommunityEvents,
+    Media,
+  ],
   globals: [Header, Footer, SiteSettings, CommunitySettings],
   plugins: [
     // 1. Almacenamiento en Vercel Blob (se activa si existe token válido de Blob)

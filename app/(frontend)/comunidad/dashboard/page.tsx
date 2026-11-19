@@ -6,6 +6,8 @@ import { representationsContent } from '@/data/content';
 import CommunityDashboardClient, {
   type DashboardRepresentation,
   type DashboardContentItem,
+  type DashboardPromotion,
+  type DashboardEvent,
   type DashboardCommunitySettings,
 } from '@/components/comunidad/CommunityDashboardClient';
 
@@ -46,10 +48,12 @@ export default async function ComunidadDashboardPage() {
   // Consultas en paralelo a Payload CMS
   let representations: DashboardRepresentation[] = [];
   let contentItems: DashboardContentItem[] = [];
+  let promotions: DashboardPromotion[] = [];
+  let events: DashboardEvent[] = [];
   let settings: DashboardCommunitySettings | null = null;
 
   try {
-    const [repsRes, contentRes, settingsRes] = await Promise.all([
+    const [repsRes, contentRes, promosRes, eventsRes, settingsRes] = await Promise.all([
       payload
         .find({
           collection: 'representations',
@@ -69,6 +73,26 @@ export default async function ComunidadDashboardPage() {
           depth: 2,
           sort: '-createdAt',
           limit: 100,
+        })
+        .catch(() => null),
+      payload
+        .find({
+          collection: 'community-promotions',
+          user,
+          overrideAccess: false,
+          depth: 1,
+          sort: 'validUntil',
+          limit: 50,
+        })
+        .catch(() => null),
+      payload
+        .find({
+          collection: 'community-events',
+          user,
+          overrideAccess: false,
+          depth: 1,
+          sort: 'eventDate',
+          limit: 50,
         })
         .catch(() => null),
       payload
@@ -117,6 +141,41 @@ export default async function ComunidadDashboardPage() {
       }));
     }
 
+    if (promosRes?.docs) {
+      promotions = promosRes.docs.map((doc: any) => ({
+        id: doc.id,
+        title: doc.title,
+        promoType: doc.promoType,
+        benefitBadge: doc.benefitBadge ?? null,
+        description: doc.description || '',
+        conditions: doc.conditions ?? null,
+        validFrom: doc.validFrom ?? null,
+        validUntil: doc.validUntil,
+        ctaLabel: doc.ctaLabel ?? null,
+        ctaUrl: doc.ctaUrl ?? null,
+        coverImage: doc.coverImage ?? null,
+        representation: doc.representation ?? null,
+        featured: Boolean(doc.featured),
+      }));
+    }
+
+    if (eventsRes?.docs) {
+      events = eventsRes.docs.map((doc: any) => ({
+        id: doc.id,
+        title: doc.title,
+        modality: doc.modality,
+        eventDate: doc.eventDate ?? null,
+        locationOrPlatform: doc.locationOrPlatform ?? null,
+        speaker: doc.speaker ?? null,
+        description: doc.description || '',
+        registrationUrl: doc.registrationUrl ?? null,
+        recordingUrl: doc.recordingUrl ?? null,
+        coverImage: doc.coverImage ?? null,
+        materialAttachment: doc.materialAttachment ?? null,
+        representation: doc.representation ?? null,
+      }));
+    }
+
     if (settingsRes) {
       settings = settingsRes as DashboardCommunitySettings;
     }
@@ -148,6 +207,8 @@ export default async function ComunidadDashboardPage() {
       userRole={String(user.role || 'minorista')}
       representations={representations}
       contentItems={contentItems}
+      promotions={promotions}
+      events={events}
       settings={settings}
     />
   );

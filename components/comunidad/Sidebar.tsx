@@ -5,7 +5,6 @@ import Link from 'next/link';
 import {
   Building2,
   Compass,
-  Newspaper,
   FolderOpen,
   Globe,
   Shield,
@@ -17,6 +16,8 @@ import {
   CheckCircle2,
   Phone,
   MapPin,
+  Tag,
+  Calendar,
 } from 'lucide-react';
 import type { User } from '@/payload-types';
 import UserProfileItem, { formatRole } from './UserProfileItem';
@@ -75,16 +76,22 @@ export default function Sidebar({
       description: 'Marcas y cadenas hoteleras',
     },
     {
-      name: 'Novedades & Prensa',
-      href: '/comunidad/dashboard#novedades',
-      icon: Newspaper,
-      description: 'Lanzamientos y comunicados',
+      name: 'Promociones & Incentivos',
+      href: '/comunidad/dashboard#promociones',
+      icon: Tag,
+      description: 'Beneficios y vigencia trade',
     },
     {
-      name: 'Herramientas & Manuales',
+      name: 'Eventos & Capacitaciones',
+      href: '/comunidad/dashboard#eventos',
+      icon: Calendar,
+      description: 'Webinars, workshops y videos',
+    },
+    {
+      name: 'Recursos & Herramientas',
       href: '/comunidad/dashboard#herramientas',
       icon: FolderOpen,
-      description: 'Fichas técnicas y descargas',
+      description: 'Manuales, novedades y descargas',
     },
   ];
 

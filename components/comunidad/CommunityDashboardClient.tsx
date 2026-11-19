@@ -22,8 +22,44 @@ import {
   Images,
   X,
   Filter,
+  Tag,
+  Calendar,
+  Clock,
+  Video,
+  UserCheck,
 } from 'lucide-react';
 import { getMediaUrl } from '@/lib/media';
+
+export interface DashboardPromotion {
+  id: string | number;
+  title: string;
+  promoType: string;
+  benefitBadge?: string | null;
+  description: string;
+  conditions?: string | null;
+  validFrom?: string | null;
+  validUntil: string;
+  ctaLabel?: string | null;
+  ctaUrl?: string | null;
+  coverImage?: any;
+  representation?: any;
+  featured?: boolean | null;
+}
+
+export interface DashboardEvent {
+  id: string | number;
+  title: string;
+  modality: 'webinar' | 'presencial' | 'on_demand' | string;
+  eventDate?: string | null;
+  locationOrPlatform?: string | null;
+  speaker?: string | null;
+  description: string;
+  registrationUrl?: string | null;
+  recordingUrl?: string | null;
+  coverImage?: any;
+  materialAttachment?: any;
+  representation?: any;
+}
 
 export interface DashboardRepresentation {
   id: string | number;
@@ -86,7 +122,53 @@ export interface CommunityDashboardClientProps {
   userRole: string;
   representations: DashboardRepresentation[];
   contentItems: DashboardContentItem[];
+  promotions?: DashboardPromotion[];
+  events?: DashboardEvent[];
   settings?: DashboardCommunitySettings | null;
+}
+
+const PROMO_TYPE_LABELS: Record<string, string> = {
+  descuento: 'Descuento Especial',
+  comision: 'Comisión Extra',
+  incentivo: 'Incentivo por Ventas',
+  fam_trip: 'Fam Trip',
+  early_booking: 'Early Booking',
+};
+
+const MODALITY_META: Record<string, { label: string; badgeClass: string }> = {
+  webinar: {
+    label: 'Webinar en Vivo',
+    badgeClass: 'bg-[#1b87c7]/10 text-[#1b87c7] border-[#1b87c7]/25',
+  },
+  presencial: {
+    label: 'Evento Presencial',
+    badgeClass: 'bg-[#3cac59]/10 text-[#266f39] border-[#3cac59]/25',
+  },
+  on_demand: {
+    label: 'Grabado On-Demand',
+    badgeClass: 'bg-purple-50 text-purple-700 border-purple-200',
+  },
+};
+
+function getDaysRemaining(dateIso?: string | null): number | null {
+  if (!dateIso) return null;
+  const target = new Date(dateIso);
+  if (Number.isNaN(target.getTime())) return null;
+  const now = new Date();
+  const diffMs = target.setHours(23, 59, 59, 999) - now.getTime();
+  return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+}
+
+function formatDateAR(dateIso?: string | null, includeTime = false): string {
+  if (!dateIso) return '';
+  const d = new Date(dateIso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('es-AR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    ...(includeTime ? { hour: '2-digit', minute: '2-digit' } : {}),
+  });
 }
 
 const CATEGORY_META: Record<
@@ -125,11 +207,40 @@ export default function CommunityDashboardClient({
   userRole,
   representations,
   contentItems,
+  promotions = [],
+  events = [],
   settings,
 }: CommunityDashboardClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedRepId, setSelectedRepId] = useState<string>('all');
+  const [showExpiredPromos, setShowExpiredPromos] = useState(false);
+  const [eventFilter, setEventFilter] = useState<'all' | 'upcoming' | 'on_demand'>('all');
+
+  // Promociones vigentes vs vencidas
+  const { activePromotions, expiredPromotionsCount } = useMemo(() => {
+    const active: DashboardPromotion[] = [];
+    let expiredCount = 0;
+    for (const promo of promotions) {
+      const days = getDaysRemaining(promo.validUntil);
+      if (days !== null && days < 0) {
+        expiredCount += 1;
+        if (showExpiredPromos) active.push(promo);
+      } else {
+        active.push(promo);
+      }
+    }
+    return { activePromotions: active, expiredPromotionsCount: expiredCount };
+  }, [promotions, showExpiredPromos]);
+
+  // Eventos filtrados por modalidad
+  const filteredEvents = useMemo(() => {
+    if (eventFilter === 'all') return events;
+    if (eventFilter === 'on_demand') {
+      return events.filter((ev) => ev.modality === 'on_demand' || Boolean(ev.recordingUrl));
+    }
+    return events.filter((ev) => ev.modality !== 'on_demand');
+  }, [events, eventFilter]);
 
   const canSeeContracts = userRole !== 'minorista';
 
@@ -439,6 +550,344 @@ export default function CommunityDashboardClient({
             );
           })}
         </div>
+      </section>
+
+      {/* ==================================================================== */}
+      {/* 2B. PROMOCIONES E INCENTIVOS TRADE (Vigencia Automática)              */}
+      {/* ==================================================================== */}
+      <section id="promociones" className="scroll-mt-24">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-600 mb-1">
+              <Tag className="w-4 h-4" />
+              <span>Beneficios Comerciales Vigentes</span>
+            </div>
+            <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
+              Promociones e Incentivos Trade
+            </h2>
+          </div>
+
+          {expiredPromotionsCount > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowExpiredPromos((prev) => !prev)}
+              className="text-xs font-bold text-[#1b87c7] hover:underline cursor-pointer self-start sm:self-auto"
+            >
+              {showExpiredPromos
+                ? 'Ocultar promociones vencidas'
+                : `Ver también vencidas (${expiredPromotionsCount})`}
+            </button>
+          )}
+        </div>
+
+        {activePromotions.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-8 text-center">
+            <p className="text-sm font-semibold text-[#4d4e4f]">
+              No hay promociones vigentes en este momento.
+            </p>
+            <p className="text-xs text-slate-500 mt-1">
+              Las nuevas campañas e incentivos aparecerán aquí apenas se publiquen desde /admin.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {activePromotions.map((promo) => {
+              const daysLeft = getDaysRemaining(promo.validUntil);
+              const isExpired = daysLeft !== null && daysLeft < 0;
+              const isUrgent = daysLeft !== null && daysLeft >= 0 && daysLeft <= 7;
+              const coverSrc = getMediaUrl(promo.coverImage);
+              const repLabel =
+                typeof promo.representation === 'object' && promo.representation !== null
+                  ? `${promo.representation.title} — ${promo.representation.brand}`
+                  : null;
+
+              let expiryBadge = {
+                text: `Vigente hasta ${formatDateAR(promo.validUntil)}`,
+                cls: 'bg-[#3cac59]/10 text-[#266f39] border-[#3cac59]/25',
+              };
+              if (isExpired) {
+                expiryBadge = {
+                  text: `Vencida (${formatDateAR(promo.validUntil)})`,
+                  cls: 'bg-slate-100 text-slate-500 border-slate-200',
+                };
+              } else if (daysLeft === 0) {
+                expiryBadge = {
+                  text: '¡Último día hoy!',
+                  cls: 'bg-red-50 text-red-700 border-red-200',
+                };
+              } else if (isUrgent) {
+                expiryBadge = {
+                  text: `Vence en ${daysLeft} ${daysLeft === 1 ? 'día' : 'días'}`,
+                  cls: 'bg-amber-50 text-amber-700 border-amber-200',
+                };
+              }
+
+              return (
+                <article
+                  key={String(promo.id)}
+                  className={`bg-white rounded-3xl border shadow-xs hover:shadow-lg transition-all overflow-hidden flex flex-col justify-between ${
+                    isExpired
+                      ? 'border-slate-200 opacity-75'
+                      : promo.featured
+                      ? 'border-[#1b87c7]/40 ring-1 ring-[#1b87c7]/15'
+                      : 'border-slate-200/90'
+                  }`}
+                >
+                  <div>
+                    {coverSrc && (
+                      <div className="relative h-44 w-full overflow-hidden bg-slate-100">
+                        <img
+                          src={coverSrc}
+                          alt={promo.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover object-center"
+                        />
+                        {promo.benefitBadge && (
+                          <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-gradient-to-r from-[#1b87c7] to-[#3cac59] text-white text-xs font-extrabold shadow-md">
+                            {promo.benefitBadge}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="p-6">
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="px-2.5 py-1 rounded-lg bg-[#1b87c7]/10 text-[#1b87c7] text-[11px] font-bold uppercase tracking-wide">
+                            {PROMO_TYPE_LABELS[promo.promoType] || promo.promoType}
+                          </span>
+                          {!coverSrc && promo.benefitBadge && (
+                            <span className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#1b87c7] to-[#3cac59] text-white text-[11px] font-extrabold">
+                              {promo.benefitBadge}
+                            </span>
+                          )}
+                        </div>
+
+                        <span
+                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border ${expiryBadge.cls}`}
+                        >
+                          <Clock className="w-3 h-3" />
+                          <span>{expiryBadge.text}</span>
+                        </span>
+                      </div>
+
+                      {repLabel && (
+                        <p className="text-xs font-semibold text-[#1b87c7] flex items-center gap-1 mb-1">
+                          <Building2 className="w-3.5 h-3.5" />
+                          <span>{repLabel}</span>
+                        </p>
+                      )}
+
+                      <h3 className="font-baloo text-xl font-extrabold text-[#4d4e4f] leading-snug mb-2">
+                        {promo.title}
+                      </h3>
+
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-3">
+                        {promo.description}
+                      </p>
+
+                      {promo.conditions && (
+                        <p className="text-[11px] text-slate-400 bg-slate-50 rounded-xl p-3 border border-slate-100 leading-relaxed">
+                          <strong className="text-slate-500">Condiciones:</strong> {promo.conditions}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="px-6 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <span className="text-[11px] text-slate-400 font-medium">
+                      Hasta {formatDateAR(promo.validUntil)}
+                    </span>
+                    {promo.ctaUrl && !isExpired && (
+                      <a
+                        href={promo.ctaUrl}
+                        target={promo.ctaUrl.startsWith('http') ? '_blank' : undefined}
+                        rel={promo.ctaUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#1b87c7] to-[#3cac59] hover:from-[#156d9f] hover:to-[#32964c] text-white text-xs font-bold shadow-sm transition-all"
+                      >
+                        <span>{promo.ctaLabel || 'Consultar Promoción'}</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* ==================================================================== */}
+      {/* 2C. EVENTOS, WEBINARS Y CAPACITACIONES (Agenda + On-Demand)           */}
+      {/* ==================================================================== */}
+      <section id="eventos" className="scroll-mt-24">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1b87c7] mb-1">
+              <Calendar className="w-4 h-4" />
+              <span>Formación Continua & Agenda</span>
+            </div>
+            <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
+              Eventos, Webinars y Capacitaciones
+            </h2>
+          </div>
+
+          {/* Filtro rápido de modalidad */}
+          <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 self-start sm:self-auto">
+            {[
+              { id: 'all', label: 'Todos' },
+              { id: 'upcoming', label: 'En Vivo / Presencial' },
+              { id: 'on_demand', label: 'On-Demand' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setEventFilter(tab.id as any)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  eventFilter === tab.id
+                    ? 'bg-[#1b87c7] text-white shadow-xs'
+                    : 'text-[#4d4e4f]/75 hover:bg-slate-100'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {filteredEvents.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-8 text-center">
+            <p className="text-sm font-semibold text-[#4d4e4f]">
+              No hay eventos o capacitaciones en esta categoría por el momento.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredEvents.map((ev) => {
+              const modMeta = MODALITY_META[ev.modality] || {
+                label: ev.modality,
+                badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+              };
+              const coverSrc = getMediaUrl(ev.coverImage);
+              const materialUrl = getMediaUrl(ev.materialAttachment);
+              const repLabel =
+                typeof ev.representation === 'object' && ev.representation !== null
+                  ? `${ev.representation.title} (${ev.representation.brand})`
+                  : null;
+
+              return (
+                <article
+                  key={String(ev.id)}
+                  className="bg-white rounded-3xl border border-slate-200/90 shadow-xs hover:shadow-lg transition-all overflow-hidden flex flex-col justify-between"
+                >
+                  <div>
+                    {coverSrc && (
+                      <div className="relative h-44 w-full overflow-hidden bg-slate-100">
+                        <img
+                          src={coverSrc}
+                          alt={ev.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover object-center"
+                        />
+                      </div>
+                    )}
+
+                    <div className="p-6">
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border ${modMeta.badgeClass}`}
+                        >
+                          {ev.modality === 'on_demand' ? (
+                            <Video className="w-3 h-3" />
+                          ) : (
+                            <Calendar className="w-3 h-3" />
+                          )}
+                          <span>{modMeta.label}</span>
+                        </span>
+
+                        {ev.eventDate && (
+                          <span className="inline-flex items-center gap-1 text-xs font-bold text-[#4d4e4f] bg-slate-100 px-2.5 py-1 rounded-lg">
+                            <Clock className="w-3 h-3 text-[#1b87c7]" />
+                            <span>{formatDateAR(ev.eventDate, true)} hs</span>
+                          </span>
+                        )}
+                      </div>
+
+                      {repLabel && (
+                        <p className="text-xs font-semibold text-[#1b87c7] flex items-center gap-1 mb-1">
+                          <Building2 className="w-3.5 h-3.5" />
+                          <span>{repLabel}</span>
+                        </p>
+                      )}
+
+                      <h3 className="font-baloo text-xl font-extrabold text-[#4d4e4f] leading-snug mb-2">
+                        {ev.title}
+                      </h3>
+
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                        {ev.description}
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-500">
+                        {ev.locationOrPlatform && (
+                          <span className="inline-flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5 text-[#3cac59]" />
+                            <span>{ev.locationOrPlatform}</span>
+                          </span>
+                        )}
+                        {ev.speaker && (
+                          <span className="inline-flex items-center gap-1">
+                            <UserCheck className="w-3.5 h-3.5 text-[#1b87c7]" />
+                            <span>{ev.speaker}</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="px-6 pb-5 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
+                    {ev.registrationUrl && ev.modality !== 'on_demand' && (
+                      <a
+                        href={ev.registrationUrl}
+                        target={ev.registrationUrl.startsWith('http') ? '_blank' : undefined}
+                        rel={ev.registrationUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1b87c7] hover:bg-[#156d9f] text-white text-xs font-bold transition-colors"
+                      >
+                        <span>Inscribirme</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+
+                    {ev.recordingUrl && (
+                      <a
+                        href={ev.recordingUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#4d4e4f] hover:bg-[#38393a] text-white text-xs font-bold transition-colors"
+                      >
+                        <PlayCircle className="w-3.5 h-3.5 text-[#3cac59]" />
+                        <span>Ver Grabación</span>
+                      </a>
+                    )}
+
+                    {materialUrl && (
+                      <a
+                        href={materialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#4d4e4f] text-xs font-bold transition-colors"
+                      >
+                        <Download className="w-3.5 h-3.5 text-[#1b87c7]" />
+                        <span>Presentación</span>
+                      </a>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* ==================================================================== */}

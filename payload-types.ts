@@ -71,6 +71,8 @@ export interface Config {
     users: User;
     representations: Representation;
     'community-content': CommunityContent;
+    'community-promotions': CommunityPromotion;
+    'community-events': CommunityEvent;
     media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -83,6 +85,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     representations: RepresentationsSelect<false> | RepresentationsSelect<true>;
     'community-content': CommunityContentSelect<false> | CommunityContentSelect<true>;
+    'community-promotions': CommunityPromotionsSelect<false> | CommunityPromotionsSelect<true>;
+    'community-events': CommunityEventsSelect<false> | CommunityEventsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -1044,6 +1048,85 @@ export interface CommunityContent {
   createdAt: string;
 }
 /**
+ * Promociones vigentes, comisiones especiales, incentivos de venta y Fam Trips con control automático de vigencia.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-promotions".
+ */
+export interface CommunityPromotion {
+  id: number;
+  /**
+   * Ej: Early Booking Verano 2026 — Hasta 35% OFF + Noches Libres.
+   */
+  title: string;
+  promoType: 'descuento' | 'comision' | 'incentivo' | 'fam_trip' | 'early_booking';
+  /**
+   * Ej: +2% Comisión, Hasta 35% OFF, Cupos Limitados.
+   */
+  benefitBadge?: string | null;
+  description: string;
+  /**
+   * Ej: Válido para reservas emitidas hasta el 30/06. Aplica a estadías mínimas de 4 noches.
+   */
+  conditions?: string | null;
+  validFrom?: string | null;
+  /**
+   * El portal calculará automáticamente los días restantes y marcará vencimiento.
+   */
+  validUntil: string;
+  ctaLabel?: string | null;
+  /**
+   * Ej: https://wa.me/... o mailto:reservas@...
+   */
+  ctaUrl?: string | null;
+  coverImage?: (number | null) | Media;
+  visibleFor: ('mayorista' | 'minorista')[];
+  representation?: (number | null) | Representation;
+  status: 'active' | 'draft';
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Agenda de webinars en vivo, workshops presenciales y capacitaciones grabadas (On-Demand) para la Comunidad Trade.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-events".
+ */
+export interface CommunityEvent {
+  id: number;
+  /**
+   * Ej: Webinar: Novedades de Atelier Playa Mujeres 2026.
+   */
+  title: string;
+  modality: 'webinar' | 'presencial' | 'on_demand';
+  eventDate?: string | null;
+  /**
+   * Ej: Zoom, Google Meet, Buenos Aires — Hotel Alvear, YouTube.
+   */
+  locationOrPlatform?: string | null;
+  /**
+   * Ej: Equipo Comercial Promovêre & Atelier.
+   */
+  speaker?: string | null;
+  description: string;
+  /**
+   * Botón "Inscribirme" para eventos próximos.
+   */
+  registrationUrl?: string | null;
+  /**
+   * Botón "Ver Grabación" para capacitaciones On-Demand o ya realizadas.
+   */
+  recordingUrl?: string | null;
+  coverImage?: (number | null) | Media;
+  materialAttachment?: (number | null) | Media;
+  visibleFor: ('mayorista' | 'minorista')[];
+  representation?: (number | null) | Representation;
+  status: 'active' | 'draft';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -1082,6 +1165,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'community-content';
         value: number | CommunityContent;
+      } | null)
+    | ({
+        relationTo: 'community-promotions';
+        value: number | CommunityPromotion;
+      } | null)
+    | ({
+        relationTo: 'community-events';
+        value: number | CommunityEvent;
       } | null)
     | ({
         relationTo: 'media';
@@ -1747,6 +1838,49 @@ export interface CommunityContentSelect<T extends boolean = true> {
   brand?: T;
   highlight?: T;
   featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-promotions_select".
+ */
+export interface CommunityPromotionsSelect<T extends boolean = true> {
+  title?: T;
+  promoType?: T;
+  benefitBadge?: T;
+  description?: T;
+  conditions?: T;
+  validFrom?: T;
+  validUntil?: T;
+  ctaLabel?: T;
+  ctaUrl?: T;
+  coverImage?: T;
+  visibleFor?: T;
+  representation?: T;
+  status?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-events_select".
+ */
+export interface CommunityEventsSelect<T extends boolean = true> {
+  title?: T;
+  modality?: T;
+  eventDate?: T;
+  locationOrPlatform?: T;
+  speaker?: T;
+  description?: T;
+  registrationUrl?: T;
+  recordingUrl?: T;
+  coverImage?: T;
+  materialAttachment?: T;
+  visibleFor?: T;
+  representation?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
