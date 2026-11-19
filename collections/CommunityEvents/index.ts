@@ -28,13 +28,13 @@ const canManageEvents: Access = ({ req: { user } }) => {
 export const CommunityEvents: CollectionConfig = {
   slug: 'community-events',
   labels: {
-    singular: 'Evento / Capacitación',
-    plural: 'Eventos y Capacitaciones',
+    singular: 'Fam / Capacitación',
+    plural: 'Fams & Caps',
   },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'modality', 'eventDate', 'locationOrPlatform', 'status'],
-    group: 'Comunidad Trade',
+    group: 'Comunidad',
     description:
       'Agenda de webinars en vivo, workshops presenciales y capacitaciones grabadas (On-Demand) para la Comunidad Trade.',
   },

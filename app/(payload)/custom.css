@@ -1,0 +1,33 @@
+/* ==========================================================================
+   Promovêre CMS — Ajustes Minimalistas del Panel de Administración
+   ========================================================================== */
+
+/* 1. Ocultar el ícono de cuenta del usuario en el topbar (breadcrumb) */
+.app-header__account {
+  display: none !important;
+}
+
+/* 2. Ocultar el botón de salir nativo del sidebar (ya existe en la tarjeta de usuario) */
+.nav__controls,
+.nav__log-out {
+  display: none !important;
+}
+
+/* 3. Empujar la tarjeta del usuario (afterNavLinks) hacia la parte inferior del sidebar */
+.nav__wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100% !important;
+}
+
+.promovere-sidebar-user-wrap {
+  margin-top: auto !important;
+  padding-top: 16px;
+}
+
+/* 4. Ocultar la tabla nativa de Media cuando el usuario activa la Vista Cuadrícula */
+body.promovere-media-grid-active .collection-list__tables,
+body.promovere-media-grid-active .table-wrap,
+body.promovere-media-grid-active .table {
+  display: none !important;
+}

@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
-  label: 'Pie de Página (Footer)',
+  label: 'Footer',
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
@@ -19,7 +19,7 @@ export const Footer: GlobalConfig = {
     ],
   },
   admin: {
-    group: 'Web Pública',
+    group: 'Sitios',
     description: 'Gestión de columnas de enlaces, avisos legales y textos de pie de página.',
   },
   fields: [

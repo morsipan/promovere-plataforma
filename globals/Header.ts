@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache'
 
 export const Header: GlobalConfig = {
   slug: 'header',
-  label: 'Encabezado / Navegación',
+  label: 'Header',
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
@@ -19,7 +19,7 @@ export const Header: GlobalConfig = {
     ],
   },
   admin: {
-    group: 'Web Pública',
+    group: 'Sitios',
     description: 'Gestión centralizada del menú principal, isotipo y enlaces superiores del sitio.',
   },
   fields: [

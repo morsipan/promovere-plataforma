@@ -6,7 +6,7 @@ import { ImpactBannerBlock } from '../collections/Pages/blocks/ImpactBanner'
 export const CommunitySettings: GlobalConfig = {
   slug: 'community-settings',
   dbName: 'community_settings',
-  label: 'Configuración de la Comunidad',
+  label: 'Configuración Comunidad',
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
@@ -22,7 +22,7 @@ export const CommunitySettings: GlobalConfig = {
     ],
   },
   admin: {
-    group: 'Comunidad Trade',
+    group: 'Comunidad',
     description:
       'Configurá textos, estilos visuales de los elementos, aviso urgente, canal de WhatsApp y los 3 espacios de banners publicitarios del portal privado.',
     livePreview: {

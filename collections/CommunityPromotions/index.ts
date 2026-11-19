@@ -28,13 +28,13 @@ const canManagePromotions: Access = ({ req: { user } }) => {
 export const CommunityPromotions: CollectionConfig = {
   slug: 'community-promotions',
   labels: {
-    singular: 'Promoción / Incentivo Trade',
-    plural: 'Promociones e Incentivos',
+    singular: 'Promo / Incentivo',
+    plural: 'Promos e incentivos',
   },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'promoType', 'benefitBadge', 'validUntil', 'status'],
-    group: 'Comunidad Trade',
+    group: 'Comunidad',
     description:
       'Promociones vigentes, comisiones especiales, incentivos de venta y Fam Trips con control automático de vigencia.',
   },

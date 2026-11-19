@@ -19,12 +19,15 @@ try {
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: {
-    singular: 'Multimedia',
-    plural: 'Archivos Multimedia',
+    singular: 'Archivo',
+    plural: 'Biblioteca multimedia',
   },
   admin: {
-    group: 'Biblioteca Digital',
+    group: 'Biblioteca multimedia',
     description: 'Gestión centralizada de fotografías, logos e imágenes del sitio.',
+    components: {
+      beforeListTable: ['/components/admin/MediaViewToggle#MediaViewToggle'],
+    },
   },
   access: {
     read: () => true,

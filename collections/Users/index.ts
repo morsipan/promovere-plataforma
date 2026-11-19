@@ -30,7 +30,7 @@ export const Users: CollectionConfig = {
   slug: 'users',
   labels: {
     singular: 'Usuario',
-    plural: 'Usuarios',
+    plural: 'Gestión',
   },
   auth: {
     // Autenticación nativa segura con token JWT (hasta 30 días para "Recordar cuenta") y protección contra fuerza bruta
@@ -41,7 +41,7 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'role', 'avatar', 'company', 'createdAt'],
-    group: 'Configuración & Accesos',
+    group: 'Usuarios',
     description: 'Gestión centralizada de credenciales, roles y permisos de acceso para el equipo interno y la Comunidad Promovêre.',
   },
   access: {

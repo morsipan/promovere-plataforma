@@ -3,13 +3,13 @@ import type { CollectionConfig } from 'payload'
 export const Representations: CollectionConfig = {
   slug: 'representations',
   labels: {
-    singular: 'Marca / Representación',
-    plural: 'Marcas y Representaciones',
+    singular: 'Marca / Rep',
+    plural: 'Marcas y reps',
   },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'brand', 'country', 'category', 'status', 'order'],
-    group: 'Comunidad Trade',
+    group: 'Comunidad',
     description:
       'Catálogo oficial de destinos, cadenas hoteleras y operadores representados por Promovêre. Alimenta el portal privado de la Comunidad.',
   },

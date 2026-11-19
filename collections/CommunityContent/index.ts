@@ -77,13 +77,13 @@ export const canManageCommunityContent: Access = ({ req: { user } }) => {
 export const CommunityContent: CollectionConfig = {
   slug: 'community-content',
   labels: {
-    singular: 'Contenido Privado de Comunidad',
-    plural: 'Contenidos Privados de Comunidad',
+    singular: 'Contenido privado',
+    plural: 'Contenidos privados',
   },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'visibleFor', 'updatedAt'],
-    group: 'Comunidad Trade',
+    group: 'Comunidad',
     description:
       'Recursos privados, herramientas comerciales y documentación para la Comunidad Promovêre (Operadores Mayoristas y Agencias Minoristas).',
   },

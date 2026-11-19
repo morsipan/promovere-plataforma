@@ -10,9 +10,6 @@ export interface AdminSidebarUserProps {
   user?: any;
 }
 
-/**
- * Extrae la URL de imagen a partir de un objeto Media, string o relación.
- */
 function extractAvatarUrl(avatar: any): string | null {
   if (!avatar) return null;
 
@@ -32,9 +29,6 @@ function extractAvatarUrl(avatar: any): string | null {
   return null;
 }
 
-/**
- * Obtiene la inicial en mayúscula a partir del nombre o email.
- */
 function getInitial(name?: string | null, email?: string | null): string {
   if (name && typeof name === 'string' && name.trim().length > 0) {
     return name.trim().charAt(0).toUpperCase();
@@ -45,24 +39,21 @@ function getInitial(name?: string | null, email?: string | null): string {
   return 'U';
 }
 
-/**
- * Formatea y traduce el rol del usuario para el CMS de Promovêre.
- */
 function formatRole(role?: string | null): string {
   if (!role || typeof role !== 'string') return 'Usuario';
   const roles: Record<string, string> = {
     admin: 'Administrador',
-    editor: 'Editor de Contenidos',
-    mayorista: 'Operador Mayorista',
-    minorista: 'Agencia Minorista',
+    editor: 'Editor',
+    mayorista: 'Mayorista',
+    minorista: 'Minorista',
   };
   const key = role.toLowerCase();
-  return roles[key] || (role.charAt(0).toUpperCase() + role.slice(1).toLowerCase());
+  return roles[key] || role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
 }
 
 /**
- * Componente de Perfil de Usuario para el Sidebar del Panel de Administración de Promovêre CMS.
- * Muestra avatar (o inicial), nombre de usuario, correo, rol, ruedita de configuración de datos y botón de salir.
+ * Credencial minimalista de usuario ubicada en la parte inferior del sidebar del Admin Panel.
+ * Sin colores estridentes — adaptada 100% a los tokens monocromáticos del tema de Payload CMS.
  */
 export const AdminSidebarUser: React.FC<AdminSidebarUserProps> = ({ user: propUser }) => {
   const { user: authUser } = useAuth();
@@ -71,7 +62,6 @@ export const AdminSidebarUser: React.FC<AdminSidebarUserProps> = ({ user: propUs
   const [imageError, setImageError] = useState(false);
   const [resolvedAvatarUrl, setResolvedAvatarUrl] = useState<string | null>(null);
 
-  // Resolver la URL del avatar según el formato recibido
   useEffect(() => {
     if (!currentUser) return;
 
@@ -82,7 +72,6 @@ export const AdminSidebarUser: React.FC<AdminSidebarUserProps> = ({ user: propUs
       return;
     }
 
-    // Si es un ID numérico de la colección Media, consultarlo vía API
     if (typeof currentUser.avatar === 'number') {
       fetch(`/api/media/${currentUser.avatar}`)
         .then((res) => {
@@ -104,7 +93,6 @@ export const AdminSidebarUser: React.FC<AdminSidebarUserProps> = ({ user: propUs
     }
   }, [currentUser]);
 
-  // Si no hay usuario cargado en la sesión
   if (!currentUser) {
     return null;
   }
@@ -116,126 +104,115 @@ export const AdminSidebarUser: React.FC<AdminSidebarUserProps> = ({ user: propUs
   const showAvatarImage = Boolean(resolvedAvatarUrl && !imageError);
 
   return (
-    <div
-      suppressHydrationWarning
-      style={{
-        margin: '0 0 16px 0',
-        padding: '12px',
-        borderRadius: '14px',
-        backgroundColor: 'var(--theme-elevation-50, #f8fafc)',
-        border: '1px solid var(--theme-elevation-150, #e2e8f0)',
-        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        color: 'var(--theme-text, #1e293b)',
-        fontFamily: 'inherit',
-      }}
-    >
-      {/* 1. Fila de Identidad: Avatar + Datos (Nombre, Correo, Rol) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-        {/* Avatar / Inicial de Fallback */}
-        <div style={{ flexShrink: 0 }}>
-          {showAvatarImage ? (
-            <img
-              src={resolvedAvatarUrl!}
-              alt={displayName}
-              onError={() => setImageError(true)}
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                border: '2px solid rgba(60, 172, 89, 0.4)',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                display: 'block',
-              }}
-            />
-          ) : (
-            <div
-              suppressHydrationWarning
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                backgroundColor: '#3cac59',
-                color: '#ffffff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 800,
-                fontSize: '16px',
-                boxShadow: '0 1px 3px rgba(60, 172, 89, 0.3)',
-                flexShrink: 0,
-              }}
-            >
-              {initialLetter}
-            </div>
-          )}
-        </div>
+    <div className="promovere-sidebar-user-wrap" suppressHydrationWarning>
+      <div
+        suppressHydrationWarning
+        style={{
+          margin: '12px 0 4px 0',
+          padding: '12px',
+          borderRadius: '10px',
+          backgroundColor: 'var(--theme-elevation-50)',
+          border: '1px solid var(--theme-elevation-150)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          color: 'var(--theme-text)',
+          fontFamily: 'inherit',
+        }}
+      >
+        {/* Identidad minimalista: Avatar/Inicial + Nombre, Correo y Rol */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+          <div style={{ flexShrink: 0 }}>
+            {showAvatarImage ? (
+              <img
+                src={resolvedAvatarUrl!}
+                alt={displayName}
+                onError={() => setImageError(true)}
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: '1px solid var(--theme-elevation-200)',
+                  display: 'block',
+                }}
+              />
+            ) : (
+              <div
+                suppressHydrationWarning
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--theme-elevation-200)',
+                  color: 'var(--theme-text)',
+                  border: '1px solid var(--theme-elevation-300)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                  fontSize: '14px',
+                  flexShrink: 0,
+                }}
+              >
+                {initialLetter}
+              </div>
+            )}
+          </div>
 
-        {/* Nombre, Correo y Rol */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            minWidth: 0,
-            flex: 1,
-            overflow: 'hidden',
-          }}
-        >
-          {/* Nombre de usuario */}
-          <span
-            suppressHydrationWarning
-            title={displayName}
+          <div
             style={{
-              fontSize: '13px',
-              fontWeight: 700,
-              color: 'var(--theme-text, #1e293b)',
-              whiteSpace: 'nowrap',
+              display: 'flex',
+              flexDirection: 'column',
+              minWidth: 0,
+              flex: 1,
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              lineHeight: 1.2,
             }}
           >
-            {displayName}
-          </span>
-
-          {/* Correo electrónico */}
-          {displayEmail ? (
             <span
               suppressHydrationWarning
-              title={displayEmail}
+              title={displayName}
               style={{
-                fontSize: '11px',
-                color: 'var(--theme-elevation-500, #64748b)',
+                fontSize: '13px',
+                fontWeight: 600,
+                color: 'var(--theme-text)',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                lineHeight: 1.2,
-                marginTop: '2px',
+                lineHeight: 1.25,
               }}
             >
-              {displayEmail}
+              {displayName}
             </span>
-          ) : null}
 
-          {/* Rol del usuario */}
-          <div style={{ marginTop: '4px' }}>
+            {displayEmail ? (
+              <span
+                suppressHydrationWarning
+                title={displayEmail}
+                style={{
+                  fontSize: '11px',
+                  color: 'var(--theme-elevation-500)',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  lineHeight: 1.25,
+                  marginTop: '1px',
+                }}
+              >
+                {displayEmail}
+              </span>
+            ) : null}
+
             <span
               suppressHydrationWarning
               style={{
-                display: 'inline-block',
-                padding: '1px 7px',
-                borderRadius: '9999px',
                 fontSize: '10px',
-                fontWeight: 700,
-                lineHeight: 1.3,
-                backgroundColor: 'rgba(60, 172, 89, 0.12)',
-                color: '#24733b',
-                border: '1px solid rgba(60, 172, 89, 0.25)',
+                fontWeight: 600,
+                color: 'var(--theme-elevation-600)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+                marginTop: '3px',
                 whiteSpace: 'nowrap',
-                maxWidth: '100%',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
               }}
@@ -244,89 +221,85 @@ export const AdminSidebarUser: React.FC<AdminSidebarUserProps> = ({ user: propUs
             </span>
           </div>
         </div>
-      </div>
 
-      {/* 2. Barra de Acciones: Rueda de Configuración de Datos + Botón de Salir */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          paddingTop: '8px',
-          borderTop: '1px solid var(--theme-elevation-150, rgba(0, 0, 0, 0.06))',
-        }}
-      >
-        {/* Ruedita de Configuración de sus datos (Acceso a /admin/account) */}
-        <Link
-          href="/admin/account"
-          title="Configurar mis datos y perfil"
-          aria-label="Configurar mis datos"
+        {/* Acciones minimalistas: Configurar + Salir */}
+        <div
           style={{
-            flex: 1,
-            display: 'inline-flex',
+            display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
             gap: '6px',
-            padding: '6px 10px',
-            borderRadius: '8px',
-            fontSize: '11px',
-            fontWeight: 600,
-            textDecoration: 'none',
-            color: 'var(--theme-text, #334155)',
-            backgroundColor: 'var(--theme-elevation-100, #ffffff)',
-            border: '1px solid var(--theme-elevation-200, #cbd5e1)',
-            transition: 'all 0.15s ease',
-            cursor: 'pointer',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--theme-elevation-150, #f1f5f9)';
-            e.currentTarget.style.color = '#1b87c7';
-            e.currentTarget.style.borderColor = '#1b87c7';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--theme-elevation-100, #ffffff)';
-            e.currentTarget.style.color = 'var(--theme-text, #334155)';
-            e.currentTarget.style.borderColor = 'var(--theme-elevation-200, #cbd5e1)';
+            paddingTop: '8px',
+            borderTop: '1px solid var(--theme-elevation-150)',
           }}
         >
-          <Settings size={14} style={{ color: '#1b87c7', flexShrink: 0 }} />
-          <span>Configurar</span>
-        </Link>
+          <Link
+            href="/admin/account"
+            title="Configurar mis datos"
+            aria-label="Configurar mis datos"
+            style={{
+              flex: 1,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '5px',
+              padding: '6px 8px',
+              borderRadius: '6px',
+              fontSize: '11px',
+              fontWeight: 500,
+              textDecoration: 'none',
+              color: 'var(--theme-text)',
+              backgroundColor: 'var(--theme-elevation-100)',
+              border: '1px solid var(--theme-elevation-200)',
+              transition: 'background-color 0.15s ease, border-color 0.15s ease',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--theme-elevation-150)';
+              e.currentTarget.style.borderColor = 'var(--theme-elevation-300)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--theme-elevation-100)';
+              e.currentTarget.style.borderColor = 'var(--theme-elevation-200)';
+            }}
+          >
+            <Settings size={13} style={{ flexShrink: 0, opacity: 0.75 }} />
+            <span>Perfil</span>
+          </Link>
 
-        {/* Botón de salir del panel (al lado de la rueda de configuración) */}
-        <Link
-          href="/admin/logout"
-          title="Cerrar sesión y salir del panel"
-          aria-label="Salir del panel de administración"
-          style={{
-            flex: 1,
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            padding: '6px 10px',
-            borderRadius: '8px',
-            fontSize: '11px',
-            fontWeight: 600,
-            textDecoration: 'none',
-            color: '#dc2626',
-            backgroundColor: 'var(--theme-elevation-100, #ffffff)',
-            border: '1px solid var(--theme-elevation-200, #cbd5e1)',
-            transition: 'all 0.15s ease',
-            cursor: 'pointer',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.08)';
-            e.currentTarget.style.borderColor = '#ef4444';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--theme-elevation-100, #ffffff)';
-            e.currentTarget.style.borderColor = 'var(--theme-elevation-200, #cbd5e1)';
-          }}
-        >
-          <LogOut size={14} style={{ color: '#dc2626', flexShrink: 0 }} />
-          <span>Salir</span>
-        </Link>
+          <Link
+            href="/admin/logout"
+            title="Cerrar sesión"
+            aria-label="Cerrar sesión"
+            style={{
+              flex: 1,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '5px',
+              padding: '6px 8px',
+              borderRadius: '6px',
+              fontSize: '11px',
+              fontWeight: 500,
+              textDecoration: 'none',
+              color: 'var(--theme-elevation-600)',
+              backgroundColor: 'transparent',
+              border: '1px solid var(--theme-elevation-200)',
+              transition: 'background-color 0.15s ease, color 0.15s ease',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--theme-elevation-150)';
+              e.currentTarget.style.color = 'var(--theme-text)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = 'var(--theme-elevation-600)';
+            }}
+          >
+            <LogOut size={13} style={{ flexShrink: 0, opacity: 0.75 }} />
+            <span>Salir</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

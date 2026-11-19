@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   dbName: 'site_settings',
-  label: 'Ajustes Generales del Sitio',
+  label: 'Ajustes generales',
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user?.role && ['admin', 'editor'].includes(user.role)),
@@ -20,7 +20,7 @@ export const SiteSettings: GlobalConfig = {
     ],
   },
   admin: {
-    group: 'Web Pública',
+    group: 'Sitios',
     description: 'Datos de contacto oficiales, enlaces a redes sociales y códigos de analítica.',
   },
   fields: [
