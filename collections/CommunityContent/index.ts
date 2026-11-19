@@ -181,6 +181,47 @@ export const CommunityContent: CollectionConfig = {
       },
     },
     {
+      name: 'coverImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Imagen de Portada / Thumbnail (Opcional)',
+      admin: {
+        description: 'Imagen visual para destacar esta publicación o herramienta en el dashboard.',
+      },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'externalUrl',
+          type: 'text',
+          label: 'Enlace Externo (Drive, Cotizador, Zoom, Formulario, Web)',
+          admin: {
+            width: '60%',
+            description: 'URL externa si el recurso vive en Drive, Dropbox, YouTube, Tally o motor de reservas.',
+          },
+        },
+        {
+          name: 'ctaLabel',
+          type: 'text',
+          label: 'Texto del Botón Externo',
+          defaultValue: 'Abrir Recurso',
+          admin: {
+            width: '40%',
+            description: 'Ej: Abrir Banco de Fotos, Ir al Cotizador.',
+          },
+        },
+      ],
+    },
+    {
+      name: 'videoUrl',
+      type: 'text',
+      label: 'Enlace de Video (YouTube / Vimeo — Opcional)',
+      admin: {
+        description: 'Link de webinar grabado, capacitación o video promocional.',
+      },
+    },
+    {
       name: 'visibleFor',
       type: 'select',
       hasMany: true,
@@ -198,9 +239,19 @@ export const CommunityContent: CollectionConfig = {
     },
     // Metadatos complementarios para potenciar la experiencia del dashboard
     {
+      name: 'representation',
+      type: 'relationship',
+      relationTo: 'representations',
+      label: 'Marca / Representación Asociada',
+      admin: {
+        position: 'sidebar',
+        description: 'Vinculá este recurso a una marca oficial para filtrarlo en el portal.',
+      },
+    },
+    {
       name: 'brand',
       type: 'text',
-      label: 'Marca / Cadena Relacionada (Opcional)',
+      label: 'Marca / Cadena (Texto libre opcional)',
       admin: {
         position: 'sidebar',
       },

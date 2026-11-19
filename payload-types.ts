@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     pages: Page;
     users: User;
+    representations: Representation;
     'community-content': CommunityContent;
     media: Media;
     'payload-kv': PayloadKv;
@@ -80,6 +81,7 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    representations: RepresentationsSelect<false> | RepresentationsSelect<true>;
     'community-content': CommunityContentSelect<false> | CommunityContentSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -95,11 +97,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     'site-settings': SiteSetting;
+    'community-settings': CommunitySetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'community-settings': CommunitySettingsSelect<false> | CommunitySettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -910,6 +914,68 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Catálogo oficial de destinos, cadenas hoteleras y operadores representados por Promovêre. Alimenta el portal privado de la Comunidad.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "representations".
+ */
+export interface Representation {
+  id: number;
+  /**
+   * Ej: Cuba, México, Grecia, Islas Caimán, Estados Unidos.
+   */
+  title: string;
+  /**
+   * Ej: Gaviota Hoteles, Atelier de Hoteles, Hellenic Travel Network.
+   */
+  brand: string;
+  country: string;
+  category:
+    | 'Destino & Hotelería'
+    | 'DMC & Circuitos'
+    | 'Destino de Ultra-Lujo'
+    | 'Destino & Lujo All-Inclusive'
+    | 'Receptivo & Circuitos'
+    | 'Cadena Hotelera'
+    | 'Cruceros & Navieras'
+    | 'Otro';
+  /**
+   * Ej: Caribe Histórico, Mediterráneo & Islas.
+   */
+  tag?: string | null;
+  /**
+   * Resumen de la propuesta de valor y diferencial para el trade turístico.
+   */
+  description: string;
+  /**
+   * Foto principal en alta resolución para la tarjeta del destino/marca.
+   */
+  coverImage?: (number | null) | Media;
+  /**
+   * PNG o SVG con fondo transparente.
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Se utiliza automáticamente si no se subió una imagen en el campo anterior.
+   */
+  coverImageUrl?: string | null;
+  websiteUrl?: string | null;
+  mediaKitUrl?: string | null;
+  contactEmail?: string | null;
+  /**
+   * Ej: https://wa.me/5491112345678
+   */
+  contactWhatsapp?: string | null;
+  status: 'active' | 'draft';
+  featured?: boolean | null;
+  /**
+   * Menor número aparece primero.
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Recursos privados, herramientas comerciales y documentación para la Comunidad Promovêre (Operadores Mayoristas y Agencias Minoristas).
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -948,9 +1014,29 @@ export interface CommunityContent {
    */
   attachments?: (number | Media)[] | null;
   /**
+   * Imagen visual para destacar esta publicación o herramienta en el dashboard.
+   */
+  coverImage?: (number | null) | Media;
+  /**
+   * URL externa si el recurso vive en Drive, Dropbox, YouTube, Tally o motor de reservas.
+   */
+  externalUrl?: string | null;
+  /**
+   * Ej: Abrir Banco de Fotos, Ir al Cotizador.
+   */
+  ctaLabel?: string | null;
+  /**
+   * Link de webinar grabado, capacitación o video promocional.
+   */
+  videoUrl?: string | null;
+  /**
    * Selecciona qué perfiles de la Comunidad pueden visualizar y descargar este recurso.
    */
   visibleFor: ('mayorista' | 'minorista')[];
+  /**
+   * Vinculá este recurso a una marca oficial para filtrarlo en el portal.
+   */
+  representation?: (number | null) | Representation;
   brand?: string | null;
   highlight?: string | null;
   featured?: boolean | null;
@@ -988,6 +1074,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'representations';
+        value: number | Representation;
       } | null)
     | ({
         relationTo: 'community-content';
@@ -1617,6 +1707,30 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "representations_select".
+ */
+export interface RepresentationsSelect<T extends boolean = true> {
+  title?: T;
+  brand?: T;
+  country?: T;
+  category?: T;
+  tag?: T;
+  description?: T;
+  coverImage?: T;
+  logo?: T;
+  coverImageUrl?: T;
+  websiteUrl?: T;
+  mediaKitUrl?: T;
+  contactEmail?: T;
+  contactWhatsapp?: T;
+  status?: T;
+  featured?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "community-content_select".
  */
 export interface CommunityContentSelect<T extends boolean = true> {
@@ -1624,7 +1738,12 @@ export interface CommunityContentSelect<T extends boolean = true> {
   category?: T;
   description?: T;
   attachments?: T;
+  coverImage?: T;
+  externalUrl?: T;
+  ctaLabel?: T;
+  videoUrl?: T;
   visibleFor?: T;
+  representation?: T;
   brand?: T;
   highlight?: T;
   featured?: T;
@@ -1792,6 +1911,42 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * Editá el aviso urgente, el mensaje de bienvenida, la política B2B y el canal de WhatsApp Trade del portal privado.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-settings".
+ */
+export interface CommunitySetting {
+  id: number;
+  alertBanner?: {
+    enabled?: boolean | null;
+    /**
+     * Ej: ¡Inscripciones abiertas para el Workshop Cono Sur 2026!
+     */
+    message?: string | null;
+    ctaLabel?: string | null;
+    ctaUrl?: string | null;
+  };
+  welcomeBanner?: {
+    badge?: string | null;
+    subtitle?: string | null;
+    b2bPolicyTitle?: string | null;
+    b2bPolicyText?: string | null;
+  };
+  whatsappChannel?: {
+    enabled?: boolean | null;
+    title?: string | null;
+    buttonLabel?: string | null;
+    description?: string | null;
+    /**
+     * Ej: https://whatsapp.com/channel/... o https://wa.me/54911...
+     */
+    whatsappUrl?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -1862,6 +2017,40 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   youtube?: T;
   googleAnalyticsId?: T;
   metaPixelId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-settings_select".
+ */
+export interface CommunitySettingsSelect<T extends boolean = true> {
+  alertBanner?:
+    | T
+    | {
+        enabled?: T;
+        message?: T;
+        ctaLabel?: T;
+        ctaUrl?: T;
+      };
+  welcomeBanner?:
+    | T
+    | {
+        badge?: T;
+        subtitle?: T;
+        b2bPolicyTitle?: T;
+        b2bPolicyText?: T;
+      };
+  whatsappChannel?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        buttonLabel?: T;
+        description?: T;
+        whatsappUrl?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

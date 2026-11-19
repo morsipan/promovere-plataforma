@@ -18,10 +18,12 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Pages } from './collections/Pages'
 import { CommunityContent } from './collections/CommunityContent'
+import { Representations } from './collections/Representations'
 import { Media } from './collections/Media'
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
 import { SiteSettings } from './globals/SiteSettings'
+import { CommunitySettings } from './globals/CommunitySettings'
 import { getVercelBlobToken, getBlobAccess, isVercelBlobEnabled } from './lib/blob'
 
 const filename = fileURLToPath(import.meta.url)
@@ -75,8 +77,8 @@ export default buildConfig({
       afterLogin: ['/components/admin/AdminRememberMe#AdminRememberMe'],
     },
   },
-  collections: [Pages, Users, CommunityContent, Media],
-  globals: [Header, Footer, SiteSettings],
+  collections: [Pages, Users, Representations, CommunityContent, Media],
+  globals: [Header, Footer, SiteSettings, CommunitySettings],
   plugins: [
     // 1. Almacenamiento en Vercel Blob (se activa si existe token válido de Blob)
     vercelBlobStorage({
