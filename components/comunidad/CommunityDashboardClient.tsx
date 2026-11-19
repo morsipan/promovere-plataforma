@@ -130,6 +130,7 @@ export interface DashboardCommunitySettings {
     whatsappStyle?: 'verde-gradiente' | 'verde' | 'azul' | 'grisOscuro' | null;
     cardStyle?: 'elevated' | 'bordered' | 'soft' | null;
     accentColor?: 'azul' | 'verde' | null;
+    welcomeTitleColor?: 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde' | null;
     welcomeTextColor?: 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde' | null;
     alertTextColor?: 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde' | null;
     whatsappTextColor?: 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde' | null;
@@ -338,6 +339,8 @@ export default function CommunityDashboardClient({
     verde: 'text-[#3cac59]',
   };
 
+  const welcomeTitleClass =
+    textColorMap[styles?.welcomeTitleColor || styles?.welcomeTextColor || 'blanco'] || 'text-white';
   const welcomeTextClass = textColorMap[styles?.welcomeTextColor || 'blanco'] || 'text-white';
   const alertTextClass = textColorMap[styles?.alertTextColor || 'blanco'] || 'text-white';
   const whatsappTextClass = textColorMap[styles?.whatsappTextColor || 'blanco'] || 'text-white';
@@ -773,7 +776,13 @@ export default function CommunityDashboardClient({
         );
 
       case 'eventos':
-        return <CommunityEventsCalendar key="eventos" events={events} />;
+        return (
+          <CommunityEventsCalendar
+            key="eventos"
+            events={events}
+            headingTextClass={headingTextClass}
+          />
+        );
 
       case 'herramientas':
         return (
@@ -1307,7 +1316,7 @@ export default function CommunityDashboardClient({
             </div>
             <h1
               suppressHydrationWarning
-              className="font-baloo text-2xl sm:text-4xl font-extrabold tracking-tight mb-3"
+              className={`font-baloo text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 ${welcomeTitleClass}`}
             >
               {`Bienvenido, ${userName}`}
             </h1>
@@ -1366,7 +1375,9 @@ export default function CommunityDashboardClient({
                 <MessageCircle className="w-3.5 h-3.5" />
                 <span>Canal Directo Trade</span>
               </div>
-              <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold mb-2 leading-tight">
+              <h2
+                className={`font-baloo text-2xl sm:text-3xl font-extrabold mb-2 leading-tight ${whatsappTextClass}`}
+              >
                 {whatsapp.title || 'Sumate al Canal Oficial de WhatsApp Trade'}
               </h2>
               <p className="text-xs sm:text-sm opacity-90 leading-relaxed">

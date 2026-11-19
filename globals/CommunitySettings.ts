@@ -293,10 +293,10 @@ export const CommunitySettings: GlobalConfig = {
                   type: 'row',
                   fields: [
                     {
-                      name: 'welcomeTextColor',
+                      name: 'welcomeTitleColor',
                       type: 'select',
-                      enumName: 'enum_cs_wel_txt',
-                      label: 'Color de Texto — Banner de Bienvenida',
+                      enumName: 'enum_cs_wel_ttl',
+                      label: 'Color del Título — Banner de Bienvenida',
                       defaultValue: 'blanco',
                       options: [
                         { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
@@ -313,10 +313,10 @@ export const CommunitySettings: GlobalConfig = {
                       },
                     },
                     {
-                      name: 'alertTextColor',
+                      name: 'welcomeTextColor',
                       type: 'select',
-                      enumName: 'enum_cs_alr_txt',
-                      label: 'Color de Texto — Cintillo de Aviso',
+                      enumName: 'enum_cs_wel_txt',
+                      label: 'Color de Texto / Bajada — Banner de Bienvenida',
                       defaultValue: 'blanco',
                       options: [
                         { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
@@ -338,10 +338,10 @@ export const CommunitySettings: GlobalConfig = {
                   type: 'row',
                   fields: [
                     {
-                      name: 'whatsappTextColor',
+                      name: 'alertTextColor',
                       type: 'select',
-                      enumName: 'enum_cs_wa_txt',
-                      label: 'Color de Texto — Banner de WhatsApp',
+                      enumName: 'enum_cs_alr_txt',
+                      label: 'Color de Texto — Cintillo de Aviso',
                       defaultValue: 'blanco',
                       options: [
                         { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
@@ -351,7 +351,27 @@ export const CommunitySettings: GlobalConfig = {
                         { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
                       ],
                       admin: {
-                        width: '50%',
+                        width: '33.3%',
+                        components: {
+                          Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                        },
+                      },
+                    },
+                    {
+                      name: 'whatsappTextColor',
+                      type: 'select',
+                      enumName: 'enum_cs_wa_txt',
+                      label: 'Color de Título y Texto — Banner de WhatsApp',
+                      defaultValue: 'blanco',
+                      options: [
+                        { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
+                        { label: 'Blanco Humo (#f9f9f9)', value: 'blancoHumo' },
+                        { label: 'Gris Antracita (#4d4e4f)', value: 'grisOscuro' },
+                        { label: 'Azul Brillante (#1b87c7)', value: 'azul' },
+                        { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
+                      ],
+                      admin: {
+                        width: '33.3%',
                         components: {
                           Field: '/components/admin/BrandColorPicker#BrandColorPicker',
                         },
@@ -369,7 +389,7 @@ export const CommunitySettings: GlobalConfig = {
                         { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
                       ],
                       admin: {
-                        width: '50%',
+                        width: '33.3%',
                         components: {
                           Field: '/components/admin/BrandColorPicker#BrandColorPicker',
                         },

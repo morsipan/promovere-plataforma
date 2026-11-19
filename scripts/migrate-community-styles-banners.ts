@@ -18,6 +18,11 @@ async function run() {
   console.log('📦 1. Agregando enums y columnas de colores de texto en community_settings...');
   await client.query(`
     DO $$ BEGIN
+      CREATE TYPE enum_cs_wel_ttl AS ENUM ('blanco', 'blancoHumo', 'grisOscuro', 'azul', 'verde');
+    EXCEPTION WHEN duplicate_object THEN null;
+    END $$;
+
+    DO $$ BEGIN
       CREATE TYPE enum_cs_wel_txt AS ENUM ('blanco', 'blancoHumo', 'grisOscuro', 'azul', 'verde');
     EXCEPTION WHEN duplicate_object THEN null;
     END $$;
@@ -38,6 +43,7 @@ async function run() {
     END $$;
 
     ALTER TABLE community_settings
+      ADD COLUMN IF NOT EXISTS design_styles_welcome_title_color enum_cs_wel_ttl DEFAULT 'blanco',
       ADD COLUMN IF NOT EXISTS design_styles_welcome_text_color enum_cs_wel_txt DEFAULT 'blanco',
       ADD COLUMN IF NOT EXISTS design_styles_alert_text_color enum_cs_alr_txt DEFAULT 'blanco',
       ADD COLUMN IF NOT EXISTS design_styles_whatsapp_text_color enum_cs_wa_txt DEFAULT 'blanco',

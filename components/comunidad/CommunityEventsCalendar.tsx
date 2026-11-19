@@ -39,6 +39,7 @@ export interface CalendarEventItem {
 
 export interface CommunityEventsCalendarProps {
   events: CalendarEventItem[];
+  headingTextClass?: string;
 }
 
 type CalendarView = 'month' | 'week' | 'list';
@@ -114,7 +115,10 @@ function formatTimeOnly(dateIso?: string | null): string {
   return d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
 }
 
-export default function CommunityEventsCalendar({ events }: CommunityEventsCalendarProps) {
+export default function CommunityEventsCalendar({
+  events,
+  headingTextClass = 'text-[#4d4e4f]',
+}: CommunityEventsCalendarProps) {
   const [view, setView] = useState<CalendarView>('month');
   const [todayKey, setTodayKey] = useState<string>('');
   const [anchorDate, setAnchorDate] = useState<Date>(() => {
@@ -312,7 +316,7 @@ export default function CommunityEventsCalendar({ events }: CommunityEventsCalen
             <Calendar className="w-4 h-4" />
             <span>Agenda Trade, Fam Tours & Capacitaciones</span>
           </div>
-          <h2 className="font-baloo text-2xl sm:text-3xl font-extrabold text-[#4d4e4f] tracking-tight">
+          <h2 className={`font-baloo text-2xl sm:text-3xl font-extrabold ${headingTextClass} tracking-tight`}>
             Eventos & Fam Tours
           </h2>
         </div>

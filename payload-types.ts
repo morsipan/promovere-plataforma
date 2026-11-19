@@ -68,11 +68,11 @@ export interface Config {
   blocks: {};
   collections: {
     pages: Page;
-    users: User;
     representations: Representation;
     'community-content': CommunityContent;
     'community-promotions': CommunityPromotion;
     'community-events': CommunityEvent;
+    users: User;
     media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -82,11 +82,11 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
     representations: RepresentationsSelect<false> | RepresentationsSelect<true>;
     'community-content': CommunityContentSelect<false> | CommunityContentSelect<true>;
     'community-promotions': CommunityPromotionsSelect<false> | CommunityPromotionsSelect<true>;
     'community-events': CommunityEventsSelect<false> | CommunityEventsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -882,62 +882,6 @@ export interface Media {
   focalY?: number | null;
 }
 /**
- * Gestión centralizada de credenciales, roles y permisos de acceso para el equipo interno y la Comunidad Promovêre.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name: string;
-  /**
-   * Foto de perfil o avatar del usuario para el portal privado de la Comunidad.
-   */
-  avatar?: (number | null) | Media;
-  /**
-   * Define los permisos del usuario. Roles "admin" y "editor" tienen acceso a /admin. Roles "mayorista" y "minorista" acceden exclusivamente al portal privado de la Comunidad.
-   */
-  role: 'admin' | 'editor' | 'mayorista' | 'minorista';
-  company?: string | null;
-  phone?: string | null;
-  country?: string | null;
-  /**
-   * Marca si la cuenta fue validada formalmente por el equipo comercial de Promovêre.
-   */
-  verified?: boolean | null;
-  /**
-   * Preferencia guardada por el usuario con el orden de las secciones en su panel de bienvenida.
-   */
-  dashboardOrder?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
  * Catálogo oficial de destinos, cadenas hoteleras y operadores representados por Promovêre. Alimenta el portal privado de la Comunidad.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1159,6 +1103,62 @@ export interface CommunityEvent {
   createdAt: string;
 }
 /**
+ * Gestión centralizada de credenciales, roles y permisos de acceso para el equipo interno y la Comunidad Promovêre.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name: string;
+  /**
+   * Foto de perfil o avatar del usuario para el portal privado de la Comunidad.
+   */
+  avatar?: (number | null) | Media;
+  /**
+   * Define los permisos del usuario. Roles "admin" y "editor" tienen acceso a /admin. Roles "mayorista" y "minorista" acceden exclusivamente al portal privado de la Comunidad.
+   */
+  role: 'admin' | 'editor' | 'mayorista' | 'minorista';
+  company?: string | null;
+  phone?: string | null;
+  country?: string | null;
+  /**
+   * Marca si la cuenta fue validada formalmente por el equipo comercial de Promovêre.
+   */
+  verified?: boolean | null;
+  /**
+   * Preferencia guardada por el usuario con el orden de las secciones en su panel de bienvenida.
+   */
+  dashboardOrder?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -1187,10 +1187,6 @@ export interface PayloadLockedDocument {
         value: number | Page;
       } | null)
     | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
         relationTo: 'representations';
         value: number | Representation;
       } | null)
@@ -1205,6 +1201,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'community-events';
         value: number | CommunityEvent;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
@@ -1802,37 +1802,6 @@ export interface PagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  avatar?: T;
-  role?: T;
-  company?: T;
-  phone?: T;
-  country?: T;
-  verified?: T;
-  dashboardOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "representations_select".
  */
 export interface RepresentationsSelect<T extends boolean = true> {
@@ -1919,6 +1888,37 @@ export interface CommunityEventsSelect<T extends boolean = true> {
   featured?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  avatar?: T;
+  role?: T;
+  company?: T;
+  phone?: T;
+  country?: T;
+  verified?: T;
+  dashboardOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2122,6 +2122,7 @@ export interface CommunitySetting {
     whatsappStyle?: ('verde-gradiente' | 'verde' | 'azul' | 'grisOscuro') | null;
     cardStyle?: ('elevated' | 'bordered' | 'soft') | null;
     accentColor?: ('azul' | 'verde') | null;
+    welcomeTitleColor?: ('blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde') | null;
     welcomeTextColor?: ('blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde') | null;
     alertTextColor?: ('blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde') | null;
     whatsappTextColor?: ('blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde') | null;
@@ -2552,6 +2553,7 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
         whatsappStyle?: T;
         cardStyle?: T;
         accentColor?: T;
+        welcomeTitleColor?: T;
         welcomeTextColor?: T;
         alertTextColor?: T;
         whatsappTextColor?: T;
