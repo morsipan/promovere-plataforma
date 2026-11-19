@@ -18,6 +18,9 @@ import {
   MapPin,
   Tag,
   Calendar,
+  Video,
+  BookOpen,
+  Settings,
 } from 'lucide-react';
 import type { User } from '@/payload-types';
 import UserProfileItem, { formatRole } from './UserProfileItem';
@@ -82,16 +85,34 @@ export default function Sidebar({
       description: 'Beneficios y vigencia trade',
     },
     {
-      name: 'Eventos & Capacitaciones',
+      name: 'Eventos & Fam Tours',
       href: '/comunidad/dashboard#eventos',
       icon: Calendar,
-      description: 'Webinars, workshops y videos',
+      description: 'Calendario y destacados',
     },
     {
-      name: 'Recursos & Herramientas',
+      name: 'Herramientas',
       href: '/comunidad/dashboard#herramientas',
       icon: FolderOpen,
-      description: 'Manuales, novedades y descargas',
+      description: 'Comerciales e Inteligentes',
+    },
+    {
+      name: 'Webinars',
+      href: '/comunidad/dashboard#webinars',
+      icon: Video,
+      description: 'Videos y capacitaciones',
+    },
+    {
+      name: 'Herramientas Importantes',
+      href: '/comunidad/dashboard#herramientas-importantes',
+      icon: BookOpen,
+      description: 'Notas de blog y guías',
+    },
+    {
+      name: 'Mi Perfil y Panel',
+      href: '/comunidad/dashboard/perfil',
+      icon: Settings,
+      description: 'Datos, avatar y orden',
     },
   ];
 

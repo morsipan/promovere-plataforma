@@ -39,6 +39,7 @@ export const FullWidthImageBlock: Block = {
         {
           name: 'height',
           type: 'select',
+          enumName: 'enum_fwi_height',
           label: 'Altura del Módulo',
           defaultValue: 'medium',
           options: [
@@ -53,6 +54,7 @@ export const FullWidthImageBlock: Block = {
         {
           name: 'overlay',
           type: 'select',
+          enumName: 'enum_fwi_overlay',
           label: 'Capa Superpuesta (Overlay)',
           defaultValue: 'none',
           options: [
@@ -97,6 +99,7 @@ export const FullWidthImageBlock: Block = {
         {
           name: 'linkType',
           type: 'select',
+          enumName: 'enum_fwi_link_type',
           label: 'Comportamiento del Enlace',
           defaultValue: 'cta',
           options: [
@@ -141,6 +144,7 @@ export const FullWidthImageBlock: Block = {
         {
           name: 'contentAlignment',
           type: 'select',
+          enumName: 'enum_fwi_align',
           label: 'Alineación del Contenido de Texto',
           defaultValue: 'center',
           options: [

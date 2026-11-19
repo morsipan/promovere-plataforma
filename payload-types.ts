@@ -897,6 +897,18 @@ export interface User {
    * Marca si la cuenta fue validada formalmente por el equipo comercial de Promovêre.
    */
   verified?: boolean | null;
+  /**
+   * Preferencia guardada por el usuario con el orden de las secciones en su panel de bienvenida.
+   */
+  dashboardOrder?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -994,7 +1006,15 @@ export interface CommunityContent {
   /**
    * Seleccioná la categoría. Aviso: Los contratos y acuerdos quedan automáticamente restringidos al rol Mayorista.
    */
-  category: 'herramientas' | 'material_comercial' | 'novedades' | 'promociones' | 'contratos';
+  category:
+    | 'herramientas_comerciales'
+    | 'herramientas_inteligentes'
+    | 'blog'
+    | 'herramientas'
+    | 'material_comercial'
+    | 'novedades'
+    | 'promociones'
+    | 'contratos';
   /**
    * Texto estructurado, especificaciones comerciales e instrucciones para el canal.
    */
@@ -1782,6 +1802,7 @@ export interface UsersSelect<T extends boolean = true> {
   phone?: T;
   country?: T;
   verified?: T;
+  dashboardOrder?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -2050,7 +2071,7 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
- * Editá el aviso urgente, el mensaje de bienvenida, la política B2B y el canal de WhatsApp Trade del portal privado.
+ * Configurá textos, estilos visuales de los elementos, aviso urgente, canal de WhatsApp y los 3 espacios de banners publicitarios del portal privado.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "community-settings".
@@ -2082,6 +2103,301 @@ export interface CommunitySetting {
      */
     whatsappUrl?: string | null;
   };
+  /**
+   * Elegí los estilos oficiales para el Banner de Bienvenida, Aviso Superior, WhatsApp, Tarjetas y color de acento.
+   */
+  designStyles?: {
+    welcomeTheme?: ('azul-oscuro' | 'gradiente-marca' | 'azul' | 'verde' | 'grisOscuro') | null;
+    alertStyle?: ('gradiente' | 'azul' | 'verde' | 'grisOscuro') | null;
+    whatsappStyle?: ('verde-gradiente' | 'verde' | 'azul' | 'grisOscuro') | null;
+    cardStyle?: ('elevated' | 'bordered' | 'soft') | null;
+    accentColor?: ('azul' | 'verde') | null;
+  };
+  /**
+   * Cargá un Banner Full-Width o Banner de Impacto para mostrar en la zona superior del dashboard.
+   */
+  adBannerTop?:
+    | (
+        | {
+            /**
+             * Imagen horizontal de alta calidad para ocupar el ancho completo.
+             */
+            image: number | Media;
+            /**
+             * Si se adjunta, se mostrará en pantallas móviles en lugar de la imagen de escritorio.
+             */
+            mobileImage?: (number | null) | Media;
+            height?: ('auto' | 'small' | 'medium' | 'large' | 'screen') | null;
+            overlay?: ('none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand') | null;
+            fullBleed?: boolean | null;
+            title?: string | null;
+            subtitle?: string | null;
+            /**
+             * Define si el enlace se activa únicamente en el botón CTA o en toda la superficie del banner.
+             */
+            linkType?: ('cta' | 'full') | null;
+            /**
+             * Destino al hacer clic (ej. /contacto o https://...).
+             */
+            buttonHref?: string | null;
+            /**
+             * Etiqueta del botón (opcional si es elemento completo).
+             */
+            buttonLabel?: string | null;
+            newTab?: boolean | null;
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'fullWidthImage';
+          }
+        | {
+            appearance: {
+              /**
+               * Elegí entre un gradiente de marca, un color corporativo plano o una foto de fondo.
+               */
+              backgroundStyle: 'gradient' | 'solid' | 'image';
+              /**
+               * Garantiza la legibilidad según la oscuridad del fondo elegido.
+               */
+              theme: 'dark' | 'light';
+              /**
+               * Define la separación vertical y presencia del banner.
+               */
+              height: 'small' | 'medium' | 'large';
+              /**
+               * Distribución espacial de los textos y botones.
+               */
+              layout: 'centered' | 'split';
+              /**
+               * Aplica efectos animados fluidos al entrar en pantalla.
+               */
+              enableAnimations?: boolean | null;
+              /**
+               * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
+               */
+              backgroundColor?: ('blancoHumo' | 'grisOscuro' | 'verde' | 'azul') | null;
+              /**
+               * Imagen horizontal en alta resolución. Se aplicará con cobertura total y un overlay oscuro para proteger el contraste.
+               */
+              backgroundImage?: (number | null) | Media;
+            };
+            /**
+             * Texto principal en tipografía Baloo Da 2 (H2).
+             */
+            title: string;
+            /**
+             * Texto secundario en tipografía Roboto.
+             */
+            subtitle?: string | null;
+            buttons?:
+              | {
+                  label: string;
+                  url: string;
+                  style: 'primary' | 'secondary';
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * Subí una tarjeta flotante, un logotipo (ej: Comunidad Promovêre) o un gráfico decorativo.
+             */
+            secondaryGraphic?: (number | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'impactBanner';
+          }
+      )[]
+    | null;
+  /**
+   * Cargá un Banner Full-Width o Banner de Impacto para mostrar en la zona intermedia del dashboard.
+   */
+  adBannerMiddle?:
+    | (
+        | {
+            /**
+             * Imagen horizontal de alta calidad para ocupar el ancho completo.
+             */
+            image: number | Media;
+            /**
+             * Si se adjunta, se mostrará en pantallas móviles en lugar de la imagen de escritorio.
+             */
+            mobileImage?: (number | null) | Media;
+            height?: ('auto' | 'small' | 'medium' | 'large' | 'screen') | null;
+            overlay?: ('none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand') | null;
+            fullBleed?: boolean | null;
+            title?: string | null;
+            subtitle?: string | null;
+            /**
+             * Define si el enlace se activa únicamente en el botón CTA o en toda la superficie del banner.
+             */
+            linkType?: ('cta' | 'full') | null;
+            /**
+             * Destino al hacer clic (ej. /contacto o https://...).
+             */
+            buttonHref?: string | null;
+            /**
+             * Etiqueta del botón (opcional si es elemento completo).
+             */
+            buttonLabel?: string | null;
+            newTab?: boolean | null;
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'fullWidthImage';
+          }
+        | {
+            appearance: {
+              /**
+               * Elegí entre un gradiente de marca, un color corporativo plano o una foto de fondo.
+               */
+              backgroundStyle: 'gradient' | 'solid' | 'image';
+              /**
+               * Garantiza la legibilidad según la oscuridad del fondo elegido.
+               */
+              theme: 'dark' | 'light';
+              /**
+               * Define la separación vertical y presencia del banner.
+               */
+              height: 'small' | 'medium' | 'large';
+              /**
+               * Distribución espacial de los textos y botones.
+               */
+              layout: 'centered' | 'split';
+              /**
+               * Aplica efectos animados fluidos al entrar en pantalla.
+               */
+              enableAnimations?: boolean | null;
+              /**
+               * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
+               */
+              backgroundColor?: ('blancoHumo' | 'grisOscuro' | 'verde' | 'azul') | null;
+              /**
+               * Imagen horizontal en alta resolución. Se aplicará con cobertura total y un overlay oscuro para proteger el contraste.
+               */
+              backgroundImage?: (number | null) | Media;
+            };
+            /**
+             * Texto principal en tipografía Baloo Da 2 (H2).
+             */
+            title: string;
+            /**
+             * Texto secundario en tipografía Roboto.
+             */
+            subtitle?: string | null;
+            buttons?:
+              | {
+                  label: string;
+                  url: string;
+                  style: 'primary' | 'secondary';
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * Subí una tarjeta flotante, un logotipo (ej: Comunidad Promovêre) o un gráfico decorativo.
+             */
+            secondaryGraphic?: (number | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'impactBanner';
+          }
+      )[]
+    | null;
+  /**
+   * Cargá un Banner Full-Width o Banner de Impacto para mostrar al pie del dashboard.
+   */
+  adBannerBottom?:
+    | (
+        | {
+            /**
+             * Imagen horizontal de alta calidad para ocupar el ancho completo.
+             */
+            image: number | Media;
+            /**
+             * Si se adjunta, se mostrará en pantallas móviles en lugar de la imagen de escritorio.
+             */
+            mobileImage?: (number | null) | Media;
+            height?: ('auto' | 'small' | 'medium' | 'large' | 'screen') | null;
+            overlay?: ('none' | 'subtle' | 'medium' | 'strong' | 'gradient' | 'brand') | null;
+            fullBleed?: boolean | null;
+            title?: string | null;
+            subtitle?: string | null;
+            /**
+             * Define si el enlace se activa únicamente en el botón CTA o en toda la superficie del banner.
+             */
+            linkType?: ('cta' | 'full') | null;
+            /**
+             * Destino al hacer clic (ej. /contacto o https://...).
+             */
+            buttonHref?: string | null;
+            /**
+             * Etiqueta del botón (opcional si es elemento completo).
+             */
+            buttonLabel?: string | null;
+            newTab?: boolean | null;
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'fullWidthImage';
+          }
+        | {
+            appearance: {
+              /**
+               * Elegí entre un gradiente de marca, un color corporativo plano o una foto de fondo.
+               */
+              backgroundStyle: 'gradient' | 'solid' | 'image';
+              /**
+               * Garantiza la legibilidad según la oscuridad del fondo elegido.
+               */
+              theme: 'dark' | 'light';
+              /**
+               * Define la separación vertical y presencia del banner.
+               */
+              height: 'small' | 'medium' | 'large';
+              /**
+               * Distribución espacial de los textos y botones.
+               */
+              layout: 'centered' | 'split';
+              /**
+               * Aplica efectos animados fluidos al entrar en pantalla.
+               */
+              enableAnimations?: boolean | null;
+              /**
+               * Seleccioná uno de los 4 colores oficiales del sistema de diseño Promovêre.
+               */
+              backgroundColor?: ('blancoHumo' | 'grisOscuro' | 'verde' | 'azul') | null;
+              /**
+               * Imagen horizontal en alta resolución. Se aplicará con cobertura total y un overlay oscuro para proteger el contraste.
+               */
+              backgroundImage?: (number | null) | Media;
+            };
+            /**
+             * Texto principal en tipografía Baloo Da 2 (H2).
+             */
+            title: string;
+            /**
+             * Texto secundario en tipografía Roboto.
+             */
+            subtitle?: string | null;
+            buttons?:
+              | {
+                  label: string;
+                  url: string;
+                  style: 'primary' | 'secondary';
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * Subí una tarjeta flotante, un logotipo (ej: Comunidad Promovêre) o un gráfico decorativo.
+             */
+            secondaryGraphic?: (number | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'impactBanner';
+          }
+      )[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2189,6 +2505,168 @@ export interface CommunitySettingsSelect<T extends boolean = true> {
         buttonLabel?: T;
         description?: T;
         whatsappUrl?: T;
+      };
+  designStyles?:
+    | T
+    | {
+        welcomeTheme?: T;
+        alertStyle?: T;
+        whatsappStyle?: T;
+        cardStyle?: T;
+        accentColor?: T;
+      };
+  adBannerTop?:
+    | T
+    | {
+        fullWidthImage?:
+          | T
+          | {
+              image?: T;
+              mobileImage?: T;
+              height?: T;
+              overlay?: T;
+              fullBleed?: T;
+              title?: T;
+              subtitle?: T;
+              linkType?: T;
+              buttonHref?: T;
+              buttonLabel?: T;
+              newTab?: T;
+              contentAlignment?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        impactBanner?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundStyle?: T;
+                    theme?: T;
+                    height?: T;
+                    layout?: T;
+                    enableAnimations?: T;
+                    backgroundColor?: T;
+                    backgroundImage?: T;
+                  };
+              title?: T;
+              subtitle?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    style?: T;
+                    id?: T;
+                  };
+              secondaryGraphic?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  adBannerMiddle?:
+    | T
+    | {
+        fullWidthImage?:
+          | T
+          | {
+              image?: T;
+              mobileImage?: T;
+              height?: T;
+              overlay?: T;
+              fullBleed?: T;
+              title?: T;
+              subtitle?: T;
+              linkType?: T;
+              buttonHref?: T;
+              buttonLabel?: T;
+              newTab?: T;
+              contentAlignment?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        impactBanner?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundStyle?: T;
+                    theme?: T;
+                    height?: T;
+                    layout?: T;
+                    enableAnimations?: T;
+                    backgroundColor?: T;
+                    backgroundImage?: T;
+                  };
+              title?: T;
+              subtitle?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    style?: T;
+                    id?: T;
+                  };
+              secondaryGraphic?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  adBannerBottom?:
+    | T
+    | {
+        fullWidthImage?:
+          | T
+          | {
+              image?: T;
+              mobileImage?: T;
+              height?: T;
+              overlay?: T;
+              fullBleed?: T;
+              title?: T;
+              subtitle?: T;
+              linkType?: T;
+              buttonHref?: T;
+              buttonLabel?: T;
+              newTab?: T;
+              contentAlignment?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        impactBanner?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundStyle?: T;
+                    theme?: T;
+                    height?: T;
+                    layout?: T;
+                    enableAnimations?: T;
+                    backgroundColor?: T;
+                    backgroundImage?: T;
+                  };
+              title?: T;
+              subtitle?: T;
+              buttons?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    style?: T;
+                    id?: T;
+                  };
+              secondaryGraphic?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

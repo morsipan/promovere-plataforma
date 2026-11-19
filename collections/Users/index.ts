@@ -155,5 +155,14 @@ export const Users: CollectionConfig = {
         description: 'Marca si la cuenta fue validada formalmente por el equipo comercial de Promovêre.',
       },
     },
+    {
+      name: 'dashboardOrder',
+      type: 'json',
+      label: 'Orden Personalizado del Panel de Comunidad',
+      admin: {
+        description:
+          'Preferencia guardada por el usuario con el orden de las secciones en su panel de bienvenida.',
+      },
+    },
   ],
 }

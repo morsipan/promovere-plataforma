@@ -98,7 +98,7 @@ export default async function ComunidadDashboardPage() {
       payload
         .findGlobal({
           slug: 'community-settings',
-          depth: 1,
+          depth: 2,
         })
         .catch(() => null),
     ]);
@@ -206,6 +206,9 @@ export default async function ComunidadDashboardPage() {
     <CommunityDashboardClient
       userName={firstName}
       userRole={String(user.role || 'minorista')}
+      dashboardOrder={
+        Array.isArray((user as any).dashboardOrder) ? (user as any).dashboardOrder : null
+      }
       representations={representations}
       contentItems={contentItems}
       promotions={promotions}

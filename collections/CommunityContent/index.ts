@@ -134,7 +134,10 @@ export const CommunityContent: CollectionConfig = {
       required: true,
       defaultValue: 'novedades',
       options: [
-        { label: 'Herramientas', value: 'herramientas' },
+        { label: 'Herramientas Comerciales', value: 'herramientas_comerciales' },
+        { label: 'Herramientas Inteligentes', value: 'herramientas_inteligentes' },
+        { label: 'Notas de Blog (Herramientas Importantes)', value: 'blog' },
+        { label: 'Herramientas (General)', value: 'herramientas' },
         { label: 'Material Comercial', value: 'material_comercial' },
         { label: 'Novedades', value: 'novedades' },
         { label: 'Promociones', value: 'promociones' },
