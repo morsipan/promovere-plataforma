@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useLivePreview, RefreshRouteOnSave } from '@payloadcms/live-preview-react';
 import {
   Building2,
   FileText,
@@ -223,6 +225,36 @@ function normalizeSectionOrder(customOrder?: string[] | null): string[] {
   return [...cleaned, ...missing];
 }
 
+/**
+ * Suscriptor de Live Preview para el Global `community-settings`.
+ * Solo se monta cuando el dashboard se visualiza dentro del iframe del Admin de Payload CMS,
+ * evitando condiciones de carrera durante la hidratación de React 19.
+ */
+function CommunityLivePreviewSubscriber({
+  initialSettings,
+  onSettingsChange,
+}: {
+  initialSettings: DashboardCommunitySettings;
+  onSettingsChange: (data: DashboardCommunitySettings) => void;
+}) {
+  const router = useRouter();
+  const serverURL = typeof window !== 'undefined' ? window.location.origin : '';
+
+  const { data } = useLivePreview<DashboardCommunitySettings>({
+    initialData: initialSettings,
+    serverURL,
+    depth: 2,
+  });
+
+  useEffect(() => {
+    if (data) {
+      onSettingsChange(data);
+    }
+  }, [data, onSettingsChange]);
+
+  return <RefreshRouteOnSave refresh={() => router.refresh()} serverURL={serverURL} />;
+}
+
 export default function CommunityDashboardClient({
   userName,
   userRole,
@@ -233,6 +265,20 @@ export default function CommunityDashboardClient({
   events = [],
   settings,
 }: CommunityDashboardClientProps) {
+  const [liveSettings, setLiveSettings] = useState<DashboardCommunitySettings | null>(null);
+  const [inIframe, setInIframe] = useState(false);
+
+  useEffect(() => {
+    const isInsideAdmin =
+      typeof window !== 'undefined' &&
+      (window.self !== window.top || Boolean(window.opener));
+    if (isInsideAdmin) {
+      setInIframe(true);
+    }
+  }, []);
+
+  const activeSettings = inIframe && liveSettings ? liveSettings : settings;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [toolTab, setToolTab] = useState<'all' | 'comerciales' | 'inteligentes' | 'contratos'>('all');
   const [selectedRepId, setSelectedRepId] = useState<string>('all');
@@ -245,7 +291,7 @@ export default function CommunityDashboardClient({
   // =========================================================================
   // Estilos configurables desde Configuración de la Comunidad
   // =========================================================================
-  const styles = settings?.designStyles;
+  const styles = activeSettings?.designStyles;
   const accentIsGreen = styles?.accentColor === 'verde';
   const accentBtnClass = accentIsGreen
     ? 'bg-[#3cac59] hover:bg-[#32964c] text-white'
@@ -398,9 +444,9 @@ export default function CommunityDashboardClient({
   const hasActiveToolFilters =
     searchQuery.trim().length > 0 || toolTab !== 'all' || selectedRepId !== 'all';
 
-  const alertBanner = settings?.alertBanner;
-  const welcome = settings?.welcomeBanner;
-  const whatsapp = settings?.whatsappChannel;
+  const alertBanner = activeSettings?.alertBanner;
+  const welcome = activeSettings?.welcomeBanner;
+  const whatsapp = activeSettings?.whatsappChannel;
 
   // =========================================================================
   // Renderizadores de cada sección ordenable
@@ -1200,6 +1246,13 @@ export default function CommunityDashboardClient({
 
   return (
     <div className="space-y-10 sm:space-y-12">
+      {inIframe && (
+        <CommunityLivePreviewSubscriber
+          initialSettings={settings || {}}
+          onSettingsChange={setLiveSettings}
+        />
+      )}
+
       {/* 0. AVISO URGENTE / CINTILLO SUPERIOR */}
       {alertBanner?.enabled && alertBanner?.message && (
         <div
@@ -1272,18 +1325,18 @@ export default function CommunityDashboardClient({
       </div>
 
       {/* ESPACIO PUBLICITARIO 1 (SUPERIOR) */}
-      <CommunityAdBannerSlot blocks={settings?.adBannerTop} />
+      <CommunityAdBannerSlot blocks={activeSettings?.adBannerTop} />
 
       {/* SECCIONES DINÁMICAS EN EL ORDEN PERSONALIZADO POR EL USUARIO */}
       {orderedSections.slice(0, 3).map((sectionKey) => renderSection(sectionKey))}
 
       {/* ESPACIO PUBLICITARIO 2 (INTERMEDIO) */}
-      <CommunityAdBannerSlot blocks={settings?.adBannerMiddle} />
+      <CommunityAdBannerSlot blocks={activeSettings?.adBannerMiddle} />
 
       {orderedSections.slice(3).map((sectionKey) => renderSection(sectionKey))}
 
       {/* ESPACIO PUBLICITARIO 3 (INFERIOR) */}
-      <CommunityAdBannerSlot blocks={settings?.adBannerBottom} />
+      <CommunityAdBannerSlot blocks={activeSettings?.adBannerBottom} />
 
       {/* CANAL DE WHATSAPP TRADE */}
       {whatsapp?.enabled !== false && whatsapp?.whatsappUrl && (

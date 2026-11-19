@@ -25,6 +25,36 @@ export const CommunitySettings: GlobalConfig = {
     group: 'Comunidad Trade',
     description:
       'Configurá textos, estilos visuales de los elementos, aviso urgente, canal de WhatsApp y los 3 espacios de banners publicitarios del portal privado.',
+    livePreview: {
+      url: ({ req }) => {
+        if (req?.headers) {
+          const headers = req.headers as any
+          const host =
+            typeof headers.get === 'function'
+              ? headers.get('x-forwarded-host') || headers.get('host')
+              : headers['x-forwarded-host'] || headers['host']
+          const proto =
+            (typeof headers.get === 'function'
+              ? headers.get('x-forwarded-proto')
+              : headers['x-forwarded-proto']) || (host?.includes('localhost') ? 'http' : 'https')
+          if (host) {
+            return `${proto}://${host}/comunidad/dashboard`
+          }
+        }
+        if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+          return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/comunidad/dashboard`
+        }
+        if (process.env.VERCEL_URL) {
+          return `https://${process.env.VERCEL_URL}/comunidad/dashboard`
+        }
+        return '/comunidad/dashboard'
+      },
+      breakpoints: [
+        { label: 'Mobile (375px)', name: 'mobile', width: 375, height: 667 },
+        { label: 'Tablet (768px)', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop (1440px)', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
   },
   fields: [
     {
