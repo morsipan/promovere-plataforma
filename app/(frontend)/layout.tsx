@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Baloo_Da_2, Roboto } from 'next/font/google';
+import TopProgressBar from '@/components/TopProgressBar';
 import '../globals.css';
 
 const balooDa2 = Baloo_Da_2({
@@ -51,6 +53,9 @@ export default function FrontendLayout({
         className="font-sans bg-[#f9f9f9] text-[#4d4e4f] antialiased"
         suppressHydrationWarning
       >
+        <Suspense fallback={null}>
+          <TopProgressBar />
+        </Suspense>
         {children}
       </body>
     </html>
