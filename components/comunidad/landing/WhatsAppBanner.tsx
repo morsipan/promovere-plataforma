@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { MessageCircle, ArrowRight, Sparkles, CheckCircle2, ShieldCheck, PhoneCall } from 'lucide-react';
+import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 
 interface WhatsAppBannerProps {
   data?: {
@@ -7,6 +8,7 @@ interface WhatsAppBannerProps {
     subtitle?: string;
     ctaText?: string;
     phone?: string;
+    appearance?: AppearanceData;
   };
 }
 
@@ -22,8 +24,33 @@ export default function WhatsAppBanner({ data }: WhatsAppBannerProps = {}) {
     'Hola equipo Promovêre, deseo unirme al canal oficial de WhatsApp para agencias y operadores de la Comunidad Promovêre.'
   )}`;
 
+  const app = resolveAppearance(data?.appearance, {
+    backgroundColor: 'verde',
+    theme: 'dark',
+    accentColor: 'blanco',
+    buttonColor: 'blanco',
+    badgeColor: 'blanco',
+  });
+  const hasCustomBg = Boolean(
+    data?.appearance?.backgroundColor && data.appearance.backgroundColor !== 'verde'
+  );
+  const sectionBgClass = hasCustomBg
+    ? app.bgClass
+    : 'bg-gradient-to-r from-[#25D366] via-[#27ae60] to-[#128C7E]';
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-r from-[#25D366] via-[#27ae60] to-[#128C7E] text-white py-16 sm:py-20">
+    <section
+      className={`relative overflow-hidden ${sectionBgClass} ${app.isDark ? 'text-white' : 'text-[#4d4e4f]'} py-16 sm:py-20`}
+    >
+      {app.backgroundImageUrl && (
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${app.backgroundImageUrl})` }}
+          />
+          <div className={`absolute inset-0 ${app.overlayClass}`} />
+        </>
+      )}
       {/* Decorative Blur Circles */}
       <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-black/10 blur-3xl pointer-events-none" />
@@ -32,16 +59,22 @@ export default function WhatsAppBanner({ data }: WhatsAppBannerProps = {}) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Columna Izquierda: Información y CTA (8 cols) */}
           <div className="lg:col-span-8 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 border border-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-wider mb-4 shadow-xs">
-              <MessageCircle className="w-4 h-4 text-white" />
+            <div
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 shadow-xs ${app.badgeClass}`}
+            >
+              <MessageCircle className={`w-4 h-4 ${app.badgeIconClass}`} />
               <span>Canal Directo de Comunicación B2B</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4 leading-tight font-heading">
+            <h2
+              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${app.titleClass}`}
+            >
               {title}
             </h2>
 
-            <p className="text-sm sm:text-base md:text-lg text-white/95 leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8 font-light">
+            <p
+              className={`text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8 font-light ${app.subtitleClass}`}
+            >
               {subtitle}
             </p>
 

@@ -45,6 +45,7 @@ export function createAppearanceField(options: AppearanceFieldOptions = {}): Fie
           {
             name: 'backgroundColor',
             type: 'select',
+            enumName: 'enum_app_bg',
             label: 'Color de Fondo de Sección',
             defaultValue: defaultBackgroundColor,
             required: true,
@@ -66,6 +67,7 @@ export function createAppearanceField(options: AppearanceFieldOptions = {}): Fie
           {
             name: 'theme',
             type: 'select',
+            enumName: 'enum_app_theme',
             label: 'Contraste de Textos',
             defaultValue: defaultTheme,
             required: true,
@@ -86,6 +88,7 @@ export function createAppearanceField(options: AppearanceFieldOptions = {}): Fie
           {
             name: 'overlayOpacity',
             type: 'select',
+            enumName: 'enum_app_ovl',
             label: 'Filtro sobre Foto',
             defaultValue: defaultOverlayOpacity,
             options: [
@@ -106,6 +109,7 @@ export function createAppearanceField(options: AppearanceFieldOptions = {}): Fie
           {
             name: 'accentColor',
             type: 'select',
+            enumName: 'enum_app_acc',
             label: 'Color de Acento & Iconos',
             defaultValue: defaultAccentColor,
             options: [
@@ -124,6 +128,7 @@ export function createAppearanceField(options: AppearanceFieldOptions = {}): Fie
           {
             name: 'buttonColor',
             type: 'select',
+            enumName: 'enum_app_btn',
             label: 'Color del Botón Principal (CTA)',
             defaultValue: defaultButtonColor,
             options: [
@@ -142,6 +147,7 @@ export function createAppearanceField(options: AppearanceFieldOptions = {}): Fie
           {
             name: 'badgeColor',
             type: 'select',
+            enumName: 'enum_app_bdg',
             label: 'Color de la Etiqueta (Badge)',
             defaultValue: defaultBadgeColor,
             options: [

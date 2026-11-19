@@ -145,6 +145,15 @@ export interface Page {
   id: number;
   title: string;
   slug: string;
+  /**
+   * Personalizá los colores base de fondo, títulos, textos y acento para esta página o landing (disponible en todas las páginas actuales y futuras).
+   */
+  pageStyles?: {
+    backgroundColor?: ('blancoHumo' | 'blanco' | 'grisOscuro' | 'azul' | 'verde') | null;
+    headingColor?: ('grisOscuro' | 'azul' | 'verde' | 'blanco') | null;
+    textColor?: ('grisOscuro' | 'blancoHumo' | 'blanco') | null;
+    accentColor?: ('azul' | 'verde') | null;
+  };
   layout: (
     | {
         /**
@@ -693,6 +702,145 @@ export interface Page {
         id?: string | null;
         blockName?: string | null;
         blockType: 'promovereAnimCounter';
+      }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        title: string;
+        subtitle?: string | null;
+        ctaText?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'communityHero';
+      }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'communityCommercialTools';
+      }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'communityPromotionsPreview';
+      }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'communitySmartTools';
+      }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'communityFeaturedProducts';
+      }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        title: string;
+        subtitle?: string | null;
+        ctaText?: string | null;
+        phone?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'communityWhatsApp';
       }
     | {
         heroTitle: string;
@@ -1259,6 +1407,14 @@ export interface PayloadMigration {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  pageStyles?:
+    | T
+    | {
+        backgroundColor?: T;
+        headingColor?: T;
+        textColor?: T;
+        accentColor?: T;
+      };
   layout?:
     | T
     | {
@@ -1686,6 +1842,127 @@ export interface PagesSelect<T extends boolean = true> {
                     counterSpeed?: T;
                     id?: T;
                   };
+              id?: T;
+              blockName?: T;
+            };
+        communityHero?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              title?: T;
+              subtitle?: T;
+              ctaText?: T;
+              id?: T;
+              blockName?: T;
+            };
+        communityCommercialTools?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              id?: T;
+              blockName?: T;
+            };
+        communityPromotionsPreview?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              id?: T;
+              blockName?: T;
+            };
+        communitySmartTools?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              id?: T;
+              blockName?: T;
+            };
+        communityFeaturedProducts?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              id?: T;
+              blockName?: T;
+            };
+        communityWhatsApp?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              title?: T;
+              subtitle?: T;
+              ctaText?: T;
+              phone?: T;
               id?: T;
               blockName?: T;
             };

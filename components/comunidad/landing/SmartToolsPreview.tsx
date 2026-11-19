@@ -13,12 +13,14 @@ import {
   Clock,
   Zap,
 } from 'lucide-react';
+import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 
 interface SmartToolsPreviewProps {
   data?: {
     badge?: string;
     title?: string;
     subtitle?: string;
+    appearance?: AppearanceData;
   };
 }
 
@@ -28,20 +30,36 @@ export default function SmartToolsPreview({ data }: SmartToolsPreviewProps = {})
   const subtitle =
     data?.subtitle ||
     'Tecnología desarrollada a medida para agencias de viajes. Armá propuestas comerciales completas día por día en cuestión de segundos.';
+  const app = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blancoHumo',
+    theme: 'light',
+    accentColor: 'azul',
+    buttonColor: 'verde',
+    badgeColor: 'verde',
+  });
 
   return (
-    <section className="py-20 md:py-28 bg-[#f9f9f9] border-b border-slate-200 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className={`relative py-20 md:py-28 ${app.bgClass} border-b ${app.borderClass} overflow-hidden`}>
+      {app.backgroundImageUrl && (
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${app.backgroundImageUrl})` }}
+          />
+          <div className={`absolute inset-0 ${app.overlayClass}`} />
+        </>
+      )}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 text-xs font-bold uppercase tracking-wider mb-4">
-            <Zap className="w-3.5 h-3.5" />
+          <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${app.badgeClass}`}>
+            <Zap className={`w-3.5 h-3.5 ${app.badgeIconClass}`} />
             {badge}
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${app.titleClass}`}>
             {title}
           </h2>
-          <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
+          <p className={`text-base sm:text-lg leading-relaxed font-normal ${app.subtitleClass}`}>
             {subtitle}
           </p>
         </div>

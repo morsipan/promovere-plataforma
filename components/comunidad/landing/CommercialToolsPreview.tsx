@@ -11,12 +11,14 @@ import {
   MapPin,
   Clock,
 } from 'lucide-react';
+import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 
 interface CommercialToolsPreviewProps {
   data?: {
     badge?: string;
     title?: string;
     subtitle?: string;
+    appearance?: AppearanceData;
   };
 }
 
@@ -26,20 +28,36 @@ export default function CommercialToolsPreview({ data }: CommercialToolsPreviewP
   const subtitle =
     data?.subtitle ||
     'Consultá requisitos migratorios actualizados y realizá el seguimiento de vuelos de tus pasajeros directamente desde tu panel.';
+  const app = resolveAppearance(data?.appearance, {
+    backgroundColor: 'blancoHumo',
+    theme: 'light',
+    accentColor: 'azul',
+    buttonColor: 'azul',
+    badgeColor: 'verde',
+  });
 
   return (
-    <section className="py-20 md:py-28 bg-[#f9f9f9] border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className={`relative py-20 md:py-28 ${app.bgClass} border-b ${app.borderClass} overflow-hidden`}>
+      {app.backgroundImageUrl && (
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${app.backgroundImageUrl})` }}
+          />
+          <div className={`absolute inset-0 ${app.overlayClass}`} />
+        </>
+      )}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3cac59]/10 text-[#3cac59] border border-[#3cac59]/20 text-xs font-bold uppercase tracking-wider mb-4">
-            <Globe2 className="w-3.5 h-3.5" />
+          <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 ${app.badgeClass}`}>
+            <Globe2 className={`w-3.5 h-3.5 ${app.badgeIconClass}`} />
             {badge}
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#4d4e4f] tracking-tight mb-4 leading-tight font-heading">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${app.titleClass}`}>
             {title}
           </h2>
-          <p className="text-base sm:text-lg text-[#4d4e4f]/80 leading-relaxed font-normal">
+          <p className={`text-base sm:text-lg leading-relaxed font-normal ${app.subtitleClass}`}>
             {subtitle}
           </p>
         </div>

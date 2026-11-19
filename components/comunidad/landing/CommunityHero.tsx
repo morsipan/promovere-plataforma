@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Lock, Sparkles, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 
 interface CommunityHeroProps {
   data?: {
     title?: string;
     subtitle?: string;
     ctaText?: string;
+    appearance?: AppearanceData;
   };
 }
 
@@ -21,8 +23,33 @@ export default function CommunityHero({ data }: CommunityHeroProps = {}) {
     'Tu Comunidad Promovêre es una plataforma exclusiva pensada para potenciar tu gestión turística diaria, acceder a herramientas clave en tiempo real y conectar de forma directa con las mejores marcas, cadenas y destinos de América Latina.';
   const ctaText = data?.ctaText || 'Iniciá sesión para acceder a tu espacio';
 
+  const app = resolveAppearance(data?.appearance, {
+    backgroundColor: 'verde',
+    theme: 'dark',
+    accentColor: 'blanco',
+    buttonColor: 'blanco',
+    badgeColor: 'blanco',
+  });
+  const hasCustomBg = Boolean(
+    data?.appearance?.backgroundColor && data.appearance.backgroundColor !== 'verde'
+  );
+  const sectionBgClass = hasCustomBg
+    ? app.bgClass
+    : 'bg-gradient-to-br from-[#27ae60] via-[#2ecc71] to-[#1b87c7]';
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#27ae60] via-[#2ecc71] to-[#1b87c7] text-white pt-28 pb-20 md:pt-36 md:pb-28">
+    <section
+      className={`relative overflow-hidden ${sectionBgClass} ${app.isDark ? 'text-white' : 'text-[#4d4e4f]'} pt-28 pb-20 md:pt-36 md:pb-28`}
+    >
+      {app.backgroundImageUrl && (
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${app.backgroundImageUrl})` }}
+          />
+          <div className={`absolute inset-0 ${app.overlayClass}`} />
+        </>
+      )}
       {/* Decorative Background Pattern */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
@@ -38,13 +65,17 @@ export default function CommunityHero({ data }: CommunityHeroProps = {}) {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Badge Superior */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 border border-white/25 backdrop-blur-md text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 shadow-sm">
-          <Sparkles className="w-4 h-4 text-white" />
+        <div
+          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 shadow-sm ${app.badgeClass}`}
+        >
+          <Sparkles className={`w-4 h-4 ${app.badgeIconClass}`} />
           <span>Comunidad Promovêre • Portal Trade Oficial</span>
         </div>
 
         {/* Título Principal (Baloo Da 2) */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight drop-shadow-sm font-heading">
+        <h1
+          className={`text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight drop-shadow-sm ${app.titleClass}`}
+        >
           {title}
         </h1>
 

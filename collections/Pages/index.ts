@@ -15,6 +15,14 @@ import { TimelineBlock } from './blocks/Timeline'
 import { RichTextBlock } from './blocks/RichTextBlock'
 import { PromovereAnimCounterBlock } from './blocks/PromovereAnimCounter'
 import { CommunityLandingBlock } from './blocks/CommunityLanding'
+import {
+  CommunityHeroBlock,
+  CommunityCommercialToolsBlock,
+  CommunityPromotionsPreviewBlock,
+  CommunitySmartToolsBlock,
+  CommunityFeaturedProductsBlock,
+  CommunityWhatsAppBlock,
+} from './blocks/CommunityLandingBlocks'
 import { FullWidthImageBlock } from './blocks/FullWidthImage'
 import { ImpactBannerBlock } from './blocks/ImpactBanner'
 import { PartnersMarqueeBlock } from './blocks/PartnersMarquee'
@@ -133,6 +141,96 @@ export const Pages: CollectionConfig = {
       },
     },
     {
+      name: 'pageStyles',
+      type: 'group',
+      label: 'Estilos Generales de la Página / Landing',
+      admin: {
+        description:
+          'Personalizá los colores base de fondo, títulos, textos y acento para esta página o landing (disponible en todas las páginas actuales y futuras).',
+      },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'backgroundColor',
+              type: 'select',
+              enumName: 'enum_pg_bg',
+              label: 'Color de Fondo de la Página',
+              defaultValue: 'blancoHumo',
+              options: [
+                { label: 'Blanco Humo (#f9f9f9)', value: 'blancoHumo' },
+                { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
+                { label: 'Gris Antracita (#4d4e4f)', value: 'grisOscuro' },
+                { label: 'Azul Brillante (#1b87c7)', value: 'azul' },
+                { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
+              ],
+              admin: {
+                width: '25%',
+                components: {
+                  Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                },
+              },
+            },
+            {
+              name: 'headingColor',
+              type: 'select',
+              enumName: 'enum_pg_hdg',
+              label: 'Color Base de Títulos',
+              defaultValue: 'grisOscuro',
+              options: [
+                { label: 'Gris Antracita (#4d4e4f)', value: 'grisOscuro' },
+                { label: 'Azul Brillante (#1b87c7)', value: 'azul' },
+                { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
+                { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
+              ],
+              admin: {
+                width: '25%',
+                components: {
+                  Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                },
+              },
+            },
+            {
+              name: 'textColor',
+              type: 'select',
+              enumName: 'enum_pg_txt',
+              label: 'Color Base de Textos',
+              defaultValue: 'grisOscuro',
+              options: [
+                { label: 'Gris Antracita (#4d4e4f)', value: 'grisOscuro' },
+                { label: 'Blanco Humo (#f9f9f9)', value: 'blancoHumo' },
+                { label: 'Blanco Puro (#ffffff)', value: 'blanco' },
+              ],
+              admin: {
+                width: '25%',
+                components: {
+                  Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                },
+              },
+            },
+            {
+              name: 'accentColor',
+              type: 'select',
+              enumName: 'enum_pg_acc',
+              label: 'Color de Acento Principal',
+              defaultValue: 'azul',
+              options: [
+                { label: 'Azul Brillante (#1b87c7)', value: 'azul' },
+                { label: 'Verde Corporativo (#3cac59)', value: 'verde' },
+              ],
+              admin: {
+                width: '25%',
+                components: {
+                  Field: '/components/admin/BrandColorPicker#BrandColorPicker',
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: 'layout',
       type: 'blocks',
       label: 'Bloques de Contenido de la Página',
@@ -152,6 +250,12 @@ export const Pages: CollectionConfig = {
         TimelineBlock,
         RichTextBlock,
         PromovereAnimCounterBlock,
+        CommunityHeroBlock,
+        CommunityCommercialToolsBlock,
+        CommunityPromotionsPreviewBlock,
+        CommunitySmartToolsBlock,
+        CommunityFeaturedProductsBlock,
+        CommunityWhatsAppBlock,
         CommunityLandingBlock,
         FullWidthImageBlock,
         ImpactBannerBlock,

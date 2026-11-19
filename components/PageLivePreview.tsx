@@ -22,6 +22,39 @@ import PromovereAnimCounterSection from '@/components/blocks/PromovereAnimCounte
 import FullWidthImageSection from '@/components/blocks/FullWidthImageSection';
 import ImpactBanner from '@/components/blocks/ImpactBanner';
 import PartnersMarquee from '@/components/blocks/PartnersMarquee';
+import CommunityHero from '@/components/comunidad/landing/CommunityHero';
+import CommercialToolsPreview from '@/components/comunidad/landing/CommercialToolsPreview';
+import PromotionsEventsPreview from '@/components/comunidad/landing/PromotionsEventsPreview';
+import SmartToolsPreview from '@/components/comunidad/landing/SmartToolsPreview';
+import FeaturedProducts from '@/components/comunidad/landing/FeaturedProducts';
+import WhatsAppBanner from '@/components/comunidad/landing/WhatsAppBanner';
+import type { CSSProperties } from 'react';
+
+const PAGE_BG_MAP: Record<string, string> = {
+  blancoHumo: 'bg-[#f9f9f9]',
+  blanco: 'bg-white',
+  grisOscuro: 'bg-[#4d4e4f]',
+  azul: 'bg-[#1b87c7]',
+  verde: 'bg-[#3cac59]',
+};
+
+const PAGE_TEXT_MAP: Record<string, string> = {
+  grisOscuro: 'text-[#4d4e4f]',
+  blancoHumo: 'text-[#f9f9f9]',
+  blanco: 'text-white',
+};
+
+const PAGE_HEADING_HEX_MAP: Record<string, string> = {
+  grisOscuro: '#4d4e4f',
+  azul: '#1b87c7',
+  verde: '#3cac59',
+  blanco: '#ffffff',
+};
+
+const PAGE_ACCENT_HEX_MAP: Record<string, string> = {
+  azul: '#1b87c7',
+  verde: '#3cac59',
+};
 
 export interface PageLivePreviewProps {
   initialData: any;
@@ -122,13 +155,83 @@ export default function PageLivePreview({
         return <ImpactBanner key={`block-${index}`} data={block} />;
       case 'partnersMarquee':
         return <PartnersMarquee key={`block-${index}`} data={block} />;
+      case 'communityHero':
+        return <CommunityHero key={`block-${index}`} data={block} />;
+      case 'communityCommercialTools':
+        return <CommercialToolsPreview key={`block-${index}`} data={block} />;
+      case 'communityPromotionsPreview':
+        return <PromotionsEventsPreview key={`block-${index}`} data={block} />;
+      case 'communitySmartTools':
+        return <SmartToolsPreview key={`block-${index}`} data={block} />;
+      case 'communityFeaturedProducts':
+        return <FeaturedProducts key={`block-${index}`} data={block} />;
+      case 'communityWhatsApp':
+        return <WhatsAppBanner key={`block-${index}`} data={block} />;
+      case 'communityLanding':
+        return (
+          <div key={`block-${index}`}>
+            <CommunityHero
+              data={{
+                title: block.heroTitle,
+                subtitle: block.heroSubtitle,
+                ctaText: block.heroCtaText,
+              }}
+            />
+            <CommercialToolsPreview
+              data={{
+                badge: block.toolsBadge,
+                title: block.toolsTitle,
+                subtitle: block.toolsSubtitle,
+              }}
+            />
+            <PromotionsEventsPreview
+              data={{
+                badge: block.promotionsBadge,
+                title: block.promotionsTitle,
+                subtitle: block.promotionsSubtitle,
+              }}
+            />
+            <SmartToolsPreview
+              data={{
+                badge: block.smartToolsBadge,
+                title: block.smartToolsTitle,
+                subtitle: block.smartToolsSubtitle,
+              }}
+            />
+            <FeaturedProducts
+              data={{
+                badge: block.productsBadge,
+                title: block.productsTitle,
+                subtitle: block.productsSubtitle,
+              }}
+            />
+            <WhatsAppBanner
+              data={{
+                title: block.whatsappTitle,
+                subtitle: block.whatsappSubtitle,
+                ctaText: block.whatsappCtaText,
+                phone: block.whatsappPhone,
+              }}
+            />
+          </div>
+        );
       default:
         return null;
     }
   };
 
+  const pageBgClass = PAGE_BG_MAP[page?.pageStyles?.backgroundColor || 'blancoHumo'] || 'bg-[#f9f9f9]';
+  const pageTextClass = PAGE_TEXT_MAP[page?.pageStyles?.textColor || 'grisOscuro'] || 'text-[#4d4e4f]';
+  const pageStyleVars: CSSProperties & Record<string, string> = {};
+  if (page?.pageStyles?.headingColor && PAGE_HEADING_HEX_MAP[page.pageStyles.headingColor]) {
+    pageStyleVars['--promovere-antracita'] = PAGE_HEADING_HEX_MAP[page.pageStyles.headingColor];
+  }
+  if (page?.pageStyles?.accentColor && PAGE_ACCENT_HEX_MAP[page.pageStyles.accentColor]) {
+    pageStyleVars['--page-accent'] = PAGE_ACCENT_HEX_MAP[page.pageStyles.accentColor];
+  }
+
   return (
-    <main className="min-h-screen bg-[#f9f9f9]">
+    <main className={`min-h-screen ${pageBgClass} ${pageTextClass}`} style={pageStyleVars}>
       {inIframe && (
         <LivePreviewSubscriber
           initialData={initialData}
@@ -149,6 +252,16 @@ export default function PageLivePreview({
           <DistributionSection />
           <PartnersSection />
           <ContactSection />
+        </>
+      ) : slug === 'comunidad' ? (
+        // Fallback por defecto para la Landing de Comunidad si aún no hay bloques cargados
+        <>
+          <CommunityHero />
+          <CommercialToolsPreview />
+          <PromotionsEventsPreview />
+          <SmartToolsPreview />
+          <FeaturedProducts />
+          <WhatsAppBanner />
         </>
       ) : (
         // Fallback visual para páginas internas nuevas
