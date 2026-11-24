@@ -50,15 +50,24 @@ export interface PressSectionProps {
   hideViewAllCta?: boolean;
 }
 
+const MONTHS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
 function formatDateEs(dateStr?: string | null): string {
   if (!dateStr) return '';
+  const isoMatch = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr.trim());
+  if (isoMatch) {
+    const [, year, monthStr, day] = isoMatch;
+    const monthIdx = Number(monthStr) - 1;
+    if (monthIdx >= 0 && monthIdx < 12) {
+      return `${day} ${MONTHS_ES[monthIdx]} ${year}`;
+    }
+  }
   const parsed = new Date(dateStr);
   if (Number.isNaN(parsed.getTime())) return dateStr;
-  return parsed.toLocaleDateString('es-AR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  const day = String(parsed.getUTCDate()).padStart(2, '0');
+  const month = MONTHS_ES[parsed.getUTCMonth()];
+  const year = parsed.getUTCFullYear();
+  return `${day} ${month} ${year}`;
 }
 
 function getEmbedUrl(rawUrl?: string | null): string | null {
