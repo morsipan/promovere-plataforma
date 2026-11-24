@@ -1,6 +1,12 @@
 import pg from 'pg';
+import crypto from 'crypto';
+import { blogContent, pressContent } from '../data/content';
 
 const { Client } = pg;
+
+function genId() {
+  return crypto.randomBytes(12).toString('hex');
+}
 
 const connectionString = process.env.DATABASE_URI || '';
 
@@ -144,6 +150,125 @@ async function run() {
       WHEN undefined_object THEN null;
     END $$;
   `);
+
+  // 5. Insertar bloques de Blog y Prensa en la página 'home' si aún no existen (sin tocar bloques existentes)
+  const homeRes = await client.query(`SELECT id FROM pages WHERE slug = 'home' LIMIT 1`);
+  if (homeRes.rows.length > 0) {
+    const homeId = homeRes.rows[0].id;
+    const existingBlog = await client.query(
+      `SELECT id FROM pages_blocks_blog WHERE _parent_id = $1 LIMIT 1`,
+      [homeId]
+    );
+    const existingPress = await client.query(
+      `SELECT id FROM pages_blocks_press WHERE _parent_id = $1 LIMIT 1`,
+      [homeId]
+    );
+
+    if (existingBlog.rows.length === 0 && existingPress.rows.length === 0) {
+      // Buscar el orden del bloque contact para insertar Blog y Prensa justo antes de Contacto
+      const contactRes = await client.query(
+        `SELECT id, _order FROM pages_blocks_contact WHERE _parent_id = $1 ORDER BY _order DESC LIMIT 1`,
+        [homeId]
+      );
+
+      let blogOrder = 8;
+      let pressOrder = 9;
+
+      if (contactRes.rows.length > 0) {
+        const contactRow = contactRes.rows[0];
+        blogOrder = contactRow._order;
+        pressOrder = contactRow._order + 1;
+        await client.query(
+          `UPDATE pages_blocks_contact SET _order = $1 WHERE id = $2`,
+          [contactRow._order + 2, contactRow.id]
+        );
+      }
+
+      const blogBlockId = genId();
+      await client.query(
+        `INSERT INTO pages_blocks_blog
+          (_order, _parent_id, _path, id, badge, title, subtitle, cta_label, cta_href)
+         VALUES ($1, $2, 'layout', $3, $4, $5, $6, $7, $8)`,
+        [
+          blogOrder,
+          homeId,
+          blogBlockId,
+          blogContent.badge,
+          blogContent.title,
+          blogContent.subtitle,
+          blogContent.ctaLabel,
+          blogContent.ctaHref,
+        ]
+      );
+
+      for (let i = 0; i < blogContent.posts.length; i++) {
+        const post = blogContent.posts[i];
+        await client.query(
+          `INSERT INTO pages_blocks_blog_posts
+            (_order, _parent_id, id, title, published_date, category, brand, excerpt, cover_image_url, external_url)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+          [
+            i + 1,
+            blogBlockId,
+            genId(),
+            post.title,
+            post.publishedDate ? new Date(post.publishedDate).toISOString() : null,
+            post.category,
+            post.brand,
+            post.excerpt,
+            post.image,
+            post.externalUrl || null,
+          ]
+        );
+      }
+
+      const pressBlockId = genId();
+      await client.query(
+        `INSERT INTO pages_blocks_press
+          (_order, _parent_id, _path, id, badge, title, subtitle, all_press_label, all_press_href, show_community_banner, community_cta_label, community_cta_href)
+         VALUES ($1, $2, 'layout', $3, $4, $5, $6, $7, $8, true, $9, $10)`,
+        [
+          pressOrder,
+          homeId,
+          pressBlockId,
+          pressContent.badge,
+          pressContent.title,
+          pressContent.subtitle,
+          pressContent.allPressLabel,
+          pressContent.allPressHref,
+          pressContent.communityCtaLabel,
+          pressContent.communityCtaHref,
+        ]
+      );
+
+      for (let i = 0; i < pressContent.items.length; i++) {
+        const item = pressContent.items[i];
+        await client.query(
+          `INSERT INTO pages_blocks_press_items
+            (_order, _parent_id, id, format, media_outlet, published_date, title, summary, cover_image_url, article_url, video_url, duration)
+           VALUES ($1, $2, $3, $4::enum_pr_fmt, $5, $6, $7, $8, $9, $10, $11, $12)`,
+          [
+            i + 1,
+            pressBlockId,
+            genId(),
+            item.format,
+            item.mediaOutlet,
+            item.publishedDate ? new Date(item.publishedDate).toISOString() : null,
+            item.title,
+            item.summary,
+            item.image,
+            item.articleUrl || null,
+            item.videoUrl || null,
+            item.duration || null,
+          ]
+        );
+      }
+
+      console.log(`✅ Bloques Blog (orden ${blogOrder}) y Prensa (orden ${pressOrder}) insertados en página home (id=${homeId}).`);
+    } else {
+      console.log('ℹ️ La página home ya contiene bloques de Blog/Prensa.');
+    }
+  }
 
   console.log('✅ Migración Etapa 1 completada correctamente.');
   await client.end();

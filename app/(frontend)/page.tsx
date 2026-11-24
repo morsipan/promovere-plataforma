@@ -65,7 +65,10 @@ export default async function Home() {
           },
           depth: 2,
         })
-        .catch(() => ({ docs: [] })),
+        .catch((err) => {
+          console.error('Error consultando página home en Payload CMS:', err?.message || err);
+          return { docs: [] };
+        }),
       payload.findGlobal({ slug: 'header', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'footer', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }).catch(() => null),
