@@ -136,7 +136,8 @@ export const CommunityContent: CollectionConfig = {
       options: [
         { label: 'Herramientas Comerciales', value: 'herramientas_comerciales' },
         { label: 'Herramientas Inteligentes', value: 'herramientas_inteligentes' },
-        { label: 'Notas de Blog (Herramientas Importantes)', value: 'blog' },
+        { label: 'Blog Propio (Novedades de Promovêre y Marcas)', value: 'blog' },
+        { label: 'Prensa Unificada (Medios y Videos)', value: 'prensa' },
         { label: 'Herramientas (General)', value: 'herramientas' },
         { label: 'Material Comercial', value: 'material_comercial' },
         { label: 'Novedades', value: 'novedades' },

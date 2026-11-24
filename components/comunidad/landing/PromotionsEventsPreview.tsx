@@ -46,7 +46,7 @@ const promoItems: PromotionItem[] = [
     title: 'Caribe Histórico: Gaviota Hoteles & Playas',
     location: 'Cuba • Varadero, Cayos & La Habana',
     description:
-      'Tarifas y cupos preferenciales para turoperadores. Acceso a releases especiales, paquetes combinados y manuales de producto 2026.',
+      'Condiciones y cupos preferenciales para turoperadores. Acceso a releases especiales, paquetes combinados y manuales de producto.',
     image:
       'https://images.unsplash.com/photo-1500759285222-a95626b934cb?w=800&q=80',
     spotsInfo: 'Condiciones exclusivas trade',

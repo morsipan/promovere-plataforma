@@ -172,9 +172,14 @@ const CATEGORY_META: Record<string, { label: string; badgeClass: string; dotClas
     dotClass: 'bg-[#3cac59]',
   },
   blog: {
-    label: 'Nota de Blog',
+    label: 'Blog Propio',
     badgeClass: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
     dotClass: 'bg-amber-500',
+  },
+  prensa: {
+    label: 'Prensa & Videos',
+    badgeClass: 'bg-[#1b87c7]/10 text-[#1b87c7] border-[#1b87c7]/25',
+    dotClass: 'bg-[#1b87c7]',
   },
   novedades: {
     label: 'Novedades',

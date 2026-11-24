@@ -27,7 +27,7 @@ export default function CtaBannerSection({ data }: CtaBannerSectionProps) {
     data?.title || '¿Listo para acelerar tus ventas turísticas en la región?';
   const description =
     data?.description ||
-    'Conectamos tu marca hotelera o destino con más de 500 operadores mayoristas y miles de agencias minoristas en Argentina, Brasil, Chile, Colombia, México y toda la región.';
+    'Con 10 años de trayectoria en la región, conectamos tu marca hotelera o destino con operadores mayoristas y agencias minoristas en los mercados emisores clave de América Latina.';
   const primaryButtonLabel =
     data?.primaryButtonLabel || 'Agendar Reunión Comercial';
   const primaryButtonHref = data?.primaryButtonHref || '#contacto';

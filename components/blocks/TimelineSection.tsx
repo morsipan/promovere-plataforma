@@ -27,7 +27,7 @@ export default function TimelineSection({ data }: TimelineSectionProps) {
 
   const badge = data?.badge || 'Nuestra Trayectoria';
   const title =
-    data?.title || 'Años construyendo puentes comerciales en LATAM';
+    data?.title || '10 años construyendo puentes comerciales en LATAM';
   const subtitle =
     data?.subtitle ||
     'Hitos clave de crecimiento y alianzas estratégicas que consolidaron a Promovêre como referente del trade regional.';

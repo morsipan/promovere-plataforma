@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
-import { footerContent, siteConfig } from '@/data/content';
+import { MapPin, Phone, Mail, ArrowUpRight, HelpCircle, ChevronDown } from 'lucide-react';
+import { faqContent, footerContent, siteConfig } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
 
 function InstagramIcon({ className = 'w-4 h-4' }: { className?: string }) {
@@ -49,6 +49,12 @@ export interface FooterColumn {
   }[];
 }
 
+export interface FooterFaqItem {
+  id?: string | null;
+  question: string;
+  answer: string;
+}
+
 export interface FooterProps {
   data?: {
     logoImage?: any;
@@ -57,6 +63,12 @@ export interface FooterProps {
     columns?: FooterColumn[];
     copyrightText?: string;
     disclaimerText?: string;
+    faqSection?: {
+      enabled?: boolean | null;
+      title?: string | null;
+      subtitle?: string | null;
+      items?: FooterFaqItem[] | null;
+    } | null;
   } | null;
   settings?: {
     companyName?: string;
@@ -88,6 +100,31 @@ export default function Footer({ data, settings }: FooterProps) {
   const columns =
     data?.columns && data.columns.length > 0 ? data.columns : footerContent.columns;
 
+  const showFaqs = data?.faqSection?.enabled !== false;
+  const faqTitle = data?.faqSection?.title || faqContent.title;
+  const faqSubtitle = data?.faqSection?.subtitle || faqContent.subtitle;
+  const faqItems: FooterFaqItem[] =
+    data?.faqSection?.items && data.faqSection.items.length > 0
+      ? data.faqSection.items
+      : faqContent.items;
+
+  // Schema.org FAQPage JSON-LD para Answer Engine Optimization (AEO)
+  const faqJsonLd =
+    showFaqs && faqItems.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqItems.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
+
   const socialLinks = [
     { label: 'Instagram', href: settings?.instagram, icon: InstagramIcon },
     { label: 'LinkedIn', href: settings?.linkedin, icon: LinkedinIcon },
@@ -96,7 +133,75 @@ export default function Footer({ data, settings }: FooterProps) {
   ].filter((s) => Boolean(s.href));
 
   return (
-    <footer suppressHydrationWarning className="bg-[#4d4e4f] text-gray-300 border-t border-white/10">
+    <footer suppressHydrationWarning className="bg-[#4d4e4f] text-[#f9f9f9]/85 border-t border-white/10 font-sans">
+      {/* JSON-LD estructurado para AEO (FAQPage) */}
+      {faqJsonLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      ) : null}
+
+      {/* Bloque Semántico de Preguntas Frecuentes (AEO) — Ubicado exclusivamente en el Footer */}
+      {showFaqs && faqItems.length > 0 ? (
+        <section
+          id="faq"
+          aria-labelledby="footer-faq-heading"
+          className="border-b border-white/10 bg-black/15"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3cac59]/15 border border-[#3cac59]/30 text-[#3cac59] text-[11px] font-bold uppercase tracking-wider mb-3">
+                  <HelpCircle className="w-3.5 h-3.5" />
+                  <span>Preguntas Frecuentes</span>
+                </div>
+                <h2
+                  id="footer-faq-heading"
+                  className="font-heading text-2xl sm:text-3xl font-bold text-white tracking-tight"
+                >
+                  {faqTitle}
+                </h2>
+                {faqSubtitle ? (
+                  <p className="text-xs sm:text-sm text-[#f9f9f9]/75 mt-1.5 leading-relaxed">
+                    {faqSubtitle}
+                  </p>
+                ) : null}
+              </div>
+
+              <Link
+                href="/faq"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#f9f9f9] hover:text-[#3cac59] transition-colors shrink-0"
+              >
+                <span>Ver centro de ayuda completo</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {faqItems.map((item, idx) => (
+                <details
+                  key={item.id || `footer-faq-${idx}`}
+                  className="group rounded-2xl border border-white/10 bg-white/[0.04] hover:border-[#1b87c7]/50 transition-colors"
+                >
+                  <summary className="list-none cursor-pointer px-5 py-4 flex items-center justify-between gap-3">
+                    <h3 className="font-heading text-sm sm:text-base font-bold text-white leading-snug">
+                      {item.question}
+                    </h3>
+                    <ChevronDown className="w-4 h-4 text-[#3cac59] shrink-0 transition-transform duration-200 group-open:rotate-180" />
+                  </summary>
+                  <div className="px-5 pb-4 pt-1 border-t border-white/10">
+                    <p className="text-xs sm:text-sm text-[#f9f9f9]/80 leading-relaxed font-sans">
+                      {item.answer}
+                    </p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* Top section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
@@ -131,7 +236,7 @@ export default function Footer({ data, settings }: FooterProps) {
                 </div>
               ) : (
                 <div className="flex flex-col leading-tight">
-                  <span className="text-white font-black text-xl tracking-tight">
+                  <span className="font-heading text-white font-black text-xl tracking-tight">
                     {companyName}
                   </span>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#3cac59]">
@@ -141,7 +246,7 @@ export default function Footer({ data, settings }: FooterProps) {
               )}
             </Link>
 
-            <p className="text-gray-300/80 text-xs sm:text-sm leading-relaxed mb-6 max-w-sm">
+            <p className="text-[#f9f9f9]/75 text-xs sm:text-sm leading-relaxed mb-6 max-w-sm">
               {brandDescription}
             </p>
 
@@ -150,7 +255,7 @@ export default function Footer({ data, settings }: FooterProps) {
               {phone && (
                 <a
                   href={`tel:${phone.replace(/\s/g, '')}`}
-                  className="flex items-center gap-2.5 text-gray-300 hover:text-[#3cac59] transition-colors"
+                  className="flex items-center gap-2.5 text-[#f9f9f9]/85 hover:text-[#3cac59] transition-colors"
                 >
                   <Phone className="w-4 h-4 text-[#3cac59] flex-shrink-0" />
                   <span>{phone}</span>
@@ -159,14 +264,14 @@ export default function Footer({ data, settings }: FooterProps) {
               {email && (
                 <a
                   href={`mailto:${email}`}
-                  className="flex items-center gap-2.5 text-gray-300 hover:text-[#1b87c7] transition-colors"
+                  className="flex items-center gap-2.5 text-[#f9f9f9]/85 hover:text-[#1b87c7] transition-colors"
                 >
                   <Mail className="w-4 h-4 text-[#1b87c7] flex-shrink-0" />
                   <span>{email}</span>
                 </a>
               )}
               {address && (
-                <div className="flex items-start gap-2.5 text-gray-300/90">
+                <div className="flex items-start gap-2.5 text-[#f9f9f9]/80">
                   <MapPin className="w-4 h-4 text-[#3cac59] flex-shrink-0 mt-0.5" />
                   <span>{address}</span>
                 </div>
@@ -185,7 +290,7 @@ export default function Footer({ data, settings }: FooterProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.label}
-                      className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-300 hover:text-white transition-colors"
+                      className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-[#f9f9f9]/80 hover:text-white transition-colors"
                     >
                       <Icon className="w-4 h-4" />
                     </a>
@@ -199,7 +304,7 @@ export default function Footer({ data, settings }: FooterProps) {
           <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-8">
             {columns.map((col) => (
               <div key={col.title}>
-                <h3 className="text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
+                <h3 className="font-heading text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
                   {col.title}
                 </h3>
                 <ul className="space-y-2.5">
@@ -207,7 +312,7 @@ export default function Footer({ data, settings }: FooterProps) {
                     <li key={link.label}>
                       <a
                         href={link.href}
-                        className="text-xs sm:text-sm text-gray-300/80 hover:text-white hover:translate-x-0.5 transition-all inline-flex items-center gap-1 group"
+                        className="text-xs sm:text-sm text-[#f9f9f9]/75 hover:text-white hover:translate-x-0.5 transition-all inline-flex items-center gap-1 group"
                       >
                         <span>{link.label}</span>
                         {link.href.startsWith('#') ? null : (
@@ -225,10 +330,10 @@ export default function Footer({ data, settings }: FooterProps) {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/10 bg-black/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#f9f9f9]/65">
           <div>
             <p>{copyrightText}</p>
-            {disclaimerText && <p className="text-[11px] text-gray-500 mt-1">{disclaimerText}</p>}
+            {disclaimerText && <p className="text-[11px] text-[#f9f9f9]/55 mt-1">{disclaimerText}</p>}
           </div>
           <div className="flex items-center gap-6">
             <span>promovere.com.ar</span>

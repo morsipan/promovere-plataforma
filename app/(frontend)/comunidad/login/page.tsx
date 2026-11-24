@@ -306,7 +306,7 @@ export default function ComunidadLoginPage() {
             </h2>
 
             <p className="font-sans text-base xl:text-lg text-white/90 leading-relaxed max-w-xl mb-10">
-              Accedé en un solo lugar a tarifarios actualizados, kits comerciales, capacitaciones y
+              Accedé en un solo lugar a fichas técnicas actualizadas, kits comerciales, capacitaciones y
               novedades exclusivas de las marcas y destinos que representamos.
             </p>
 

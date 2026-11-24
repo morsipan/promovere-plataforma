@@ -20,7 +20,8 @@ export const Header: GlobalConfig = {
   },
   admin: {
     group: 'Sitios',
-    description: 'Gestión centralizada del menú principal, isotipo y enlaces superiores del sitio.',
+    description:
+      'Gestión centralizada del menú principal, isotipo y enlaces superiores del sitio. Nota: las Preguntas Frecuentes (FAQs) se administran y muestran exclusivamente en el Footer (AEO).',
   },
   fields: [
     {

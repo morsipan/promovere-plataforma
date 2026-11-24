@@ -1,5 +1,5 @@
 // ============================================================
-// Promovere — Archivo de contenido centralizado
+// Promovêre — Archivo de contenido centralizado
 // Contenido institucional, comercial y estructura del sitio
 // ============================================================
 
@@ -52,12 +52,42 @@ export interface PartnerItem {
   initials: string;
 }
 
+export interface FooterFaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface BlogPostItem {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  brand: string;
+  publishedDate: string;
+  excerpt: string;
+  image: string;
+  externalUrl?: string;
+}
+
+export interface PressItem {
+  id: string;
+  format: 'nota' | 'video';
+  mediaOutlet: string;
+  title: string;
+  publishedDate: string;
+  summary: string;
+  image: string;
+  articleUrl?: string;
+  videoUrl?: string;
+  duration?: string;
+}
+
 export const siteConfig: SiteConfig = {
   name: "Promovêre",
   legalName: "Promovere S.R.L.",
   tagline: "Agencia de Representación y Promoción Turística en Latinoamérica",
   description:
-    "Especialistas en promoción turística en LATAM. Conectamos destinos, cadenas hoteleras y marcas de viajes con los principales operadores y agencias de la región.",
+    "Con 10 años de trayectoria en promoción turística en LATAM, conectamos destinos, cadenas hoteleras y marcas de viajes con los principales operadores y agencias de la región.",
   phone: "+54 9 11 4587 6932",
   email: "marketing@promovere.com.ar",
   address: "Av. Roque Sáenz Peña 720",
@@ -69,19 +99,22 @@ export const siteConfig: SiteConfig = {
   },
 };
 
+// Nota: Las Preguntas Frecuentes (FAQs) se ubican exclusivamente en el Footer (AEO).
 export const navLinks: NavLink[] = [
   { label: "Servicios", href: "#servicios" },
-  { label: "Partners", href: "#partners" },
+  { label: "Representaciones", href: "#representaciones" },
+  { label: "Blog", href: "#blog" },
+  { label: "Prensa", href: "#prensa" },
   { label: "Contacto", href: "#contacto" },
 ];
 
 export const heroContent = {
-  badge: "Especialistas en Promoción Turística en LATAM",
+  badge: "10 años impulsando marcas turísticas en LATAM",
   title: "Somos Promovêre",
   subtitle:
-    "Impulsamos la presencia comercial, el posicionamiento y las ventas de destinos, hoteles y marcas turísticas de clase mundial en los mercados más dinámicos de América Latina.",
+    "Con 10 años de trayectoria en el mercado regional, impulsamos la presencia comercial, el posicionamiento y las ventas de destinos, hoteles y marcas turísticas de clase mundial en América Latina.",
   cta1: { label: "Nuestras Representaciones", href: "#representaciones" },
-  cta2: { label: "Comunidad Promovêre", href: "#contacto" },
+  cta2: { label: "Comunidad Promovêre", href: "/comunidad" },
   backgroundImage:
     "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
 };
@@ -156,7 +189,7 @@ export const servicesContent = {
       description:
         "Asesoramiento a turoperadores para el armado de circuitos, paquetes temáticos e itinerarios diferenciales que respondan a los hábitos y preferencias del viajero latinoamericano.",
       highlights: [
-        "Diseño de itinerarios y tarifas",
+        "Diseño de itinerarios y propuesta de valor",
         "Análisis de competitividad en mercado",
         "Curaduría de experiencias únicas",
         "Integración con operadores líderes",
@@ -315,12 +348,12 @@ export const distributionContent = {
   badge: "Alcance Comercial Regional",
   title: "Red de Distribución Turística en LATAM",
   subtitle:
-    "Presencia activa y capilar en los principales mercados emisores de América Latina. Conectamos tu producto directamente con quienes deciden la compra turística.",
+    "Con 10 años de trayectoria en la región, mantenemos presencia activa y capilar en los principales mercados emisores de América Latina. Conectamos tu producto directamente con quienes deciden la compra turística.",
   stats: [
-    { value: "+12", label: "Países de cobertura activa en LATAM" },
-    { value: "+1.200", label: "Agencias de viajes y operadores capacitados" },
-    { value: "+30", label: "Eventos, caravanas y Fam Tours anuales" },
-    { value: "100%", label: "Enfoque B2B especializado en turismo" },
+    { value: "10 años", label: "De trayectoria conectando marcas y destinos en LATAM" },
+    { value: "LATAM", label: "Cobertura activa en mercados emisores estratégicos" },
+    { value: "360°", label: "Representación comercial, marketing, PR y capacitación" },
+    { value: "100%", label: "Enfoque B2B especializado y respeto al canal trade" },
   ],
   countries: [
     "Argentina",
@@ -337,7 +370,148 @@ export const distributionContent = {
     "Costa Rica",
   ],
   cta1: { label: "Sumar mi marca a la Red", href: "#contacto" },
-  cta2: { label: "Contactar a nuestro equipo", href: "#contacto" },
+  cta2: { label: "Explorar Comunidad Trade", href: "/comunidad" },
+};
+
+export const blogContent = {
+  badge: "Blog Propio",
+  title: "Novedades de Promovêre y Nuestras Marcas",
+  subtitle:
+    "Artículos editoriales, lanzamientos, tendencias del turismo latinoamericano y actualizaciones directas de los destinos y cadenas que representamos.",
+  ctaLabel: "Ver todas las notas del Blog",
+  ctaHref: "/blog",
+  posts: [
+    {
+      id: "blog-10-anos-promovere",
+      slug: "10-anos-impulsando-marcas-turisticas-en-latam",
+      title: "10 años impulsando marcas y destinos turísticos en América Latina",
+      category: "Institucional",
+      brand: "Promovêre",
+      publishedDate: "2026-10-15",
+      excerpt:
+        "Repasamos una década construyendo puentes comerciales entre cadenas hoteleras, oficinas de turismo, operadores mayoristas y agencias de viajes en toda la región.",
+      image:
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
+    },
+    {
+      id: "blog-caribe-mexicano-atelier",
+      slug: "novedades-temporada-caribe-mexicano-y-atelier",
+      title: "Novedades de temporada en Caribe Mexicano y hospitalidad artesanal",
+      category: "Marcas Representadas",
+      brand: "Caribe Mexicano & Atelier",
+      publishedDate: "2026-09-28",
+      excerpt:
+        "Nuevas experiencias gastronómicas, renovaciones de suites y diferenciales clave para potenciar la venta de resorts de lujo en el canal trade.",
+      image:
+        "https://images.unsplash.com/photo-1512815779344-99b39868f763?w=800&q=80",
+    },
+    {
+      id: "blog-grecia-circuitos-mediterraneo",
+      slug: "claves-para-vender-grecia-y-el-mediterraneo-en-espanol",
+      title: "Claves para vender Grecia y el Mediterráneo con operación en español",
+      category: "Tendencias Trade",
+      brand: "Hellenic Travel Network",
+      publishedDate: "2026-09-10",
+      excerpt:
+        "Cómo estructurar circuitos combinados entre Atenas y las Islas Griegas aprovechando la mejor estacionalidad y conectividad aérea desde Sudamérica.",
+      image:
+        "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80",
+    },
+  ] as BlogPostItem[],
+};
+
+export const pressContent = {
+  badge: "Prensa & Medios",
+  title: "Promovêre en Prensa, Entrevistas y Videos",
+  subtitle:
+    "Un único espacio que reúne nuestras apariciones en medios especializados del trade turístico junto con entrevistas, participaciones en ferias y coberturas audiovisuales.",
+  allPressLabel: "Ver sección completa de Prensa",
+  allPressHref: "/prensa",
+  communityBannerTitle: "¿Sos agencia de viajes u operador mayorista?",
+  communityBannerSubtitle:
+    "Accedé a nuestra Comunidad Promovêre para descargar kits comerciales, fichas técnicas, webinars grabados y novedades exclusivas del trade.",
+  communityCtaLabel: "Ir a Comunidad Promovêre",
+  communityCtaHref: "/comunidad",
+  items: [
+    {
+      id: "prensa-nota-fit",
+      format: "nota",
+      mediaOutlet: "Ladevi Medios y Soluciones",
+      title: "Promovêre fortalece su estrategia de representación turística en el Cono Sur",
+      publishedDate: "2026-10-08",
+      summary:
+        "Cobertura sobre la agenda comercial, alianzas con operadores mayoristas y las acciones de promoción de destinos internacionales para la próxima temporada.",
+      image:
+        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
+      articleUrl: "https://promovere.com.ar/prensa",
+    },
+    {
+      id: "prensa-video-entrevista-latam",
+      format: "video",
+      mediaOutlet: "Entrevista Audiovisual · Trade TV",
+      title: "Entrevista: 10 años conectando hoteles y destinos con el trade latinoamericano",
+      publishedDate: "2026-09-22",
+      summary:
+        "Conversación en profundidad sobre el rol de la representación comercial B2B, la capacitación a agencias y la evolución de la Comunidad Promovêre.",
+      image:
+        "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=800&q=80",
+      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      duration: "12:40",
+    },
+    {
+      id: "prensa-nota-caribe",
+      format: "nota",
+      mediaOutlet: "Mensajero Turístico",
+      title: "Roadshows y capacitaciones: el diferencial de Promovêre para el canal minorista",
+      publishedDate: "2026-08-30",
+      summary:
+        "Nota destacada sobre el ciclo anual de encuentros presenciales y webinars orientados a potenciar las ventas de las agencias de viajes de la región.",
+      image:
+        "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80",
+      articleUrl: "https://promovere.com.ar/prensa",
+    },
+    {
+      id: "prensa-video-feria-fit",
+      format: "video",
+      mediaOutlet: "Cobertura en Video · Ferias Internacionales",
+      title: "Resumen audiovisual: presencia de nuestras marcas representadas en FIT",
+      publishedDate: "2026-08-14",
+      summary:
+        "Testimonios de directivos de cadenas hoteleras, oficinas de turismo y operadores aliados durante las jornadas profesionales de negocios.",
+      image:
+        "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80",
+      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      duration: "04:15",
+    },
+  ] as PressItem[],
+};
+
+export const faqContent = {
+  title: "Preguntas Frecuentes",
+  subtitle:
+    "Respuestas claras sobre nuestra representación comercial B2B, alcance en LATAM y acceso a la Comunidad Promovêre.",
+  items: [
+    {
+      question: "¿Qué es Promovêre y qué servicios ofrece en Latinoamérica?",
+      answer:
+        "Promovêre es una agencia de representación, marketing y relaciones públicas turísticas con 10 años de trayectoria en América Latina. Conectamos destinos, cadenas hoteleras y DMCs internacionales con operadores mayoristas y agencias de viajes.",
+    },
+    {
+      question: "¿Promovêre comercializa viajes o publica tarifas al pasajero final?",
+      answer:
+        "No. Nuestro modelo es 100% B2B enfocado en el trade turístico. No realizamos venta directa al consumidor final ni publicamos tarifas públicas; trabajamos junto a operadores mayoristas y agencias minoristas.",
+    },
+    {
+      question: "¿Cómo pueden sumarse las agencias de viajes a la Comunidad Promovêre?",
+      answer:
+        "Los profesionales de agencias de viajes y operadores mayoristas pueden ingresar a través de la sección Comunidad para acceder a fichas técnicas, capacitaciones, webinars, calendario de eventos y herramientas comerciales.",
+    },
+    {
+      question: "¿Qué diferencia hay entre el Blog de Promovêre y la sección de Prensa?",
+      answer:
+        "El Blog reúne novedades propias de Promovêre y de las marcas que representamos, mientras que la sección unificada de Prensa agrupa apariciones en medios externos, entrevistas y coberturas en video.",
+    },
+  ] as FooterFaqItem[],
 };
 
 export const contactContent = {
@@ -380,7 +554,7 @@ export const contactContent = {
 
 export const footerContent = {
   description:
-    "Promovêre es la agencia de representación y marketing turístico de referencia en América Latina, conectando destinos, cadenas hoteleras y operadores con los mercados más dinámicos de la región.",
+    "Promovêre es la agencia de representación y marketing turístico con 10 años de trayectoria en América Latina, conectando destinos, cadenas hoteleras y operadores con el trade regional.",
   columns: [
     {
       title: "Servicios",
@@ -394,22 +568,22 @@ export const footerContent = {
       ],
     },
     {
-      title: "Representaciones",
+      title: "Contenidos & Medios",
       links: [
-        { label: "Cuba (Gaviota Hoteles)", href: "#representaciones" },
-        { label: "Grecia (Hellenic Travel)", href: "#representaciones" },
-        { label: "Islas Caimán", href: "#representaciones" },
-        { label: "México (Caribe Mexicano & Atelier)", href: "#representaciones" },
-        { label: "EE.UU. (Xplorer USA)", href: "#representaciones" },
+        { label: "Blog Promovêre", href: "/blog" },
+        { label: "Prensa & Videos", href: "/prensa" },
+        { label: "Nuestras Representaciones", href: "#representaciones" },
+        { label: "Red de Distribución", href: "#red" },
+        { label: "Partners Estratégicos", href: "#partners" },
       ],
     },
     {
-      title: "Comunidad & Legal",
+      title: "Comunidad & Ayuda",
       links: [
-        { label: "Red de Distribución", href: "#red" },
-        { label: "Partners Estratégicos", href: "#partners" },
-        { label: "Portal Comunidad", href: "#contacto" },
-        { label: "Términos y Condiciones", href: "#" },
+        { label: "Portal Comunidad", href: "/comunidad" },
+        { label: "Acceso Trade (Login)", href: "/comunidad/login" },
+        { label: "Preguntas Frecuentes (FAQ)", href: "/faq" },
+        { label: "Contacto Institucional", href: "#contacto" },
       ],
     },
   ],

@@ -50,8 +50,20 @@ export default function Navbar({ data }: NavbarProps) {
   const activeLogoTypeUrl = !scrolled && logoTypeTransparentUrl ? logoTypeTransparentUrl : logoTypeImageUrl;
   const activeIsotypeUrl = !scrolled && isotypeTransparentUrl ? isotypeTransparentUrl : isotypeImageUrl;
 
-  const items: Array<{ id?: string; label: string; href: string; newTab?: boolean | null }> =
+  const rawItems: Array<{ id?: string; label: string; href: string; newTab?: boolean | null }> =
     data?.navItems && data.navItems.length > 0 ? data.navItems : navLinks;
+
+  // Las Preguntas Frecuentes (FAQs) se ubican exclusivamente en el Footer (AEO)
+  const items = rawItems.filter((item) => {
+    const hrefLower = (item.href || '').toLowerCase();
+    const labelLower = (item.label || '').toLowerCase();
+    const isFaqHref = hrefLower === '/faq' || hrefLower === '#faq' || hrefLower.endsWith('/faq');
+    const isFaqLabel =
+      labelLower === 'faq' ||
+      labelLower === 'faqs' ||
+      labelLower.includes('preguntas frecuentes');
+    return !isFaqHref && !isFaqLabel;
+  });
   const ctaLabel = data?.ctaLabel || 'Iniciar Sesión';
   const ctaHref = data?.ctaHref || '/comunidad/login';
 

@@ -32,19 +32,19 @@ export default function StatsSection({ data }: StatsSectionProps) {
 
   const defaultStats: StatItem[] = [
     {
-      value: '+500',
-      label: 'Operadores Mayoristas',
-      description: 'Conectados activamente en los principales mercados emisores de la región.',
+      value: '10 años',
+      label: 'Trayectoria en LATAM',
+      description: 'Una década construyendo puentes comerciales entre marcas globales y el trade regional.',
     },
     {
-      value: '10+',
-      label: 'Países de Cobertura',
-      description: 'Presencia continua en el Cono Sur, Región Andina y Centroamérica.',
+      value: 'LATAM',
+      label: 'Cobertura Regional Activa',
+      description: 'Presencia continua en el Cono Sur, Región Andina y mercados emisores clave.',
     },
     {
-      value: '+15.000',
-      label: 'Agencias Minoristas',
-      description: 'Alcanzadas mediante capacitaciones, newsletters y kits trade.',
+      value: '360°',
+      label: 'Ecosistema Integral',
+      description: 'Representación comercial, marketing turístico, relaciones públicas y capacitación.',
     },
     {
       value: '100%',

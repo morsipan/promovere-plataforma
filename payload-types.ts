@@ -996,6 +996,87 @@ export interface Page {
         blockName?: string | null;
         blockType: 'partnersMarquee';
       }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        ctaLabel?: string | null;
+        ctaHref?: string | null;
+        posts?:
+          | {
+              title: string;
+              publishedDate?: string | null;
+              category?: string | null;
+              brand?: string | null;
+              excerpt: string;
+              coverImage?: (number | null) | Media;
+              coverImageUrl?: string | null;
+              externalUrl?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'blog';
+      }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        allPressLabel?: string | null;
+        allPressHref?: string | null;
+        showCommunityBanner?: boolean | null;
+        communityCtaLabel?: string | null;
+        communityCtaHref?: string | null;
+        items?:
+          | {
+              format: 'nota' | 'video';
+              mediaOutlet: string;
+              publishedDate?: string | null;
+              title: string;
+              summary: string;
+              coverImage?: (number | null) | Media;
+              coverImageUrl?: string | null;
+              articleUrl?: string | null;
+              videoUrl?: string | null;
+              duration?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'press';
+      }
   )[];
   meta?: {
     title?: string | null;
@@ -1110,6 +1191,7 @@ export interface CommunityContent {
     | 'herramientas_comerciales'
     | 'herramientas_inteligentes'
     | 'blog'
+    | 'prensa'
     | 'herramientas'
     | 'material_comercial'
     | 'novedades'
@@ -2066,6 +2148,81 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        blog?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              ctaLabel?: T;
+              ctaHref?: T;
+              posts?:
+                | T
+                | {
+                    title?: T;
+                    publishedDate?: T;
+                    category?: T;
+                    brand?: T;
+                    excerpt?: T;
+                    coverImage?: T;
+                    coverImageUrl?: T;
+                    externalUrl?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        press?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              allPressLabel?: T;
+              allPressHref?: T;
+              showCommunityBanner?: T;
+              communityCtaLabel?: T;
+              communityCtaHref?: T;
+              items?:
+                | T
+                | {
+                    format?: T;
+                    mediaOutlet?: T;
+                    publishedDate?: T;
+                    title?: T;
+                    summary?: T;
+                    coverImage?: T;
+                    coverImageUrl?: T;
+                    articleUrl?: T;
+                    videoUrl?: T;
+                    duration?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
       };
   meta?:
     | T
@@ -2256,7 +2413,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Gestión centralizada del menú principal, isotipo y enlaces superiores del sitio.
+ * Gestión centralizada del menú principal, isotipo y enlaces superiores del sitio. Nota: las Preguntas Frecuentes (FAQs) se administran y muestran exclusivamente en el Footer (AEO).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header".
@@ -2330,6 +2487,21 @@ export interface Footer {
     | null;
   copyrightText?: string | null;
   disclaimerText?: string | null;
+  /**
+   * Bloque semántico de Preguntas Frecuentes optimizado para AEO (con JSON-LD FAQPage) ubicado exclusivamente en el Footer.
+   */
+  faqSection?: {
+    enabled?: boolean | null;
+    title?: string | null;
+    subtitle?: string | null;
+    items?:
+      | {
+          question: string;
+          answer: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2766,6 +2938,20 @@ export interface FooterSelect<T extends boolean = true> {
       };
   copyrightText?: T;
   disclaimerText?: T;
+  faqSection?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        subtitle?: T;
+        items?:
+          | T
+          | {
+              question?: T;
+              answer?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

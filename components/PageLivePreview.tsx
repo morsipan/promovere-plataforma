@@ -22,6 +22,8 @@ import PromovereAnimCounterSection from '@/components/blocks/PromovereAnimCounte
 import FullWidthImageSection from '@/components/blocks/FullWidthImageSection';
 import ImpactBanner from '@/components/blocks/ImpactBanner';
 import PartnersMarquee from '@/components/blocks/PartnersMarquee';
+import BlogSection from '@/components/blocks/BlogSection';
+import PressSection from '@/components/blocks/PressSection';
 import CommunityHero from '@/components/comunidad/landing/CommunityHero';
 import CommercialToolsPreview from '@/components/comunidad/landing/CommercialToolsPreview';
 import PromotionsEventsPreview from '@/components/comunidad/landing/PromotionsEventsPreview';
@@ -155,6 +157,10 @@ export default function PageLivePreview({
         return <ImpactBanner key={`block-${index}`} data={block} />;
       case 'partnersMarquee':
         return <PartnersMarquee key={`block-${index}`} data={block} />;
+      case 'blog':
+        return <BlogSection key={`block-${index}`} data={block} hideViewAllCta={slug === 'blog'} />;
+      case 'press':
+        return <PressSection key={`block-${index}`} data={block} hideViewAllCta={slug === 'prensa'} />;
       case 'communityHero':
         return <CommunityHero key={`block-${index}`} data={block} />;
       case 'communityCommercialTools':
@@ -251,6 +257,8 @@ export default function PageLivePreview({
           <RepresentationsSection />
           <DistributionSection />
           <PartnersSection />
+          <BlogSection />
+          <PressSection />
           <ContactSection />
         </>
       ) : slug === 'comunidad' ? (

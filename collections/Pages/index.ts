@@ -26,6 +26,8 @@ import {
 import { FullWidthImageBlock } from './blocks/FullWidthImage'
 import { ImpactBannerBlock } from './blocks/ImpactBanner'
 import { PartnersMarqueeBlock } from './blocks/PartnersMarquee'
+import { BlogBlock } from './blocks/Blog'
+import { PressBlock } from './blocks/Press'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -260,6 +262,8 @@ export const Pages: CollectionConfig = {
         FullWidthImageBlock,
         ImpactBannerBlock,
         PartnersMarqueeBlock,
+        BlogBlock,
+        PressBlock,
       ],
     },
   ],

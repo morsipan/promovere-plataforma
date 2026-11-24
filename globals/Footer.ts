@@ -117,5 +117,65 @@ export const Footer: GlobalConfig = {
         },
       ],
     },
+    {
+      name: 'faqSection',
+      type: 'group',
+      label: 'Preguntas Frecuentes en Footer (AEO)',
+      admin: {
+        description:
+          'Bloque semántico de Preguntas Frecuentes optimizado para AEO (con JSON-LD FAQPage) ubicado exclusivamente en el Footer.',
+      },
+      fields: [
+        {
+          name: 'enabled',
+          type: 'checkbox',
+          label: 'Mostrar Preguntas Frecuentes en el Footer',
+          defaultValue: true,
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              label: 'Título de FAQs',
+              defaultValue: 'Preguntas Frecuentes',
+              admin: { width: '40%' },
+            },
+            {
+              name: 'subtitle',
+              type: 'text',
+              label: 'Subtítulo breve',
+              defaultValue:
+                'Respuestas claras sobre nuestra representación comercial B2B, alcance en LATAM y acceso a Comunidad.',
+              admin: { width: '60%' },
+            },
+          ],
+        },
+        {
+          name: 'items',
+          type: 'array',
+          label: 'Preguntas y Respuestas (AEO)',
+          labels: {
+            singular: 'Pregunta Frecuente',
+            plural: 'Preguntas Frecuentes',
+          },
+          fields: [
+            {
+              name: 'question',
+              type: 'text',
+              label: 'Pregunta',
+              required: true,
+            },
+            {
+              name: 'answer',
+              type: 'textarea',
+              label: 'Respuesta clara y concisa (AEO)',
+              required: true,
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

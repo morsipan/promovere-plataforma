@@ -29,7 +29,7 @@ export const DistributionBlock: Block = {
       type: 'textarea',
       label: 'Subtítulo',
       defaultValue:
-        'Conectamos marcas con más de 12.000 profesionales del turismo a través de nuestra red multicanal y presencia activa en los mercados emisores clave.',
+        'Con 10 años de trayectoria, conectamos marcas y destinos internacionales con operadores mayoristas y agencias de viajes en los mercados emisores clave de América Latina.',
     },
     {
       type: 'row',
@@ -77,7 +77,7 @@ export const DistributionBlock: Block = {
         {
           name: 'value',
           type: 'text',
-          label: 'Valor (ej: +12K, 8, +15)',
+          label: 'Valor (ej: 10 años, 100%, 360°, LATAM)',
           required: true,
         },
         {

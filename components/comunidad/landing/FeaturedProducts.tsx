@@ -21,7 +21,7 @@ const polaroids: PolaroidProduct[] = [
     location: 'Cancún & Los Cabos',
     image:
       'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80',
-    description: 'Tarifas promocionales para familias con hasta 2 menores gratis.',
+    description: 'Condiciones promocionales exclusivas para el canal trade y familias.',
     rotationClass: '-rotate-1 hover:rotate-0',
   },
   {
@@ -61,7 +61,7 @@ const destinations: DestinationItem[] = [
     subtitle: 'Playas idílicas, resorts all-inclusive y sol todo el año',
     image:
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80',
-    experiencesCount: '18 Resorts Representados',
+    experiencesCount: 'Resorts Representados',
   },
   {
     id: 'europa',
@@ -183,7 +183,7 @@ export default function FeaturedProducts({ data }: FeaturedProductsProps = {}) {
 
                 <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
                   <span className="text-[11px] font-semibold text-slate-400">
-                    Tarifario B2B Protegido
+                    Ficha Técnica B2B Protegida
                   </span>
                   <Link
                     href="/comunidad/login"

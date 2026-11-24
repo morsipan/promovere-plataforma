@@ -64,8 +64,25 @@ export default function FAQSection({ data }: FAQSectionProps) {
 
   const items = data?.items && data.items.length > 0 ? data.items : defaultItems;
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <section id="faq" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {sectionAppearance.backgroundImageUrl ? (
         <div className="absolute inset-0 z-0">
           <Image
