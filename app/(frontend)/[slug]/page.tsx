@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   } catch (e) {}
 
   return {
-    title: 'Promovêre — Turismo LATAM',
+    title: 'Promovêre — Marketing Turístico',
     description: 'Especialistas en Promoción Turística y Comercialización Hotelera en LATAM.',
   };
 }

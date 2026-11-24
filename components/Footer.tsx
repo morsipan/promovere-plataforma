@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, ArrowUpRight, HelpCircle, ChevronDown } from 'lucide-react';
+import { MapPin, Phone, Mail, ArrowUpRight, HelpCircle } from 'lucide-react';
 import { faqContent, footerContent, siteConfig } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
+import FooterFaqAccordion, { type FooterFaqItem } from '@/components/FooterFaqAccordion';
 
 function InstagramIcon({ className = 'w-4 h-4' }: { className?: string }) {
   return (
@@ -49,11 +50,7 @@ export interface FooterColumn {
   }[];
 }
 
-export interface FooterFaqItem {
-  id?: string | null;
-  question: string;
-  answer: string;
-}
+export type { FooterFaqItem };
 
 export interface FooterProps {
   data?: {
@@ -95,10 +92,20 @@ export default function Footer({ data, settings }: FooterProps) {
   const disclaimerText = data?.disclaimerText;
 
   const footerIsotypeUrl = getMediaUrl(data?.logoImage, '');
-  const footerLogoTypeUrl = getMediaUrl(data?.logoTypeImage, '');
+  const footerLogoTypeUrl =
+    getMediaUrl(data?.logoTypeImage, '') || (!footerIsotypeUrl ? '/assets/SVG/logo-footer.svg' : '');
 
-  const columns =
+  const rawColumns =
     data?.columns && data.columns.length > 0 ? data.columns : footerContent.columns;
+
+  // Garantizar que ningún enlace de FAQ apunte a rutas inexistentes (/faq -> #faq)
+  const columns = rawColumns.map((col) => ({
+    ...col,
+    links: (col.links || []).map((link) => ({
+      ...link,
+      href: link.href === '/faq' ? '#faq' : link.href,
+    })),
+  }));
 
   const showFaqs = data?.faqSection?.enabled !== false;
   const faqTitle = data?.faqSection?.title || faqContent.title;
@@ -150,54 +157,25 @@ export default function Footer({ data, settings }: FooterProps) {
           className="border-b border-white/10 bg-black/15"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-              <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3cac59]/15 border border-[#3cac59]/30 text-[#3cac59] text-[11px] font-bold uppercase tracking-wider mb-3">
-                  <HelpCircle className="w-3.5 h-3.5" />
-                  <span>Preguntas Frecuentes</span>
-                </div>
-                <h2
-                  id="footer-faq-heading"
-                  className="font-heading text-2xl sm:text-3xl font-bold text-white tracking-tight"
-                >
-                  {faqTitle}
-                </h2>
-                {faqSubtitle ? (
-                  <p className="text-xs sm:text-sm text-[#f9f9f9]/75 mt-1.5 leading-relaxed">
-                    {faqSubtitle}
-                  </p>
-                ) : null}
+            <div className="max-w-2xl mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3cac59]/15 border border-[#3cac59]/30 text-[#3cac59] text-[11px] font-bold uppercase tracking-wider mb-3">
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>Preguntas Frecuentes</span>
               </div>
-
-              <Link
-                href="/faq"
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#f9f9f9] hover:text-[#3cac59] transition-colors shrink-0"
+              <h2
+                id="footer-faq-heading"
+                className="font-heading text-2xl sm:text-3xl font-bold text-white tracking-tight"
               >
-                <span>Ver centro de ayuda completo</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
+                {faqTitle}
+              </h2>
+              {faqSubtitle ? (
+                <p className="text-xs sm:text-sm text-[#f9f9f9]/75 mt-1.5 leading-relaxed">
+                  {faqSubtitle}
+                </p>
+              ) : null}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {faqItems.map((item, idx) => (
-                <details
-                  key={item.id || `footer-faq-${idx}`}
-                  className="group rounded-2xl border border-white/10 bg-white/[0.04] hover:border-[#1b87c7]/50 transition-colors"
-                >
-                  <summary className="list-none cursor-pointer px-5 py-4 flex items-center justify-between gap-3">
-                    <h3 className="font-heading text-sm sm:text-base font-bold text-white leading-snug">
-                      {item.question}
-                    </h3>
-                    <ChevronDown className="w-4 h-4 text-[#3cac59] shrink-0 transition-transform duration-200 group-open:rotate-180" />
-                  </summary>
-                  <div className="px-5 pb-4 pt-1 border-t border-white/10">
-                    <p className="text-xs sm:text-sm text-[#f9f9f9]/80 leading-relaxed font-sans">
-                      {item.answer}
-                    </p>
-                  </div>
-                </details>
-              ))}
-            </div>
+            <FooterFaqAccordion items={faqItems} />
           </div>
         </section>
       ) : null}
@@ -208,29 +186,27 @@ export default function Footer({ data, settings }: FooterProps) {
           {/* Brand Column (4 cols) */}
           <div className="lg:col-span-4">
             <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
-              {/* Isotipo */}
+              {/* Isotipo (solo si está cargado en CMS) */}
               {footerIsotypeUrl ? (
                 <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm shrink-0 group-hover:scale-105 transition-transform">
                   <Image
                     src={footerIsotypeUrl}
                     alt={companyName || 'Promovêre Isotipo'}
                     fill
+                    unoptimized
                     className="object-contain"
                   />
                 </div>
-              ) : !footerLogoTypeUrl ? (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform">
-                  <span className="text-white font-black text-base">P</span>
-                </div>
               ) : null}
 
-              {/* Logotipo Imagen o Texto */}
+              {/* Logotipo Imagen (CMS o SVG oficial) o Texto */}
               {footerLogoTypeUrl ? (
                 <div className="relative h-9 w-36 sm:w-48">
                   <Image
                     src={footerLogoTypeUrl}
                     alt={companyName}
                     fill
+                    unoptimized
                     className="object-contain object-left"
                   />
                 </div>
@@ -240,7 +216,7 @@ export default function Footer({ data, settings }: FooterProps) {
                     {companyName}
                   </span>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#3cac59]">
-                    Turismo LATAM
+                    Marketing Turístico
                   </span>
                 </div>
               )}

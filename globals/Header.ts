@@ -88,7 +88,7 @@ export const Header: GlobalConfig = {
           name: 'tagline',
           type: 'text',
           label: 'Bajada del Logotipo',
-          defaultValue: 'Turismo LATAM',
+          defaultValue: 'Marketing Turístico',
           admin: {
             width: '50%',
             description: 'Visible cuando no se utiliza una imagen de logotipo.',

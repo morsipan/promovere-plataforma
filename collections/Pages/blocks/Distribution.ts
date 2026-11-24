@@ -29,7 +29,7 @@ export const DistributionBlock: Block = {
       type: 'textarea',
       label: 'Subtítulo',
       defaultValue:
-        'Con 10 años de trayectoria, conectamos marcas y destinos internacionales con operadores mayoristas y agencias de viajes en los mercados emisores clave de América Latina.',
+        'Diez años impulsando destinos y hoteles en los mercados emisores clave de América Latina junto a operadores mayoristas y agencias de viajes.',
     },
     {
       type: 'row',

@@ -26,6 +26,9 @@ export function getMediaUrl(media: unknown, fallback: string = ''): string {
     if (typeof mediaObj.url === 'string' && mediaObj.url.trim().length > 0) {
       return formatBlobUrl(mediaObj.url);
     }
+    if (typeof mediaObj.filename === 'string' && mediaObj.filename.trim().length > 0) {
+      return `/api/media/file/${encodeURIComponent(mediaObj.filename.trim())}`;
+    }
   }
 
   return fallback;

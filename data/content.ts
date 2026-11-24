@@ -26,7 +26,8 @@ export interface NavLink {
 
 export interface ServiceItem {
   id: string;
-  icon: string;
+  image?: string;
+  icon?: string;
   title: string;
   subtitle: string;
   description: string;
@@ -85,9 +86,9 @@ export interface PressItem {
 export const siteConfig: SiteConfig = {
   name: "Promovêre",
   legalName: "Promovere S.R.L.",
-  tagline: "Agencia de Representación y Promoción Turística en Latinoamérica",
+  tagline: "Marketing Turístico",
   description:
-    "Con 10 años de trayectoria en promoción turística en LATAM, conectamos destinos, cadenas hoteleras y marcas de viajes con los principales operadores y agencias de la región.",
+    "Con una década de experiencia comercial en el trade de LATAM, conectamos destinos, cadenas hoteleras y marcas de viajes con los principales operadores y agencias de la región.",
   phone: "+54 9 11 4587 6932",
   email: "marketing@promovere.com.ar",
   address: "Av. Roque Sáenz Peña 720",
@@ -109,14 +110,13 @@ export const navLinks: NavLink[] = [
 ];
 
 export const heroContent = {
-  badge: "10 años impulsando marcas turísticas en LATAM",
+  badge: "Especialistas en Marketing y Representación Turística",
   title: "Somos Promovêre",
   subtitle:
-    "Con 10 años de trayectoria en el mercado regional, impulsamos la presencia comercial, el posicionamiento y las ventas de destinos, hoteles y marcas turísticas de clase mundial en América Latina.",
+    "Una década conectando marcas turísticas con Latinoamérica: impulsamos la presencia comercial, el posicionamiento y las ventas de destinos y hoteles de clase mundial.",
   cta1: { label: "Nuestras Representaciones", href: "#representaciones" },
   cta2: { label: "Comunidad Promovêre", href: "/comunidad" },
-  backgroundImage:
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80",
+  backgroundImage: "/assets/WebP/hero-bg-promovere.webp",
 };
 
 export const servicesContent = {
@@ -127,7 +127,7 @@ export const servicesContent = {
   services: [
     {
       id: "ve-reps",
-      icon: "Briefcase",
+      image: "/assets/SVG/servicio-reps.svg",
       title: "Representaciones Turísticas (Vê REPS®)",
       subtitle: "Gestión comercial activa",
       description:
@@ -141,7 +141,7 @@ export const servicesContent = {
     },
     {
       id: "marketing-turistico",
-      icon: "Megaphone",
+      image: "/assets/SVG/servicio-marketing.svg",
       title: "Marketing Turístico",
       subtitle: "Campañas de alta conversión",
       description:
@@ -155,7 +155,7 @@ export const servicesContent = {
     },
     {
       id: "relaciones-publicas",
-      icon: "Users",
+      image: "/assets/SVG/servicio-pr.svg",
       title: "Relaciones Públicas",
       subtitle: "Visibilidad en prensa y trade",
       description:
@@ -169,7 +169,7 @@ export const servicesContent = {
     },
     {
       id: "capacitacion",
-      icon: "GraduationCap",
+      image: "/assets/SVG/servicio-capacitacion.svg",
       title: "Capacitación",
       subtitle: "Formación especializada para el canal",
       description:
@@ -183,7 +183,7 @@ export const servicesContent = {
     },
     {
       id: "desarrollo-producto",
-      icon: "Compass",
+      image: "/assets/SVG/servicio-desarrollo.svg",
       title: "Desarrollo de Producto",
       subtitle: "Diferenciación y valor en góndola",
       description:
@@ -197,7 +197,7 @@ export const servicesContent = {
     },
     {
       id: "eventos-famtours",
-      icon: "Calendar",
+      image: "/assets/SVG/servicio-eventos.svg",
       title: "Eventos y Fam Tours",
       subtitle: "Experiencias memorables de inmersión",
       description:
@@ -209,7 +209,7 @@ export const servicesContent = {
         "Logística y coordinación integral",
       ],
     },
-  ],
+  ] as ServiceItem[],
 };
 
 export const representationsContent = {
@@ -348,9 +348,9 @@ export const distributionContent = {
   badge: "Alcance Comercial Regional",
   title: "Red de Distribución Turística en LATAM",
   subtitle:
-    "Con 10 años de trayectoria en la región, mantenemos presencia activa y capilar en los principales mercados emisores de América Latina. Conectamos tu producto directamente con quienes deciden la compra turística.",
+    "Presencia activa y capilar en los principales mercados emisores de América Latina. Conectamos tu producto directamente con quienes deciden la compra turística.",
   stats: [
-    { value: "10 años", label: "De trayectoria conectando marcas y destinos en LATAM" },
+    { value: "10 años", label: "Impulsando destinos y hoteles en la región" },
     { value: "LATAM", label: "Cobertura activa en mercados emisores estratégicos" },
     { value: "360°", label: "Representación comercial, marketing, PR y capacitación" },
     { value: "100%", label: "Enfoque B2B especializado y respeto al canal trade" },
@@ -383,8 +383,8 @@ export const blogContent = {
   posts: [
     {
       id: "blog-10-anos-promovere",
-      slug: "10-anos-impulsando-marcas-turisticas-en-latam",
-      title: "10 años impulsando marcas y destinos turísticos en América Latina",
+      slug: "una-decada-conectando-marcas-turisticas-con-latinoamerica",
+      title: "Una década conectando marcas turísticas con Latinoamérica",
       category: "Institucional",
       brand: "Promovêre",
       publishedDate: "2026-10-15",
@@ -449,7 +449,7 @@ export const pressContent = {
       id: "prensa-video-entrevista-latam",
       format: "video",
       mediaOutlet: "Entrevista Audiovisual · Trade TV",
-      title: "Entrevista: 10 años conectando hoteles y destinos con el trade latinoamericano",
+      title: "Entrevista: diez años impulsando destinos y hoteles en la región",
       publishedDate: "2026-09-22",
       summary:
         "Conversación en profundidad sobre el rol de la representación comercial B2B, la capacitación a agencias y la evolución de la Comunidad Promovêre.",
@@ -494,7 +494,7 @@ export const faqContent = {
     {
       question: "¿Qué es Promovêre y qué servicios ofrece en Latinoamérica?",
       answer:
-        "Promovêre es una agencia de representación, marketing y relaciones públicas turísticas con 10 años de trayectoria en América Latina. Conectamos destinos, cadenas hoteleras y DMCs internacionales con operadores mayoristas y agencias de viajes.",
+        "Promovêre es una agencia de representación, marketing y relaciones públicas turísticas con una década de experiencia comercial en el trade de LATAM. Conectamos destinos, cadenas hoteleras y DMCs internacionales con operadores mayoristas y agencias de viajes.",
     },
     {
       question: "¿Promovêre comercializa viajes o publica tarifas al pasajero final?",
@@ -554,7 +554,7 @@ export const contactContent = {
 
 export const footerContent = {
   description:
-    "Promovêre es la agencia de representación y marketing turístico con 10 años de trayectoria en América Latina, conectando destinos, cadenas hoteleras y operadores con el trade regional.",
+    "Promovêre es la agencia de representación y marketing turístico con una década de trayectoria en América Latina, conectando destinos, cadenas hoteleras y operadores con el trade regional.",
   columns: [
     {
       title: "Servicios",
@@ -582,7 +582,7 @@ export const footerContent = {
       links: [
         { label: "Portal Comunidad", href: "/comunidad" },
         { label: "Acceso Trade (Login)", href: "/comunidad/login" },
-        { label: "Preguntas Frecuentes (FAQ)", href: "/faq" },
+        { label: "Preguntas Frecuentes", href: "#faq" },
         { label: "Contacto Institucional", href: "#contacto" },
       ],
     },

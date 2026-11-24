@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const meta = page?.meta;
     const title =
       meta?.title ||
-      (page?.title ? `${page.title} — Promovêre` : 'Promovêre — Turismo LATAM');
+      (page?.title ? `${page.title} — Promovêre` : 'Promovêre — Marketing Turístico');
     const description =
       meta?.description ||
       'Conectamos marcas, cadenas hoteleras y destinos de clase mundial con el trade turístico de América Latina.';
@@ -42,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   } catch (e) {
     return {
-      title: 'Promovêre — Turismo LATAM',
+      title: 'Promovêre — Marketing Turístico',
       description: 'Especialistas en Promoción Turística y Comercialización Hotelera en LATAM.',
     };
   }
@@ -56,21 +56,23 @@ export default async function Home() {
 
   try {
     const payload = await getPayload({ config });
-    const [{ docs }, headerRes, footerRes, settingsRes] = await Promise.all([
-      payload.find({
-        collection: 'pages',
-        where: {
-          slug: { equals: 'home' },
-        },
-        depth: 2,
-      }),
+    const [pagesRes, headerRes, footerRes, settingsRes] = await Promise.all([
+      payload
+        .find({
+          collection: 'pages',
+          where: {
+            slug: { equals: 'home' },
+          },
+          depth: 2,
+        })
+        .catch(() => ({ docs: [] })),
       payload.findGlobal({ slug: 'header', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'footer', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }).catch(() => null),
     ]);
 
-    if (docs && docs.length > 0) {
-      homePage = docs[0];
+    if (pagesRes?.docs && pagesRes.docs.length > 0) {
+      homePage = pagesRes.docs[0];
     }
     headerData = headerRes;
     footerData = footerRes;

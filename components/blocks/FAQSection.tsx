@@ -129,6 +129,7 @@ export default function FAQSection({ data }: FAQSectionProps) {
               >
                 <button
                   type="button"
+                  aria-expanded={isOpen}
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   className="w-full p-6 text-left flex items-center justify-between gap-4 font-bold text-base sm:text-lg transition-colors"
                 >

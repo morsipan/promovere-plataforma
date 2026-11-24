@@ -124,7 +124,7 @@ export default buildConfig({
       uploadsCollection: 'media',
       tabbedUI: true,
       generateTitle: ({ doc }) =>
-        doc?.title ? `${doc.title} — Promovêre` : 'Promovêre — Turismo LATAM',
+        doc?.title ? `${doc.title} — Promovêre` : 'Promovêre — Marketing Turístico',
       generateDescription: ({ doc }) => {
         const layout = doc?.layout || []
         const hero = layout.find((b: any) => b.blockType === 'hero')

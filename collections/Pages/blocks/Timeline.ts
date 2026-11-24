@@ -23,7 +23,7 @@ export const TimelineBlock: Block = {
       type: 'text',
       label: 'Título de la Sección',
       required: true,
-      defaultValue: '10 años construyendo puentes comerciales en LATAM',
+      defaultValue: 'Una década construyendo puentes comerciales en LATAM',
     },
     {
       name: 'subtitle',

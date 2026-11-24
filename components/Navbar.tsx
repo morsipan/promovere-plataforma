@@ -40,14 +40,20 @@ export default function Navbar({ data }: NavbarProps) {
   }, []);
 
   const logoText = data?.logoText || siteConfig.name;
-  const tagline = data?.tagline || 'Turismo LATAM';
+  const rawTagline = data?.tagline || 'Marketing Turístico';
+  const tagline = rawTagline.toLowerCase() === 'turismo latam' ? 'Marketing Turístico' : rawTagline;
   const isotypeImageUrl = getMediaUrl(data?.logoImage, '');
   const logoTypeImageUrl = getMediaUrl(data?.logoTypeImage, '');
   const isotypeTransparentUrl = getMediaUrl(data?.logoImageTransparent, '');
   const logoTypeTransparentUrl = getMediaUrl(data?.logoTypeImageTransparent, '');
 
-  // Logotipo e isotipo dinámicos: se prioriza la versión para fondo transparente cuando no hay scroll
-  const activeLogoTypeUrl = !scrolled && logoTypeTransparentUrl ? logoTypeTransparentUrl : logoTypeImageUrl;
+  // Logotipo e isotipo dinámicos: prioriza los assets del CMS y cae en los SVGs oficiales de marca (nunca una "P")
+  const fallbackLogoTypeUrl = !scrolled
+    ? '/assets/SVG/logo-footer.svg'
+    : '/assets/SVG/logo-principal.svg';
+  const activeLogoTypeUrl =
+    (!scrolled && logoTypeTransparentUrl ? logoTypeTransparentUrl : logoTypeImageUrl) ||
+    (!isotypeImageUrl && !isotypeTransparentUrl ? fallbackLogoTypeUrl : '');
   const activeIsotypeUrl = !scrolled && isotypeTransparentUrl ? isotypeTransparentUrl : isotypeImageUrl;
 
   const rawItems: Array<{ id?: string; label: string; href: string; newTab?: boolean | null }> =
@@ -79,30 +85,28 @@ export default function Navbar({ data }: NavbarProps) {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo & Marca */}
           <Link href="/" suppressHydrationWarning className="flex items-center gap-2.5 sm:gap-3 group">
-            {/* 1. Isotipo / Ícono */}
+            {/* 1. Isotipo / Ícono (solo si existe imagen cargada en CMS) */}
             {activeIsotypeUrl ? (
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform shrink-0">
                 <Image
                   src={activeIsotypeUrl}
                   alt={logoText || 'Promovêre Isotipo'}
                   fill
+                  unoptimized
                   className="object-contain"
                   priority
                 />
               </div>
-            ) : !activeLogoTypeUrl ? (
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#1b87c7] to-[#3cac59] flex items-center justify-center shadow-md shadow-[#1b87c7]/20 group-hover:scale-105 transition-transform shrink-0">
-                <span className="text-white font-black text-base tracking-tight">P</span>
-              </div>
             ) : null}
 
-            {/* 2. Logotipo: Imagen O Texto */}
+            {/* 2. Logotipo: Imagen oficial (CMS o SVG de marca) O Texto */}
             {activeLogoTypeUrl ? (
-              <div className={`relative h-8 sm:h-9 w-32 sm:w-44 transition-all duration-300 ${!scrolled ? 'drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]' : ''}`}>
+              <div className={`relative h-8 sm:h-9 w-36 sm:w-44 transition-all duration-300 ${!scrolled ? 'drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]' : ''}`}>
                 <Image
                   src={activeLogoTypeUrl}
                   alt={logoText || 'Promovêre'}
                   fill
+                  unoptimized
                   className="object-contain object-left"
                   priority
                 />
@@ -111,7 +115,7 @@ export default function Navbar({ data }: NavbarProps) {
               <div suppressHydrationWarning className="flex flex-col leading-tight">
                 <span
                   suppressHydrationWarning
-                  className={`font-black text-xl tracking-tight transition-colors ${
+                  className={`font-heading font-black text-xl tracking-tight transition-colors ${
                     scrolled ? 'text-[#4d4e4f]' : 'text-white'
                   }`}
                 >

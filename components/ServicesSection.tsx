@@ -157,6 +157,7 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
                             alt={service.title}
                             width={160}
                             height={64}
+                            unoptimized
                             className="max-h-14 sm:max-h-16 w-auto object-contain object-left"
                           />
                         </div>
@@ -170,6 +171,7 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
                                 src={customIconUrl}
                                 alt={service.title}
                                 fill
+                                unoptimized
                                 className="object-contain"
                               />
                             </div>
