@@ -21,6 +21,7 @@ import { CommunityContent } from './collections/CommunityContent'
 import { Representations } from './collections/Representations'
 import { CommunityPromotions } from './collections/CommunityPromotions'
 import { CommunityEvents } from './collections/CommunityEvents'
+import { EventRegistrations } from './collections/EventRegistrations'
 import { BlogPosts } from './collections/BlogPosts'
 import { PressItems } from './collections/PressItems'
 import { Media } from './collections/Media'
@@ -89,6 +90,7 @@ export default buildConfig({
     CommunityContent,
     CommunityPromotions,
     CommunityEvents,
+    EventRegistrations,
     Users,
     Media,
   ],

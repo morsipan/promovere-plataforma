@@ -37,6 +37,7 @@ import { getMediaUrl } from '@/lib/media';
 import CommunityEventsCalendar from './CommunityEventsCalendar';
 import CommunityAdBannerSlot from './CommunityAdBannerSlot';
 import { DEFAULT_DASHBOARD_ORDER } from './ProfileSettingsClient';
+import { getBrandSlug } from '@/lib/brands';
 
 export interface DashboardRepresentation {
   id: string | number;
@@ -149,6 +150,7 @@ export interface CommunityDashboardClientProps {
   contentItems: DashboardContentItem[];
   promotions?: DashboardPromotion[];
   events?: DashboardEvent[];
+  registeredEventIds?: string[];
   settings?: DashboardCommunitySettings | null;
 }
 
@@ -273,6 +275,7 @@ export default function CommunityDashboardClient({
   contentItems,
   promotions = [],
   events = [],
+  registeredEventIds = [],
   settings,
 }: CommunityDashboardClientProps) {
   const [liveSettings, setLiveSettings] = useState<DashboardCommunitySettings | null>(null);
@@ -485,18 +488,25 @@ export default function CommunityDashboardClient({
               <div>
                 <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#3cac59] mb-1">
                   <Compass className="w-4 h-4" />
-                  <span>Marcas y Destinos de Excelencia</span>
+                  <span>Marcas Comerciales & Destinos</span>
                 </div>
                 <h2 className={`font-baloo text-2xl sm:text-3xl font-extrabold ${headingTextClass} tracking-tight`}>
-                  Catálogo de Representaciones Oficiales
+                  Catálogo por Marcas Representadas
                 </h2>
               </div>
-              <span className="text-xs text-slate-500 font-medium">
-                {representations.length}{' '}
-                {representations.length === 1
-                  ? 'Representación Activa'
-                  : 'Representaciones Activas en LATAM'}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-slate-500 font-medium">
+                  {representations.length}{' '}
+                  {representations.length === 1 ? 'Marca Activa' : 'Marcas Activas en LATAM'}
+                </span>
+                <Link
+                  href="/comunidad/marcas"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[#1b87c7] hover:underline"
+                >
+                  <span>Catálogo libre</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -552,20 +562,28 @@ export default function CommunityDashboardClient({
 
                       <div className="flex items-center gap-1.5 text-xs font-bold text-[#3cac59] uppercase tracking-wider mb-1">
                         <MapPin className="w-3.5 h-3.5" />
-                        <span>{item.country}</span>
+                        <span>
+                          {item.country}
+                          {item.title && item.title !== item.country ? ` · ${item.title}` : ''}
+                        </span>
                       </div>
 
-                      <h3 className="font-baloo text-xl sm:text-2xl font-black text-white mb-0.5 leading-tight group-hover:text-[#3cac59] transition-colors">
-                        {item.title}
+                      <h3 className="font-baloo text-xl sm:text-2xl font-black text-white mb-1 leading-tight group-hover:text-[#3cac59] transition-colors">
+                        {item.brand}
                       </h3>
-
-                      <p className="text-xs font-semibold text-white/90 mb-2">{item.brand}</p>
 
                       <p className="text-xs text-white/80 leading-relaxed line-clamp-3 mb-4">
                         {item.description}
                       </p>
 
                       <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <Link
+                          href={`/comunidad/marcas/${getBrandSlug(item)}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1b87c7] hover:bg-[#156d9f] text-white text-[11px] font-bold transition-colors"
+                        >
+                          <Building2 className="w-3.5 h-3.5" />
+                          <span>Landing de Marca</span>
+                        </Link>
                         {repResourceCount > 0 && (
                           <button
                             type="button"
@@ -785,6 +803,7 @@ export default function CommunityDashboardClient({
           <CommunityEventsCalendar
             key="eventos"
             events={events}
+            registeredEventIds={registeredEventIds}
             headingTextClass={headingTextClass}
           />
         );

@@ -200,10 +200,19 @@ export default function FeaturedProducts({ data }: FeaturedProductsProps = {}) {
 
         {/* 2. Grilla Inferior de Destinos (Fondos Oscurecidos) */}
         <div>
-          <h3 className="text-xl font-bold text-[#4d4e4f] mb-6 flex items-center gap-2 font-heading">
-            <Compass className="w-5 h-5 text-[#1b87c7]" />
-            <span>Destinos Principales de Representación</span>
-          </h3>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <h3 className="text-xl font-bold text-[#4d4e4f] flex items-center gap-2 font-heading">
+              <Compass className="w-5 h-5 text-[#1b87c7]" />
+              <span>Marcas y Destinos de Representación</span>
+            </h3>
+            <Link
+              href="/comunidad/marcas"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] hover:bg-[#156d9f] text-white text-xs font-bold shadow-sm transition-all self-start sm:self-auto"
+            >
+              <span>Explorar catálogo libre por marcas</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {destinations.map((dest) => (

@@ -51,9 +51,10 @@ export default async function ComunidadDashboardPage() {
   let promotions: DashboardPromotion[] = [];
   let events: DashboardEvent[] = [];
   let settings: DashboardCommunitySettings | null = null;
+  let registeredEventIds: string[] = [];
 
   try {
-    const [repsRes, contentRes, promosRes, eventsRes, settingsRes] = await Promise.all([
+    const [repsRes, contentRes, promosRes, eventsRes, settingsRes, regsRes] = await Promise.all([
       payload
         .find({
           collection: 'representations',
@@ -99,6 +100,19 @@ export default async function ComunidadDashboardPage() {
         .findGlobal({
           slug: 'community-settings',
           depth: 2,
+        })
+        .catch(() => null),
+      payload
+        .find({
+          collection: 'event-registrations',
+          where: {
+            and: [
+              { user: { equals: user.id } },
+              { status: { equals: 'registered' } },
+            ],
+          },
+          limit: 100,
+          overrideAccess: true,
         })
         .catch(() => null),
     ]);
@@ -180,6 +194,12 @@ export default async function ComunidadDashboardPage() {
     if (settingsRes) {
       settings = settingsRes as DashboardCommunitySettings;
     }
+
+    if (regsRes?.docs) {
+      registeredEventIds = regsRes.docs.map((doc: any) =>
+        String(typeof doc.event === 'object' && doc.event !== null ? doc.event.id : doc.event)
+      );
+    }
   } catch (e) {
     console.warn('Error al cargar datos del Dashboard de Comunidad:', e);
   }
@@ -213,6 +233,7 @@ export default async function ComunidadDashboardPage() {
       contentItems={contentItems}
       promotions={promotions}
       events={events}
+      registeredEventIds={registeredEventIds}
       settings={settings}
     />
   );

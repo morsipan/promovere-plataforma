@@ -74,6 +74,7 @@ export interface Config {
     'community-content': CommunityContent;
     'community-promotions': CommunityPromotion;
     'community-events': CommunityEvent;
+    'event-registrations': EventRegistration;
     users: User;
     media: Media;
     'payload-kv': PayloadKv;
@@ -90,6 +91,7 @@ export interface Config {
     'community-content': CommunityContentSelect<false> | CommunityContentSelect<true>;
     'community-promotions': CommunityPromotionsSelect<false> | CommunityPromotionsSelect<true>;
     'community-events': CommunityEventsSelect<false> | CommunityEventsSelect<true>;
+    'event-registrations': EventRegistrationsSelect<false> | EventRegistrationsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -1405,6 +1407,28 @@ export interface CommunityEvent {
   createdAt: string;
 }
 /**
+ * Registro automático de inscripciones en 1 clic a Webinars y FAM Tours vinculadas al usuario y la marca/evento.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-registrations".
+ */
+export interface EventRegistration {
+  id: number;
+  user: number | User;
+  event: number | CommunityEvent;
+  representation?: (number | null) | Representation;
+  eventTitle: string;
+  eventModality?: string | null;
+  brandName?: string | null;
+  userName?: string | null;
+  userEmail?: string | null;
+  userCompany?: string | null;
+  userRole?: string | null;
+  status: 'registered' | 'cancelled';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Gestión centralizada de credenciales, roles y permisos de acceso para el equipo interno y la Comunidad Promovêre.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1511,6 +1535,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'community-events';
         value: number | CommunityEvent;
+      } | null)
+    | ({
+        relationTo: 'event-registrations';
+        value: number | EventRegistration;
       } | null)
     | ({
         relationTo: 'users';
@@ -2439,6 +2467,25 @@ export interface CommunityEventsSelect<T extends boolean = true> {
   representation?: T;
   status?: T;
   featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-registrations_select".
+ */
+export interface EventRegistrationsSelect<T extends boolean = true> {
+  user?: T;
+  event?: T;
+  representation?: T;
+  eventTitle?: T;
+  eventModality?: T;
+  brandName?: T;
+  userName?: T;
+  userEmail?: T;
+  userCompany?: T;
+  userRole?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }

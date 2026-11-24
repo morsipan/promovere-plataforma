@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { getMediaUrl } from '@/lib/media';
+import EventRegisterActions from '@/components/comunidad/EventRegisterActions';
 
 export const dynamic = 'force-dynamic';
 
@@ -139,6 +140,24 @@ export default async function WebinarDetailPage({ params }: WebinarPageProps) {
     });
 
     relatedWebinars = candidates.slice(0, 3);
+  } catch {}
+
+  // Verificar si el usuario ya está inscripto a este webinar/evento
+  let isAlreadyRegistered = false;
+  try {
+    const regCheck = await payload.find({
+      collection: 'event-registrations',
+      where: {
+        and: [
+          { user: { equals: user.id } },
+          { event: { equals: webinar.id } },
+          { status: { equals: 'registered' } },
+        ],
+      },
+      limit: 1,
+      overrideAccess: true,
+    });
+    isAlreadyRegistered = regCheck.docs.length > 0;
   } catch {}
 
   const embedUrl = getVideoEmbedUrl(webinar.recordingUrl);
@@ -328,19 +347,20 @@ export default async function WebinarDetailPage({ params }: WebinarPageProps) {
             )}
           </dl>
 
-          {/* Acciones del Webinar */}
+          {/* Acciones del Webinar (Inscripción 1 Clic + Google Calendar) */}
           <div className="pt-4 border-t border-slate-100 space-y-2.5">
-            {webinar.registrationUrl && webinar.modality !== 'on_demand' && (
-              <a
-                href={webinar.registrationUrl}
-                target={webinar.registrationUrl.startsWith('http') ? '_blank' : undefined}
-                rel={webinar.registrationUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#1b87c7] to-[#3cac59] text-white text-xs font-bold shadow-md hover:opacity-95 transition-opacity"
-              >
-                <span>Inscribirme al Webinar</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
-            )}
+            <EventRegisterActions
+              eventId={webinar.id}
+              title={webinar.title}
+              modality={webinar.modality}
+              eventDate={webinar.eventDate}
+              description={webinar.description}
+              locationOrPlatform={webinar.locationOrPlatform}
+              registrationUrl={webinar.registrationUrl}
+              initialRegistered={isAlreadyRegistered}
+              isAuthenticated={true}
+              fullWidth
+            />
 
             {materialUrl && (
               <a

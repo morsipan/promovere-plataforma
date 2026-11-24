@@ -20,6 +20,7 @@ import {
   Video,
 } from 'lucide-react';
 import { getMediaUrl } from '@/lib/media';
+import EventRegisterActions from './EventRegisterActions';
 
 export interface CalendarEventItem {
   id: string | number;
@@ -39,6 +40,7 @@ export interface CalendarEventItem {
 
 export interface CommunityEventsCalendarProps {
   events: CalendarEventItem[];
+  registeredEventIds?: string[];
   headingTextClass?: string;
 }
 
@@ -117,8 +119,12 @@ function formatTimeOnly(dateIso?: string | null): string {
 
 export default function CommunityEventsCalendar({
   events,
+  registeredEventIds = [],
   headingTextClass = 'text-[#4d4e4f]',
 }: CommunityEventsCalendarProps) {
+  const [registeredSet, setRegisteredSet] = useState<Set<string>>(
+    () => new Set(registeredEventIds.map(String))
+  );
   const [view, setView] = useState<CalendarView>('month');
   const [todayKey, setTodayKey] = useState<string>('');
   const [anchorDate, setAnchorDate] = useState<Date>(() => {
@@ -257,25 +263,36 @@ export default function CommunityEventsCalendar({
       pillClass: 'bg-slate-100 text-slate-700',
     };
 
+  const handleRegisteredChange = (eventId: string | number, registered: boolean) => {
+    setRegisteredSet((prev) => {
+      const next = new Set(prev);
+      if (registered) {
+        next.add(String(eventId));
+      } else {
+        next.delete(String(eventId));
+      }
+      return next;
+    });
+  };
+
   const renderEventActions = (ev: CalendarEventItem, compact = false) => {
     const materialUrl = getMediaUrl(ev.materialAttachment);
-    const ctaText = ev.modality === 'fam_trip' ? 'Postularme' : 'Inscribirme';
 
     return (
       <div className="flex flex-wrap items-center gap-2">
-        {ev.registrationUrl && ev.modality !== 'on_demand' && (
-          <a
-            href={ev.registrationUrl}
-            target={ev.registrationUrl.startsWith('http') ? '_blank' : undefined}
-            rel={ev.registrationUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className={`inline-flex items-center gap-1 rounded-xl bg-[#1b87c7] hover:bg-[#156d9f] text-white font-bold transition-colors ${
-              compact ? 'px-3 py-1.5 text-[11px]' : 'px-4 py-2 text-xs'
-            }`}
-          >
-            <span>{ctaText}</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </a>
-        )}
+        <EventRegisterActions
+          eventId={ev.id}
+          title={ev.title}
+          modality={ev.modality}
+          eventDate={ev.eventDate}
+          description={ev.description}
+          locationOrPlatform={ev.locationOrPlatform}
+          registrationUrl={ev.registrationUrl}
+          initialRegistered={registeredSet.has(String(ev.id))}
+          isAuthenticated={true}
+          compact={compact}
+          onRegisteredChange={handleRegisteredChange}
+        />
         {ev.recordingUrl && (
           <a
             href={ev.recordingUrl}
