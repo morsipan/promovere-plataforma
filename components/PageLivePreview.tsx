@@ -63,6 +63,8 @@ export interface PageLivePreviewProps {
   headerData?: any;
   footerData?: any;
   siteSettings?: any;
+  blogPosts?: any[];
+  pressItems?: any[];
   slug?: string;
 }
 
@@ -102,6 +104,8 @@ export default function PageLivePreview({
   headerData,
   footerData,
   siteSettings,
+  blogPosts,
+  pressItems,
   slug = 'home',
 }: PageLivePreviewProps) {
   const [liveData, setLiveData] = useState<any>(null);
@@ -161,9 +165,23 @@ export default function PageLivePreview({
       case 'partnersMarquee':
         return <PartnersMarquee key={`block-${index}`} data={block} />;
       case 'blog':
-        return <BlogSection key={`block-${index}`} data={block} hideViewAllCta={slug === 'blog'} />;
+        return (
+          <BlogSection
+            key={`block-${index}`}
+            data={block}
+            collectionPosts={blogPosts}
+            hideViewAllCta={slug === 'blog'}
+          />
+        );
       case 'press':
-        return <PressSection key={`block-${index}`} data={block} hideViewAllCta={slug === 'prensa'} />;
+        return (
+          <PressSection
+            key={`block-${index}`}
+            data={block}
+            collectionItems={pressItems}
+            hideViewAllCta={slug === 'prensa'}
+          />
+        );
       case 'communityHero':
         return <CommunityHero key={`block-${index}`} data={block} />;
       case 'communityCommercialTools':
@@ -255,19 +273,19 @@ export default function PageLivePreview({
           {layout.map((block, index) => (
             <div key={`block-wrap-${block.id || index}`}>
               {slug === 'home' && index === contactBlockIndex && !hasBlogBlock ? (
-                <BlogSection />
+                <BlogSection collectionPosts={blogPosts} />
               ) : null}
               {slug === 'home' && index === contactBlockIndex && !hasPressBlock ? (
-                <PressSection />
+                <PressSection collectionItems={pressItems} />
               ) : null}
               {renderBlock(block, index)}
             </div>
           ))}
           {slug === 'home' && contactBlockIndex === -1 && !hasBlogBlock ? (
-            <BlogSection />
+            <BlogSection collectionPosts={blogPosts} />
           ) : null}
           {slug === 'home' && contactBlockIndex === -1 && !hasPressBlock ? (
-            <PressSection />
+            <PressSection collectionItems={pressItems} />
           ) : null}
         </>
       ) : slug === 'home' ? (
@@ -278,8 +296,8 @@ export default function PageLivePreview({
           <RepresentationsSection />
           <DistributionSection />
           <PartnersSection />
-          <BlogSection />
-          <PressSection />
+          <BlogSection collectionPosts={blogPosts} />
+          <PressSection collectionItems={pressItems} />
           <ContactSection />
         </>
       ) : slug === 'comunidad' ? (

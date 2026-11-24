@@ -16,13 +16,14 @@ import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 
 export interface BlogPostCMS {
-  id?: string | null;
+  id?: string | number | null;
   slug?: string | null;
   title: string;
   category?: string | null;
   brand?: string | null;
   publishedDate?: string | null;
   excerpt: string;
+  content?: unknown;
   coverImage?: unknown;
   coverImageUrl?: string | null;
   image?: string | null;
@@ -39,7 +40,28 @@ export interface BlogSectionProps {
     ctaHref?: string | null;
     posts?: BlogPostCMS[] | null;
   };
+  collectionPosts?: BlogPostCMS[] | null;
   hideViewAllCta?: boolean;
+}
+
+function extractPlainContent(content: unknown): string {
+  if (!content) return '';
+  if (typeof content === 'string') return content;
+  if (typeof content === 'object' && content !== null && 'root' in content) {
+    try {
+      const texts: string[] = [];
+      const walk = (node: any) => {
+        if (!node) return;
+        if (typeof node.text === 'string') texts.push(node.text);
+        if (Array.isArray(node.children)) node.children.forEach(walk);
+      };
+      walk((content as any).root);
+      return texts.join(' ').trim();
+    } catch {
+      return '';
+    }
+  }
+  return '';
 }
 
 function formatDateEs(dateStr?: string | null): string {
@@ -53,7 +75,11 @@ function formatDateEs(dateStr?: string | null): string {
   });
 }
 
-export default function BlogSection({ data, hideViewAllCta = false }: BlogSectionProps = {}) {
+export default function BlogSection({
+  data,
+  collectionPosts,
+  hideViewAllCta = false,
+}: BlogSectionProps = {}) {
   const [activePost, setActivePost] = useState<BlogPostCMS | null>(null);
 
   const sectionAppearance = resolveAppearance(data?.appearance, {
@@ -70,8 +96,13 @@ export default function BlogSection({ data, hideViewAllCta = false }: BlogSectio
   const ctaLabel = data?.ctaLabel || blogContent.ctaLabel;
   const ctaHref = data?.ctaHref || blogContent.ctaHref;
 
+  // Prioridad: 1) Colección 'blog-posts' de /admin -> 2) Posts del bloque -> 3) Respaldo estático
   const posts: BlogPostCMS[] =
-    data?.posts && data.posts.length > 0 ? data.posts : blogContent.posts;
+    collectionPosts && collectionPosts.length > 0
+      ? collectionPosts
+      : data?.posts && data.posts.length > 0
+      ? data.posts
+      : blogContent.posts;
 
   return (
     <section
@@ -280,8 +311,8 @@ export default function BlogSection({ data, hideViewAllCta = false }: BlogSectio
                 {activePost.title}
               </h3>
 
-              <p className="text-sm sm:text-base text-[#4d4e4f]/85 leading-relaxed mb-6">
-                {activePost.excerpt}
+              <p className="text-sm sm:text-base text-[#4d4e4f]/85 leading-relaxed mb-6 whitespace-pre-line">
+                {extractPlainContent(activePost.content) || activePost.excerpt}
               </p>
 
               <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gray-100">

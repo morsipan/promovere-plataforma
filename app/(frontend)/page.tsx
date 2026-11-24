@@ -53,10 +53,12 @@ export default async function Home() {
   let headerData: any = null;
   let footerData: any = null;
   let siteSettings: any = null;
+  let blogPosts: any[] = [];
+  let pressItems: any[] = [];
 
   try {
     const payload = await getPayload({ config });
-    const [pagesRes, headerRes, footerRes, settingsRes] = await Promise.all([
+    const [pagesRes, headerRes, footerRes, settingsRes, blogRes, pressRes] = await Promise.all([
       payload
         .find({
           collection: 'pages',
@@ -72,6 +74,24 @@ export default async function Home() {
       payload.findGlobal({ slug: 'header', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'footer', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }).catch(() => null),
+      payload
+        .find({
+          collection: 'blog-posts',
+          where: { status: { equals: 'published' } },
+          sort: '-publishedDate',
+          depth: 1,
+          limit: 6,
+        })
+        .catch(() => ({ docs: [] })),
+      payload
+        .find({
+          collection: 'press-items',
+          where: { status: { equals: 'published' } },
+          sort: '-publishedDate',
+          depth: 1,
+          limit: 6,
+        })
+        .catch(() => ({ docs: [] })),
     ]);
 
     if (pagesRes?.docs && pagesRes.docs.length > 0) {
@@ -80,6 +100,8 @@ export default async function Home() {
     headerData = headerRes;
     footerData = footerRes;
     siteSettings = settingsRes;
+    blogPosts = blogRes?.docs || [];
+    pressItems = pressRes?.docs || [];
   } catch (error) {
     console.warn('Payload Pages: cargando contenido estático por defecto.');
   }
@@ -90,6 +112,8 @@ export default async function Home() {
       headerData={headerData}
       footerData={footerData}
       siteSettings={siteSettings}
+      blogPosts={blogPosts}
+      pressItems={pressItems}
       slug="home"
     />
   );

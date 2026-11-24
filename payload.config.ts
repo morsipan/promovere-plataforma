@@ -21,6 +21,8 @@ import { CommunityContent } from './collections/CommunityContent'
 import { Representations } from './collections/Representations'
 import { CommunityPromotions } from './collections/CommunityPromotions'
 import { CommunityEvents } from './collections/CommunityEvents'
+import { BlogPosts } from './collections/BlogPosts'
+import { PressItems } from './collections/PressItems'
 import { Media } from './collections/Media'
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
@@ -81,6 +83,8 @@ export default buildConfig({
   },
   collections: [
     Pages,
+    BlogPosts,
+    PressItems,
     Representations,
     CommunityContent,
     CommunityPromotions,

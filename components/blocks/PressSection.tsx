@@ -18,7 +18,7 @@ import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 
 export interface PressItemCMS {
-  id?: string | null;
+  id?: string | number | null;
   format: 'nota' | 'video';
   mediaOutlet: string;
   title: string;
@@ -30,6 +30,7 @@ export interface PressItemCMS {
   articleUrl?: string | null;
   videoUrl?: string | null;
   duration?: string | null;
+  mediaFile?: unknown;
 }
 
 export interface PressSectionProps {
@@ -45,6 +46,7 @@ export interface PressSectionProps {
     communityCtaHref?: string | null;
     items?: PressItemCMS[] | null;
   };
+  collectionItems?: PressItemCMS[] | null;
   hideViewAllCta?: boolean;
 }
 
@@ -82,7 +84,11 @@ function getEmbedUrl(rawUrl?: string | null): string | null {
   return null;
 }
 
-export default function PressSection({ data, hideViewAllCta = false }: PressSectionProps = {}) {
+export default function PressSection({
+  data,
+  collectionItems,
+  hideViewAllCta = false,
+}: PressSectionProps = {}) {
   const [filter, setFilter] = useState<'all' | 'nota' | 'video'>('all');
   const [activeVideo, setActiveVideo] = useState<PressItemCMS | null>(null);
 
@@ -103,8 +109,13 @@ export default function PressSection({ data, hideViewAllCta = false }: PressSect
   const communityCtaLabel = data?.communityCtaLabel || pressContent.communityCtaLabel;
   const communityCtaHref = data?.communityCtaHref || pressContent.communityCtaHref;
 
+  // Prioridad: 1) Colección 'press-items' de /admin -> 2) Items del bloque -> 3) Respaldo estático
   const items: PressItemCMS[] =
-    data?.items && data.items.length > 0 ? data.items : pressContent.items;
+    collectionItems && collectionItems.length > 0
+      ? collectionItems
+      : data?.items && data.items.length > 0
+      ? data.items
+      : pressContent.items;
 
   const filteredItems = useMemo(() => {
     if (filter === 'all') return items;
@@ -284,12 +295,19 @@ export default function PressSection({ data, hideViewAllCta = false }: PressSect
                       </button>
                     ) : (
                       <a
-                        href={item.articleUrl || '/prensa'}
-                        target={item.articleUrl?.startsWith('http') ? '_blank' : undefined}
-                        rel={item.articleUrl?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        href={item.articleUrl || getMediaUrl(item.mediaFile, '') || '/prensa'}
+                        target={
+                          (item.articleUrl || getMediaUrl(item.mediaFile, '')).startsWith('http') ||
+                          Boolean(getMediaUrl(item.mediaFile, ''))
+                            ? '_blank'
+                            : undefined
+                        }
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#1b87c7] hover:text-[#3cac59] transition-colors"
                       >
-                        <span>Leer nota en medio</span>
+                        <span>
+                          {item.articleUrl ? 'Leer nota en medio' : 'Ver cobertura / archivo'}
+                        </span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     )}

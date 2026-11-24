@@ -68,6 +68,8 @@ export interface Config {
   blocks: {};
   collections: {
     pages: Page;
+    'blog-posts': BlogPost;
+    'press-items': PressItem;
     representations: Representation;
     'community-content': CommunityContent;
     'community-promotions': CommunityPromotion;
@@ -82,6 +84,8 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
+    'blog-posts': BlogPostsSelect<false> | BlogPostsSelect<true>;
+    'press-items': PressItemsSelect<false> | PressItemsSelect<true>;
     representations: RepresentationsSelect<false> | RepresentationsSelect<true>;
     'community-content': CommunityContentSelect<false> | CommunityContentSelect<true>;
     'community-promotions': CommunityPromotionsSelect<false> | CommunityPromotionsSelect<true>;
@@ -1111,6 +1115,74 @@ export interface Media {
   focalY?: number | null;
 }
 /**
+ * Blog propio de Promovêre: novedades institucionales, lanzamientos y actualizaciones de las marcas representadas.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts".
+ */
+export interface BlogPost {
+  id: number;
+  title: string;
+  /**
+   * Bajada breve que se muestra en las tarjetas del Blog y en la Home.
+   */
+  excerpt: string;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  coverImage?: (number | null) | Media;
+  coverImageUrl?: string | null;
+  externalUrl?: string | null;
+  status: 'published' | 'draft';
+  publishedDate?: string | null;
+  slug?: string | null;
+  category?: string | null;
+  brand?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Sección unificada de Prensa: gestioná notas en medios externos, entrevistas y coberturas en video.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press-items".
+ */
+export interface PressItem {
+  id: number;
+  title: string;
+  /**
+   * Ej: Ladevi Medios, Mensajero Turístico, Trade TV.
+   */
+  mediaOutlet: string;
+  format: 'nota' | 'video';
+  summary: string;
+  articleUrl?: string | null;
+  videoUrl?: string | null;
+  duration?: string | null;
+  coverImage?: (number | null) | Media;
+  coverImageUrl?: string | null;
+  /**
+   * PDF de recorte de prensa, dossier o archivo multimedia descargable.
+   */
+  mediaFile?: (number | null) | Media;
+  status: 'published' | 'draft';
+  publishedDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Catálogo oficial de destinos, cadenas hoteleras y operadores representados por Promovêre. Alimenta el portal privado de la Comunidad.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1415,6 +1487,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pages';
         value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'blog-posts';
+        value: number | BlogPost;
+      } | null)
+    | ({
+        relationTo: 'press-items';
+        value: number | PressItem;
       } | null)
     | ({
         relationTo: 'representations';
@@ -2231,6 +2311,45 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts_select".
+ */
+export interface BlogPostsSelect<T extends boolean = true> {
+  title?: T;
+  excerpt?: T;
+  content?: T;
+  coverImage?: T;
+  coverImageUrl?: T;
+  externalUrl?: T;
+  status?: T;
+  publishedDate?: T;
+  slug?: T;
+  category?: T;
+  brand?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press-items_select".
+ */
+export interface PressItemsSelect<T extends boolean = true> {
+  title?: T;
+  mediaOutlet?: T;
+  format?: T;
+  summary?: T;
+  articleUrl?: T;
+  videoUrl?: T;
+  duration?: T;
+  coverImage?: T;
+  coverImageUrl?: T;
+  mediaFile?: T;
+  status?: T;
+  publishedDate?: T;
   updatedAt?: T;
   createdAt?: T;
 }
