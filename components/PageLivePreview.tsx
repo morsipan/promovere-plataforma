@@ -120,6 +120,9 @@ export default function PageLivePreview({
   const page = inIframe && liveData ? liveData : initialData;
   const layout = (page?.layout as any[]) || [];
   const heroBlock = layout.find((b) => b.blockType === 'hero');
+  const hasBlogBlock = layout.some((b) => b.blockType === 'blog');
+  const hasPressBlock = layout.some((b) => b.blockType === 'press');
+  const contactBlockIndex = layout.findIndex((b) => b.blockType === 'contact');
 
   const renderBlock = (block: any, index: number) => {
     switch (block.blockType) {
@@ -248,7 +251,25 @@ export default function PageLivePreview({
       <Navbar data={headerData} />
 
       {layout.length > 0 ? (
-        layout.map((block, index) => renderBlock(block, index))
+        <>
+          {layout.map((block, index) => (
+            <div key={`block-wrap-${block.id || index}`}>
+              {slug === 'home' && index === contactBlockIndex && !hasBlogBlock ? (
+                <BlogSection />
+              ) : null}
+              {slug === 'home' && index === contactBlockIndex && !hasPressBlock ? (
+                <PressSection />
+              ) : null}
+              {renderBlock(block, index)}
+            </div>
+          ))}
+          {slug === 'home' && contactBlockIndex === -1 && !hasBlogBlock ? (
+            <BlogSection />
+          ) : null}
+          {slug === 'home' && contactBlockIndex === -1 && !hasPressBlock ? (
+            <PressSection />
+          ) : null}
+        </>
       ) : slug === 'home' ? (
         // Fallback por defecto para la Home si aún no hay bloques cargados
         <>
