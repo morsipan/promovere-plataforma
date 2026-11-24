@@ -126,22 +126,28 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
                   ) : null}
                 </div>
 
-                {/* Contenido inferior */}
+                {/* Contenido inferior — Marca como título principal (no destino) */}
                 <div className="relative z-10 p-6 sm:p-8">
-                  {item.country ? (
+                  {item.country || item.title ? (
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#3cac59] uppercase tracking-wider mb-2 font-sans">
                       <MapPin className="w-3.5 h-3.5" />
-                      <span>{item.country}</span>
+                      <span>
+                        {item.title && item.title !== item.brand
+                          ? item.title
+                          : item.country}
+                      </span>
                     </div>
                   ) : null}
 
-                  <h3 className="text-2xl sm:text-3xl font-black text-white mb-1.5 leading-tight group-hover:text-[#3cac59] transition-colors font-heading">
-                    {item.title}
+                  <h3 className="text-2xl sm:text-3xl font-black text-white mb-2 leading-tight group-hover:text-[#3cac59] transition-colors font-heading">
+                    {item.brand || item.title}
                   </h3>
 
-                  <p className="text-sm font-semibold text-white/90 mb-3 font-sans">
-                    {item.brand}
-                  </p>
+                  {item.country && item.title && item.country !== item.title ? (
+                    <p className="text-xs font-semibold text-white/85 mb-2 font-sans">
+                      {item.country}
+                    </p>
+                  ) : null}
 
                   <p className="text-xs sm:text-sm text-white/80 leading-relaxed line-clamp-3 mb-4 font-sans">
                     {item.description}

@@ -4,8 +4,8 @@ import { createAppearanceField } from '../fields/appearance'
 export const PartnersBlock: Block = {
   slug: 'partners',
   labels: {
-    singular: 'Aliados Estratégicos (Cadenas y Partners)',
-    plural: 'Aliados Estratégicos',
+    singular: 'Nuestras Campañas (PR y Marketing)',
+    plural: 'Nuestras Campañas',
   },
   fields: [
     createAppearanceField({
@@ -16,25 +16,44 @@ export const PartnersBlock: Block = {
       name: 'badge',
       type: 'text',
       label: 'Badge / Etiqueta',
-      defaultValue: 'Nuestros Aliados',
+      defaultValue: 'Nuestras Campañas',
     },
     {
       name: 'title',
       type: 'text',
       label: 'Título de la Sección',
-      defaultValue: 'Empresas y Cadenas que Confían en Nosotros',
+      defaultValue: 'Nuestras Campañas de PR y Marketing',
     },
     {
       name: 'subtitle',
       type: 'textarea',
       label: 'Subtítulo',
       defaultValue:
-        'Trabajamos con los operadores mayoristas más prestigiosos, cadenas hoteleras internacionales y asociaciones clave del sector turístico regional.',
+        'Campañas activas de relaciones públicas, marketing turístico y posicionamiento anual diseñadas a medida para destinos y marcas en LATAM.',
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'ctaLabel',
+          type: 'text',
+          label: 'Texto del Botón CTA',
+          defaultValue: 'Quiero mi campaña anual',
+          admin: { width: '50%' },
+        },
+        {
+          name: 'ctaHref',
+          type: 'text',
+          label: 'Enlace del Botón CTA',
+          defaultValue: '#contacto',
+          admin: { width: '50%' },
+        },
+      ],
     },
     {
       name: 'partnersList',
       type: 'array',
-      label: 'Listado de Partners',
+      label: 'Listado de Campañas y Logos',
       fields: [
         {
           name: 'name',

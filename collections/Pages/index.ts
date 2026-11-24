@@ -28,6 +28,7 @@ import { ImpactBannerBlock } from './blocks/ImpactBanner'
 import { PartnersMarqueeBlock } from './blocks/PartnersMarquee'
 import { BlogBlock } from './blocks/Blog'
 import { PressBlock } from './blocks/Press'
+import { PrMetricsBlock } from './blocks/PrMetrics'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -264,6 +265,7 @@ export const Pages: CollectionConfig = {
         PartnersMarqueeBlock,
         BlogBlock,
         PressBlock,
+        PrMetricsBlock,
       ],
     },
   ],

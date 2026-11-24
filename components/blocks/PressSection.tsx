@@ -179,6 +179,10 @@ export default function PressSection({
           ) : null}
         </div>
 
+        {/* Anclas semánticas para enlaces del Footer: notas-de-prensa y entrevistas-y-coberturas */}
+        <div id="notas-de-prensa" className="scroll-mt-24" />
+        <div id="entrevistas-y-coberturas" className="scroll-mt-24" />
+
         {/* Filtros de Sección Unificada: Todo | Notas en Medios | Entrevistas & Videos */}
         <div className="flex flex-wrap items-center justify-center gap-2.5 mb-12" role="tablist" aria-label="Filtrar cobertura de prensa">
           {[

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Handshake } from 'lucide-react';
+import { Megaphone, ArrowRight } from 'lucide-react';
 import { partnersContent } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, AppearanceData } from '@/lib/appearance';
@@ -19,6 +19,8 @@ interface PartnersSectionProps {
     badge?: string;
     title?: string;
     subtitle?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
     partnersList?: PartnerItemCMS[];
   };
 }
@@ -31,9 +33,19 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
     overlayOpacity: 'media',
   });
 
-  const badge = data?.badge || partnersContent.badge;
-  const title = data?.title || partnersContent.title;
+  const rawBadge = data?.badge || partnersContent.badge;
+  const badge =
+    /alianzas?\s+estratégicas|nuestros\s+aliados/i.test(rawBadge)
+      ? 'Nuestras Campañas'
+      : rawBadge;
+  const rawTitle = data?.title || partnersContent.title;
+  const title =
+    /partners\s+y\s+aliados|alianzas?\s+estratégicas/i.test(rawTitle)
+      ? 'Nuestras Campañas de PR y Marketing'
+      : rawTitle;
   const subtitle = data?.subtitle || partnersContent.subtitle;
+  const ctaLabel = data?.ctaLabel || 'Quiero mi campaña anual';
+  const ctaHref = data?.ctaHref || '#contacto';
   const partners =
     data?.partnersList && data.partnersList.length > 0
       ? data.partnersList
@@ -60,12 +72,12 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
         <div className="text-center max-w-3xl mx-auto mb-16">
           {badge ? (
             <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider mb-4 font-sans ${sectionAppearance.badgeClass}`}>
-              <Handshake className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
+              <Megaphone className={`w-3.5 h-3.5 ${sectionAppearance.badgeIconClass}`} />
               {badge}
             </div>
           ) : null}
           {title ? (
-            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}>
+            <h2 className={`font-heading text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}>
               {title}
             </h2>
           ) : null}
@@ -136,13 +148,26 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
                 </div>
 
                 <div className={`mt-5 pt-3 border-t flex items-center justify-between text-xs font-semibold text-[#3cac59] font-sans ${sectionAppearance.borderClass}`}>
-                  <span>Alianza Comercial Activa</span>
+                  <span>Campaña PR & Marketing Activa</span>
                   <span className="w-2 h-2 rounded-full bg-[#3cac59]" />
                 </div>
               </div>
             );
           })}
         </div>
+
+        {/* CTA: Quiero mi campaña anual */}
+        {ctaLabel ? (
+          <div className="mt-14 text-center">
+            <a
+              href={ctaHref}
+              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-[#1b87c7] hover:bg-[#156d9f] text-white font-bold font-sans text-sm sm:text-base shadow-lg shadow-[#1b87c7]/25 hover:-translate-y-0.5 transition-all"
+            >
+              <span>{ctaLabel}</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        ) : null}
       </div>
     </section>
   );

@@ -87,7 +87,7 @@ export default function TestimonialsSection({ data }: TestimonialsSectionProps) 
             </div>
           ) : null}
           {title ? (
-            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}>
+            <h2 className={`font-heading text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 leading-tight ${sectionAppearance.titleClass}`}>
               {title}
             </h2>
           ) : null}

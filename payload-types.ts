@@ -391,6 +391,8 @@ export interface Page {
         badge?: string | null;
         title?: string | null;
         subtitle?: string | null;
+        ctaLabel?: string | null;
+        ctaHref?: string | null;
         partnersList?:
           | {
               name: string;
@@ -1083,6 +1085,38 @@ export interface Page {
         blockName?: string | null;
         blockType: 'press';
       }
+    | {
+        /**
+         * Seleccioná con 1 clic los colores del fondo y de cada elemento (iconos, botones, badges) manteniendo la identidad oficial.
+         */
+        appearance: {
+          backgroundColor: 'blancoHumo' | 'blanco' | 'grisOscuro' | 'verde' | 'azul' | 'transparente';
+          theme: 'light' | 'dark';
+          overlayOpacity?: ('ninguna' | 'sutil' | 'media' | 'intensa') | null;
+          accentColor?: ('azul' | 'verde' | 'grisOscuro' | 'blanco') | null;
+          buttonColor?: ('azul' | 'verde' | 'blanco' | 'oscuro') | null;
+          badgeColor?: ('verde' | 'azul' | 'gris' | 'blanco') | null;
+          /**
+           * Subí una foto de fondo opcional para esta sección. Se aplicará con cobertura total (cover) y capa de contraste.
+           */
+          backgroundImage?: (number | null) | Media;
+        };
+        badge?: string | null;
+        title: string;
+        subtitle?: string | null;
+        metrics?:
+          | {
+              metricKey: 'alcance' | 'ad_value' | 'eventos';
+              label: string;
+              value: string;
+              description?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'prMetrics';
+      }
   )[];
   meta?: {
     title?: string | null;
@@ -1765,6 +1799,8 @@ export interface PagesSelect<T extends boolean = true> {
               badge?: T;
               title?: T;
               subtitle?: T;
+              ctaLabel?: T;
+              ctaHref?: T;
               partnersList?:
                 | T
                 | {
@@ -2326,6 +2362,35 @@ export interface PagesSelect<T extends boolean = true> {
                     articleUrl?: T;
                     videoUrl?: T;
                     duration?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        prMetrics?:
+          | T
+          | {
+              appearance?:
+                | T
+                | {
+                    backgroundColor?: T;
+                    theme?: T;
+                    overlayOpacity?: T;
+                    accentColor?: T;
+                    buttonColor?: T;
+                    badgeColor?: T;
+                    backgroundImage?: T;
+                  };
+              badge?: T;
+              title?: T;
+              subtitle?: T;
+              metrics?:
+                | T
+                | {
+                    metricKey?: T;
+                    label?: T;
+                    value?: T;
+                    description?: T;
                     id?: T;
                   };
               id?: T;

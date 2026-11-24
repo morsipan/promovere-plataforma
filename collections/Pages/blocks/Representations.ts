@@ -16,7 +16,7 @@ export const RepresentationsBlock: Block = {
       name: 'badge',
       type: 'text',
       label: 'Badge / Etiqueta',
-      defaultValue: 'Nuestras Representaciones',
+      defaultValue: 'Nuestras REPS',
     },
     {
       name: 'title',

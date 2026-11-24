@@ -24,6 +24,7 @@ import ImpactBanner from '@/components/blocks/ImpactBanner';
 import PartnersMarquee from '@/components/blocks/PartnersMarquee';
 import BlogSection from '@/components/blocks/BlogSection';
 import PressSection from '@/components/blocks/PressSection';
+import PrMetricsSection from '@/components/blocks/PrMetricsSection';
 import CommunityHero from '@/components/comunidad/landing/CommunityHero';
 import CommercialToolsPreview from '@/components/comunidad/landing/CommercialToolsPreview';
 import PromotionsEventsPreview from '@/components/comunidad/landing/PromotionsEventsPreview';
@@ -126,6 +127,9 @@ export default function PageLivePreview({
   const heroBlock = layout.find((b) => b.blockType === 'hero');
   const hasBlogBlock = layout.some((b) => b.blockType === 'blog');
   const hasPressBlock = layout.some((b) => b.blockType === 'press');
+  const hasPrMetricsBlock = layout.some((b) => b.blockType === 'prMetrics');
+  const hasTestimonialsBlock = layout.some((b) => b.blockType === 'testimonials');
+  const distributionBlockIndex = layout.findIndex((b) => b.blockType === 'distribution');
   const contactBlockIndex = layout.findIndex((b) => b.blockType === 'contact');
 
   const renderBlock = (block: any, index: number) => {
@@ -182,6 +186,8 @@ export default function PageLivePreview({
             hideViewAllCta={slug === 'prensa'}
           />
         );
+      case 'prMetrics':
+        return <PrMetricsSection key={`block-${index}`} data={block} />;
       case 'communityHero':
         return <CommunityHero key={`block-${index}`} data={block} />;
       case 'communityCommercialTools':
@@ -272,6 +278,12 @@ export default function PageLivePreview({
         <>
           {layout.map((block, index) => (
             <div key={`block-wrap-${block.id || index}`}>
+              {slug === 'home' && index === distributionBlockIndex && !hasPrMetricsBlock ? (
+                <PrMetricsSection />
+              ) : null}
+              {slug === 'home' && index === contactBlockIndex && !hasTestimonialsBlock ? (
+                <TestimonialsSection />
+              ) : null}
               {slug === 'home' && index === contactBlockIndex && !hasBlogBlock ? (
                 <BlogSection collectionPosts={blogPosts} />
               ) : null}
@@ -281,6 +293,12 @@ export default function PageLivePreview({
               {renderBlock(block, index)}
             </div>
           ))}
+          {slug === 'home' && distributionBlockIndex === -1 && !hasPrMetricsBlock ? (
+            <PrMetricsSection />
+          ) : null}
+          {slug === 'home' && contactBlockIndex === -1 && !hasTestimonialsBlock ? (
+            <TestimonialsSection />
+          ) : null}
           {slug === 'home' && contactBlockIndex === -1 && !hasBlogBlock ? (
             <BlogSection collectionPosts={blogPosts} />
           ) : null}
@@ -294,8 +312,10 @@ export default function PageLivePreview({
           <HeroSection data={heroBlock} />
           <ServicesSection />
           <RepresentationsSection />
+          <PrMetricsSection />
           <DistributionSection />
           <PartnersSection />
+          <TestimonialsSection />
           <BlogSection collectionPosts={blogPosts} />
           <PressSection collectionItems={pressItems} />
           <ContactSection />
