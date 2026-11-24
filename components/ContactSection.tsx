@@ -52,19 +52,40 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
     name: '',
     email: '',
     company: '',
+    roleInterest: 'agencia_minorista',
     service: 'Representaciones Turísticas',
     message: '',
+    website_hp: '',
   });
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setSubmitted(true);
-    setLoading(false);
+    setErrorMsg(null);
+    try {
+      const res = await fetch('/api/forms/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          formType: 'contacto_comercial',
+          source: 'home-contact',
+        }),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result?.error || 'No pudimos enviar tu consulta. Intentá nuevamente.');
+      }
+      setSubmitted(true);
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'Error al enviar el formulario.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -235,6 +256,21 @@ export default function ContactSection({ data }: ContactSectionProps = {}) {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                <input
+                  type="text"
+                  name="website_hp"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website_hp}
+                  onChange={(e) => setFormData({ ...formData, website_hp: e.target.value })}
+                  className="hidden"
+                  aria-hidden="true"
+                />
+                {errorMsg ? (
+                  <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-semibold">
+                    {errorMsg}
+                  </div>
+                ) : null}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   {/* Nombre */}
                   <div>

@@ -1,31 +1,9 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
-import Script from 'next/script';
-import { Sparkles } from 'lucide-react';
-
-declare global {
-  interface Window {
-    Tally?: {
-      openPopup: (
-        formId: string,
-        options?: {
-          layout?: 'modal' | 'popup';
-          width?: number;
-          overlay?: boolean;
-          emoji?: {
-            text?: string;
-            animation?: 'wave' | 'bounce' | 'pulse' | 'tada' | 'fade-in' | 'none';
-          };
-          autoClose?: number;
-          hiddenFields?: Record<string, any>;
-        }
-      ) => void;
-      closePopup: (formId: string) => void;
-      loadEmbeds: () => void;
-    };
-  }
-}
+import React, { useState } from 'react';
+import { Sparkles, X } from 'lucide-react';
+import NativeLeadForm from '@/components/NativeLeadForm';
+import type { NativeFormType } from '@/lib/integrations/forms';
 
 export interface TallyBannerProps {
   /** Título principal del banner */
@@ -34,62 +12,36 @@ export interface TallyBannerProps {
   subtitle?: string;
   /** Texto del botón de acción */
   ctaText?: string;
-  /** ID del formulario de Tally (ej: "wL5kdN") */
+  /** Prop conservada por compatibilidad hacia atrás (reemplazado por formulario nativo Make/Doppler) */
   tallyFormId?: string;
+  /** Tipo de formulario nativo para segmentación en Make y Doppler */
+  formType?: NativeFormType;
+  /** Etiqueta de origen para analítica y segmentación */
+  source?: string;
   /** Badge / Etiqueta superior opcional */
   badge?: string;
   /** Variante de fondo: degradado corporativo, azul sólido o verde */
   backgroundVariant?: 'gradient' | 'blue' | 'green';
-  /** Emoji a mostrar en el modal de Tally */
-  emojiText?: string;
-  /** Animación del emoji de Tally */
-  emojiAnimation?: 'wave' | 'bounce' | 'pulse' | 'tada' | 'fade-in' | 'none';
-  /** Activar overlay oscuro de fondo al abrir modal */
-  overlay?: boolean;
-  /** Ancho en píxeles del modal */
-  modalWidth?: number;
   /** Clases CSS adicionales para el contenedor de la sección */
   className?: string;
 }
 
+/**
+ * Banner CTA con modal de Formulario Nativo conectado a Make y Doppler
+ * (reemplaza el embed externo de Tally manteniendo compatibilidad de props).
+ */
 export const TallyBanner: React.FC<TallyBannerProps> = ({
   title = '¿Listo para acelerar tus ventas turísticas en la región?',
-  subtitle = 'Conectamos tu marca hotelera o destino con más de 500 operadores mayoristas en LATAM. Coordiná una reunión con nuestro equipo completando un breve formulario.',
+  subtitle = 'Conectamos tu marca hotelera o destino con operadores mayoristas y agencias de viajes en LATAM. Coordiná una reunión con nuestro equipo.',
   ctaText = 'Contactar a Promovêre',
-  tallyFormId = 'wL5kdN',
+  formType = 'contacto_comercial',
+  source = 'cta-native-banner',
   badge = 'Atención Personalizada B2B',
   backgroundVariant = 'gradient',
-  emojiText = '👋',
-  emojiAnimation = 'wave',
-  overlay = true,
-  modalWidth = 700,
   className = '',
 }) => {
-  // Asegura que los embeds de Tally se vinculen al montar o cambiar el ID del formulario
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.Tally?.loadEmbeds) {
-      window.Tally.loadEmbeds();
-    }
-  }, [tallyFormId]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Handler seguro para abrir el popup incluso si el script tardó en vincular los data-attributes
-  const handleOpenPopup = useCallback(() => {
-    if (typeof window !== 'undefined' && window.Tally?.openPopup && tallyFormId) {
-      window.Tally.openPopup(tallyFormId, {
-        layout: 'modal',
-        width: modalWidth,
-        overlay: Boolean(overlay),
-        emoji: emojiText
-          ? {
-              text: emojiText,
-              animation: emojiAnimation,
-            }
-          : undefined,
-      });
-    }
-  }, [tallyFormId, modalWidth, overlay, emojiText, emojiAnimation]);
-
-  // Selección de fondo según variante corporativa
   const backgroundClasses = {
     gradient:
       'bg-gradient-to-r from-[#1b87c7] via-[#1b87c7] to-[#3cac59] shadow-2xl shadow-[#1b87c7]/20',
@@ -99,23 +51,10 @@ export const TallyBanner: React.FC<TallyBannerProps> = ({
 
   return (
     <>
-      {/* Script oficial de Tally.so cargado con lazyOnload para no bloquear el First Contentful Paint */}
-      <Script
-        id="tally-embed-script"
-        src="https://tally.so/widgets/embed.js"
-        strategy="lazyOnload"
-        onLoad={() => {
-          if (typeof window !== 'undefined' && window.Tally?.loadEmbeds) {
-            window.Tally.loadEmbeds();
-          }
-        }}
-      />
-
       <section
         className={`relative w-full overflow-hidden ${backgroundClasses} py-14 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 ${className}`}
         aria-label="Banner de contacto y llamado a la acción"
       >
-        {/* Elementos decorativos sutiles de fondo (iluminación ambiental de marca) */}
         <div
           className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white/10 blur-3xl pointer-events-none"
           aria-hidden="true"
@@ -124,14 +63,8 @@ export const TallyBanner: React.FC<TallyBannerProps> = ({
           className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[#3cac59]/30 blur-3xl pointer-events-none"
           aria-hidden="true"
         />
-        <div
-          className="absolute inset-0 bg-radial-[circle_at_center,_transparent_0%,_rgba(0,0,0,0.08)_100%] pointer-events-none"
-          aria-hidden="true"
-        />
 
-        {/* Contenedor centrado max-w-7xl */}
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center">
-          {/* Badge superior opcional */}
           {badge && (
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm font-semibold tracking-wide uppercase mb-4 shadow-xs">
               <Sparkles className="w-3.5 h-3.5 text-white/90" />
@@ -139,29 +72,20 @@ export const TallyBanner: React.FC<TallyBannerProps> = ({
             </div>
           )}
 
-          {/* Título: Tipografía Baloo Da 2 (font-baloo), alto contraste en blanco humo */}
-          <h2 className="font-baloo text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#f9f9f9] tracking-tight leading-tight max-w-4xl drop-shadow-sm mb-4">
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#f9f9f9] tracking-tight leading-tight max-w-4xl drop-shadow-sm mb-4">
             {title}
           </h2>
 
-          {/* Bajada: Tipografía Roboto (font-sans), legible, color blanco con alta opacidad */}
           {subtitle && (
             <p className="font-sans text-sm sm:text-base md:text-lg text-[#f9f9f9]/90 font-normal max-w-2xl leading-relaxed mb-8 sm:mb-10">
               {subtitle}
             </p>
           )}
 
-          {/* Botón Call To Action con atributos nativos de Tally.so Modal Popup */}
           <button
             type="button"
-            onClick={handleOpenPopup}
-            data-tally-open={tallyFormId}
-            data-tally-layout="modal"
-            data-tally-width={modalWidth}
-            data-tally-overlay={overlay ? '1' : '0'}
-            data-tally-emoji-text={emojiText}
-            data-tally-emoji-animation={emojiAnimation}
-            className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white text-[#1b87c7] font-bold text-base sm:text-lg shadow-xl shadow-black/15 hover:bg-[#f9f9f9] hover:text-[#4d4e4f] hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-hidden focus:ring-4 focus:ring-white/40"
+            onClick={() => setIsModalOpen(true)}
+            className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white text-[#1b87c7] font-bold font-sans text-base sm:text-lg shadow-xl shadow-black/15 hover:bg-[#f9f9f9] hover:text-[#4d4e4f] hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-hidden focus:ring-4 focus:ring-white/40"
             aria-label={ctaText}
           >
             <span>{ctaText}</span>
@@ -174,6 +98,45 @@ export const TallyBanner: React.FC<TallyBannerProps> = ({
           </button>
         </div>
       </section>
+
+      {/* Modal con Formulario Nativo (Make / Doppler) */}
+      {isModalOpen ? (
+        <div
+          className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className="bg-[#f9f9f9] rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl border border-gray-200 text-[#4d4e4f]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#3cac59] block">
+                  {badge}
+                </span>
+                <h3 className="font-heading text-xl font-bold text-[#4d4e4f]">{ctaText}</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                aria-label="Cerrar formulario"
+                className="p-2 rounded-xl bg-[#f9f9f9] hover:bg-gray-200 text-[#4d4e4f] transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 max-h-[80vh] overflow-y-auto">
+              <NativeLeadForm
+                formType={formType}
+                source={source}
+                submitLabel="Enviar consulta a Promovêre"
+                compact
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 };
