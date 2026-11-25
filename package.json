@@ -8,6 +8,7 @@
     "start": "next start",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
+    "import:press": "tsx --env-file=.env scripts/import-press.ts",
     "seed": "tsx --env-file=.env scripts/seed.ts"
   },
   "dependencies": {

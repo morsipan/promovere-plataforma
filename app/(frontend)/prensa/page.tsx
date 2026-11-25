@@ -42,9 +42,9 @@ export default async function PrensaPage() {
         .find({
           collection: 'press-items',
           where: { status: { equals: 'published' } },
-          sort: '-publishedDate',
+          sort: '-publishedDate,-createdAt',
           depth: 1,
-          limit: 50,
+          limit: 200,
         })
         .catch(() => ({ docs: [] })),
     ]);
