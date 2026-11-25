@@ -2813,8 +2813,16 @@ export interface BlogSetting {
          */
         order?: number | null;
         title?: string | null;
+        /**
+         * Banner horizontal principal para pantallas de escritorio.
+         */
         image?: (number | null) | Media;
+        /**
+         * Se usa en pantallas móviles (< 768px) para evitar recortes o mala lectura. Si no se carga, se utiliza automáticamente la imagen principal.
+         */
+        mobileImage?: (number | null) | Media;
         imageUrl?: string | null;
+        mobileImageUrl?: string | null;
         /**
          * Si se completa, abre en pestaña nueva (target="_blank"). Si queda vacío, se muestra solo como pieza visual.
          */
@@ -3300,7 +3308,9 @@ export interface BlogSettingsSelect<T extends boolean = true> {
         order?: T;
         title?: T;
         image?: T;
+        mobileImage?: T;
         imageUrl?: T;
+        mobileImageUrl?: T;
         href?: T;
         id?: T;
       };

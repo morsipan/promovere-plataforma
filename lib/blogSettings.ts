@@ -16,6 +16,8 @@ export interface BlogBannerItem {
   title?: string | null;
   image?: unknown;
   imageUrl?: string | null;
+  mobileImage?: unknown;
+  mobileImageUrl?: string | null;
   href?: string | null;
 }
 
@@ -23,6 +25,8 @@ export interface ResolvedBlogBanner {
   id: string;
   title: string;
   imageUrl: string;
+  mobileImageUrl: string;
+  hasDedicatedMobileImage: boolean;
   href: string | null;
   placement: BlogBannerPlacement;
 }
@@ -252,6 +256,9 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
   const resolvedBanners: ResolvedBlogBanner[] = (Array.isArray(raw?.banners) ? raw.banners : [])
     .map((b, idx) => {
       const imgUrl = getMediaUrl(b?.image, (b?.imageUrl || '').trim());
+      const dedicatedMobileUrl = getMediaUrl(b?.mobileImage, (b?.mobileImageUrl || '').trim());
+      const effectiveDesktopUrl = imgUrl || dedicatedMobileUrl;
+      const effectiveMobileUrl = dedicatedMobileUrl || imgUrl;
       const rawHref = (b?.href || '').trim();
       const href =
         rawHref.length > 0
@@ -268,13 +275,23 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
         order: typeof b?.order === 'number' && !Number.isNaN(b.order) ? b.order : idx,
         origIndex: idx,
         title: (b?.title || '').trim() || 'Banner Promovêre',
-        imageUrl: imgUrl,
+        imageUrl: effectiveDesktopUrl,
+        mobileImageUrl: effectiveMobileUrl,
+        hasDedicatedMobileImage: Boolean(dedicatedMobileUrl),
         href,
       };
     })
     .filter((b) => b.enabled && b.imageUrl.length > 0)
     .sort((a, b) => (a.order !== b.order ? a.order - b.order : a.origIndex - b.origIndex))
-    .map(({ id, title, imageUrl, href, placement }) => ({ id, title, imageUrl, href, placement }));
+    .map(({ id, title, imageUrl, mobileImageUrl, hasDedicatedMobileImage, href, placement }) => ({
+      id,
+      title,
+      imageUrl,
+      mobileImageUrl,
+      hasDedicatedMobileImage,
+      href,
+      placement,
+    }));
 
   return {
     blogTitle: (raw?.blogTitle || '').trim() || DEFAULT_TITLE,

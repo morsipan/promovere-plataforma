@@ -303,13 +303,38 @@ export const BlogSettings: GlobalConfig = {
                       name: 'image',
                       type: 'upload',
                       relationTo: 'media',
-                      label: 'Imagen del Banner (Media)',
-                      admin: { width: '50%' },
+                      label: 'Imagen del Banner — Escritorio (Media)',
+                      admin: {
+                        width: '50%',
+                        description: 'Banner horizontal principal para pantallas de escritorio.',
+                      },
                     },
+                    {
+                      name: 'mobileImage',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: 'Banner Responsive / Mobile (opcional)',
+                      admin: {
+                        width: '50%',
+                        description:
+                          'Se usa en pantallas móviles (< 768px) para evitar recortes o mala lectura. Si no se carga, se utiliza automáticamente la imagen principal.',
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
                     {
                       name: 'imageUrl',
                       type: 'text',
-                      label: 'URL de Imagen (Respaldo opcional)',
+                      label: 'URL de Imagen Escritorio (Respaldo opcional)',
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'mobileImageUrl',
+                      type: 'text',
+                      label: 'URL de Imagen Mobile (Respaldo opcional)',
                       admin: { width: '50%' },
                     },
                   ],
