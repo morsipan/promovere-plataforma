@@ -19,6 +19,8 @@ import {
 import { pressContent } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
+import { resolveBlogSettings, type BlogSettingsData } from '@/lib/blogSettings';
+import NewsInlineBanner from '@/components/blocks/NewsInlineBanner';
 
 export interface PressItemCMS {
   id?: string | number | null;
@@ -50,6 +52,7 @@ export interface PressSectionProps {
     items?: PressItemCMS[] | null;
   };
   collectionItems?: PressItemCMS[] | null;
+  blogSettings?: BlogSettingsData | null;
   hideViewAllCta?: boolean;
   showFilters?: boolean;
   maxItems?: number;
@@ -152,6 +155,7 @@ function getExternalDomainLabel(href: string | null): string | null {
 export default function PressSection({
   data,
   collectionItems,
+  blogSettings,
   hideViewAllCta = false,
   showFilters = false,
   maxItems,
@@ -163,6 +167,8 @@ export default function PressSection({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [activeVideo, setActiveVideo] = useState<PressItemCMS | null>(null);
   const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
+
+  const resolvedSettings = resolveBlogSettings(blogSettings);
 
   // Sincronizar filtro inicial con los anclajes del footer (#notas-de-prensa / #entrevistas-y-coberturas)
   useEffect(() => {
@@ -282,6 +288,30 @@ export default function PressSection({
 
   const hasActiveSearchFilters =
     searchQuery.trim().length > 0 || selectedOutlet !== 'all' || filter !== 'all';
+
+  // Banners activos para Prensa y Contenidos (solo en vista completa /prensa)
+  const activeBanners = useMemo(() => {
+    if (!showFilters) return [];
+    const allBanners = resolvedSettings.banners;
+    if (filter === 'nota') {
+      return allBanners.filter((b) => b.placement === 'ambos' || b.placement === 'prensa');
+    }
+    if (filter === 'video') {
+      return allBanners.filter((b) => b.placement === 'ambos' || b.placement === 'contenidos');
+    }
+    return allBanners;
+  }, [showFilters, resolvedSettings.banners, filter]);
+
+  const itemChunks = useMemo(() => {
+    if (!showFilters || activeBanners.length === 0) {
+      return [visibleItems];
+    }
+    const chunks: PressItemCMS[][] = [];
+    for (let i = 0; i < visibleItems.length; i += 4) {
+      chunks.push(visibleItems.slice(i, i + 4));
+    }
+    return chunks;
+  }, [visibleItems, showFilters, activeBanners.length]);
 
   const notesCount = items.filter((i) => i.format === 'nota').length;
   const videosCount = items.filter((i) => i.format === 'video').length;
@@ -447,8 +477,26 @@ export default function PressSection({
             </button>
           </div>
         ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {visibleItems.map((item, idx) => {
+          <div>
+            {itemChunks.map((chunk, chunkIdx) => {
+              const showBannerAfterChunk =
+                showFilters &&
+                activeBanners.length > 0 &&
+                (chunk.length === 4 ||
+                  (chunkIdx === itemChunks.length - 1 &&
+                    resolvedSettings.showBannerBeforePagination &&
+                    totalPages > 1));
+              const bannerRotationIdx =
+                ((safeCurrentPage - 1) * Math.max(1, itemChunks.length) + chunkIdx) %
+                Math.max(1, activeBanners.length);
+              const bannerForChunk = showBannerAfterChunk
+                ? activeBanners[bannerRotationIdx]
+                : null;
+
+              return (
+                <div key={`press-chunk-${safeCurrentPage}-${chunkIdx}`}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                    {chunk.map((item, idx) => {
             const isVideo = item.format === 'video';
             const itemKey = String(item.id || `press-item-${idx}`);
             const imgUrl =
@@ -637,8 +685,19 @@ export default function PressSection({
                 </div>
               </article>
             );
-          })}
-        </div>
+                    })}
+                  </div>
+
+                  {bannerForChunk ? (
+                    <NewsInlineBanner
+                      key={`press-banner-${safeCurrentPage}-${chunkIdx}-${bannerForChunk.id}`}
+                      banner={bannerForChunk}
+                    />
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
         )}
 
         {/* Controles de Paginación (en la vista completa /prensa) */}

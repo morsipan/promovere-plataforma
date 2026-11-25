@@ -2798,17 +2798,18 @@ export interface BlogSetting {
   accentColor?: ('azul' | 'verde' | 'grisOscuro') | null;
   cardBorderStyle?: ('subtle' | 'accent' | 'elevated') | null;
   /**
-   * En el Blog List de Promo News, además de intercalar un banner cada 4 posteos, muestra un banner limpio antes de los controles de paginación cuando corresponda.
+   * En Prensa y Contenidos, además de intercalar un banner cada 4 elementos, muestra un banner limpio antes de los controles de paginación cuando corresponda.
    */
   showBannerBeforePagination?: boolean | null;
   /**
-   * Cargá uno o más banners desde Media. Se intercalan automáticamente cada 4 posteos en el Blog List y rotan según el orden configurado.
+   * Cargá uno o más banners desde Media. Se muestran en Prensa y/o Contenidos (no en Blog propio) y rotan automáticamente cada 4 elementos según el orden configurado.
    */
   banners?:
     | {
         enabled?: boolean | null;
+        placement?: ('ambos' | 'prensa' | 'contenidos') | null;
         /**
-         * Menor número aparece primero.
+         * Menor primero.
          */
         order?: number | null;
         title?: string | null;
@@ -3295,6 +3296,7 @@ export interface BlogSettingsSelect<T extends boolean = true> {
     | T
     | {
         enabled?: T;
+        placement?: T;
         order?: T;
         title?: T;
         image?: T;

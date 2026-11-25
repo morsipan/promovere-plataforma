@@ -23,11 +23,12 @@ export default async function PrensaPage() {
   let headerData: any = null;
   let footerData: any = null;
   let siteSettings: any = null;
+  let blogSettings: any = null;
   let pressItems: any[] = [];
 
   try {
     const payload = await getPayload({ config });
-    const [{ docs }, headerRes, footerRes, settingsRes, pressRes] = await Promise.all([
+    const [{ docs }, headerRes, footerRes, settingsRes, blogSettingsRes, pressRes] = await Promise.all([
       payload
         .find({
           collection: 'pages',
@@ -39,6 +40,7 @@ export default async function PrensaPage() {
       payload.findGlobal({ slug: 'header', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'footer', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }).catch(() => null),
+      payload.findGlobal({ slug: 'blog-settings', depth: 2 }).catch(() => null),
       payload
         .find({
           collection: 'press-items',
@@ -56,6 +58,7 @@ export default async function PrensaPage() {
     headerData = headerRes;
     footerData = footerRes;
     siteSettings = settingsRes;
+    blogSettings = blogSettingsRes;
     pressItems = sortPressItemsNewestFirst(pressRes?.docs || []);
   } catch {
     // Fallback a contenido estático centralizado si aún no existe documento en CMS
@@ -68,6 +71,7 @@ export default async function PrensaPage() {
         headerData={headerData}
         footerData={footerData}
         siteSettings={siteSettings}
+        blogSettings={blogSettings}
         pressItems={pressItems}
         slug="prensa"
       />
@@ -123,7 +127,12 @@ export default async function PrensaPage() {
         </div>
       </section>
 
-      <PressSection collectionItems={pressItems} hideViewAllCta showFilters />
+      <PressSection
+        collectionItems={pressItems}
+        blogSettings={blogSettings}
+        hideViewAllCta
+        showFilters
+      />
 
       <Footer data={footerData} settings={siteSettings} />
     </main>

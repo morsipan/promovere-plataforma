@@ -188,6 +188,7 @@ export default function PageLivePreview({
             key={`block-${index}`}
             data={block}
             collectionItems={pressItems}
+            blogSettings={blogSettings}
             hideViewAllCta={slug === 'prensa'}
             showFilters={slug === 'prensa'}
             maxItems={slug === 'home' ? 6 : undefined}

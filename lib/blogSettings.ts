@@ -6,9 +6,12 @@ export type BlogHeaderTitleColor = 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azu
 export type BlogBadgeStyle = 'soft' | 'solid' | 'outline';
 export type BlogCardBorderStyle = 'subtle' | 'accent' | 'elevated';
 
+export type BlogBannerPlacement = 'ambos' | 'prensa' | 'contenidos';
+
 export interface BlogBannerItem {
   id?: string | null;
   enabled?: boolean | null;
+  placement?: BlogBannerPlacement | string | null;
   order?: number | null;
   title?: string | null;
   image?: unknown;
@@ -21,6 +24,7 @@ export interface ResolvedBlogBanner {
   title: string;
   imageUrl: string;
   href: string | null;
+  placement: BlogBannerPlacement;
 }
 
 export interface BlogSettingsData {
@@ -255,9 +259,12 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
             ? rawHref
             : `https://${rawHref}`
           : null;
+      const placement: BlogBannerPlacement =
+        b?.placement === 'prensa' || b?.placement === 'contenidos' ? b.placement : 'ambos';
       return {
         id: b?.id || `blog-banner-${idx}`,
         enabled: b?.enabled !== false,
+        placement,
         order: typeof b?.order === 'number' && !Number.isNaN(b.order) ? b.order : idx,
         origIndex: idx,
         title: (b?.title || '').trim() || 'Banner Promovêre',
@@ -267,7 +274,7 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
     })
     .filter((b) => b.enabled && b.imageUrl.length > 0)
     .sort((a, b) => (a.order !== b.order ? a.order - b.order : a.origIndex - b.origIndex))
-    .map(({ id, title, imageUrl, href }) => ({ id, title, imageUrl, href }));
+    .map(({ id, title, imageUrl, href, placement }) => ({ id, title, imageUrl, href, placement }));
 
   return {
     blogTitle: (raw?.blogTitle || '').trim() || DEFAULT_TITLE,

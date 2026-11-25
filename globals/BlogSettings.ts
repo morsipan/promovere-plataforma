@@ -18,6 +18,7 @@ export const BlogSettings: GlobalConfig = {
         try {
           revalidatePath('/')
           revalidatePath('/blog', 'layout')
+          revalidatePath('/prensa', 'layout')
         } catch {}
         return doc
       },
@@ -229,7 +230,7 @@ export const BlogSettings: GlobalConfig = {
           ],
         },
         {
-          label: 'Banners Publicitarios',
+          label: 'Banners Publicitarios (Prensa y Contenidos)',
           fields: [
             {
               name: 'showBannerBeforePagination',
@@ -238,20 +239,20 @@ export const BlogSettings: GlobalConfig = {
               defaultValue: true,
               admin: {
                 description:
-                  'En el Blog List de Promo News, además de intercalar un banner cada 4 posteos, muestra un banner limpio antes de los controles de paginación cuando corresponda.',
+                  'En Prensa y Contenidos, además de intercalar un banner cada 4 elementos, muestra un banner limpio antes de los controles de paginación cuando corresponda.',
               },
             },
             {
               name: 'banners',
               type: 'array',
-              label: 'Banners Intercalados en Promo News (cada 4 posteos)',
+              label: 'Banners Publicitarios para Prensa y Contenidos (cada 4 elementos)',
               labels: {
                 singular: 'Banner Publicitario',
                 plural: 'Banners Publicitarios',
               },
               admin: {
                 description:
-                  'Cargá uno o más banners desde Media. Se intercalan automáticamente cada 4 posteos en el Blog List y rotan según el orden configurado.',
+                  'Cargá uno o más banners desde Media. Se muestran en Prensa y/o Contenidos (no en Blog propio) y rotan automáticamente cada 4 elementos según el orden configurado.',
               },
               fields: [
                 {
@@ -262,23 +263,36 @@ export const BlogSettings: GlobalConfig = {
                       type: 'checkbox',
                       label: 'Banner activo',
                       defaultValue: true,
+                      admin: { width: '25%' },
+                    },
+                    {
+                      name: 'placement',
+                      type: 'select',
+                      enumName: 'enum_bs_bnr_plc',
+                      label: 'Ubicación',
+                      defaultValue: 'ambos',
+                      options: [
+                        { label: 'Prensa y Contenidos (Ambos)', value: 'ambos' },
+                        { label: 'Solo Prensa (Notas en Medios)', value: 'prensa' },
+                        { label: 'Solo Contenidos (Entrevistas y Coberturas)', value: 'contenidos' },
+                      ],
                       admin: { width: '35%' },
                     },
                     {
                       name: 'order',
                       type: 'number',
-                      label: 'Orden de rotación',
+                      label: 'Orden',
                       defaultValue: 0,
                       admin: {
-                        width: '35%',
-                        description: 'Menor número aparece primero.',
+                        width: '15%',
+                        description: 'Menor primero.',
                       },
                     },
                     {
                       name: 'title',
                       type: 'text',
                       label: 'Título / Alt (Opcional)',
-                      admin: { width: '30%' },
+                      admin: { width: '25%' },
                     },
                   ],
                 },
