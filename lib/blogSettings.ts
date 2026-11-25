@@ -31,6 +31,16 @@ export interface ResolvedBlogBanner {
   placement: BlogBannerPlacement;
 }
 
+export interface PromoNewsFeaturedBannerInput {
+  enabled?: boolean | null;
+  title?: string | null;
+  image?: unknown;
+  mobileImage?: unknown;
+  imageUrl?: string | null;
+  mobileImageUrl?: string | null;
+  href?: string | null;
+}
+
 export interface BlogSettingsData {
   blogTitle?: string | null;
   blogSubtitle?: string | null;
@@ -44,6 +54,8 @@ export interface BlogSettingsData {
   badgeStyle?: BlogBadgeStyle | string | null;
   accentColor?: BlogBrandColor | string | null;
   cardBorderStyle?: BlogCardBorderStyle | string | null;
+  promoNewsBanner1?: PromoNewsFeaturedBannerInput | null;
+  promoNewsBanner2?: PromoNewsFeaturedBannerInput | null;
   showBannerBeforePagination?: boolean | null;
   banners?: BlogBannerItem[] | null;
 }
@@ -71,6 +83,8 @@ export interface ResolvedBlogSettings {
   accentButtonClass: string;
   articleCardClass: string;
   listCardBorderClass: string;
+  promoNewsBanner1: ResolvedBlogBanner | null;
+  promoNewsBanner2: ResolvedBlogBanner | null;
   showBannerBeforePagination: boolean;
   banners: ResolvedBlogBanner[];
 }
@@ -293,6 +307,39 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
       placement,
     }));
 
+  const resolveSingleFeaturedBanner = (
+    input: PromoNewsFeaturedBannerInput | null | undefined,
+    id: string
+  ): ResolvedBlogBanner | null => {
+    if (!input || input.enabled !== true) return null;
+    const imgUrl = getMediaUrl(input.image, (input.imageUrl || '').trim());
+    const dedicatedMobileUrl = getMediaUrl(
+      input.mobileImage,
+      (input.mobileImageUrl || '').trim()
+    );
+    const effectiveDesktopUrl = imgUrl || dedicatedMobileUrl;
+    if (!effectiveDesktopUrl) return null;
+    const rawHref = (input.href || '').trim();
+    const href =
+      rawHref.length > 0
+        ? /^https?:\/\//i.test(rawHref) || rawHref.startsWith('/')
+          ? rawHref
+          : `https://${rawHref}`
+        : null;
+    return {
+      id,
+      title: (input.title || '').trim() || 'Banner Promo News',
+      imageUrl: effectiveDesktopUrl,
+      mobileImageUrl: dedicatedMobileUrl || effectiveDesktopUrl,
+      hasDedicatedMobileImage: Boolean(dedicatedMobileUrl),
+      href,
+      placement: 'ambos',
+    };
+  };
+
+  const promoNewsBanner1 = resolveSingleFeaturedBanner(raw?.promoNewsBanner1, 'promo-news-banner-1');
+  const promoNewsBanner2 = resolveSingleFeaturedBanner(raw?.promoNewsBanner2, 'promo-news-banner-2');
+
   return {
     blogTitle: (raw?.blogTitle || '').trim() || DEFAULT_TITLE,
     blogSubtitle: (raw?.blogSubtitle || '').trim() || DEFAULT_SUBTITLE,
@@ -316,6 +363,8 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
     accentButtonClass: accentButtonMap[accentColor],
     articleCardClass,
     listCardBorderClass,
+    promoNewsBanner1,
+    promoNewsBanner2,
     showBannerBeforePagination: raw?.showBannerBeforePagination !== false,
     banners: resolvedBanners,
   };

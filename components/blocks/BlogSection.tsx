@@ -19,6 +19,7 @@ import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 import { getBlogPostSlug, formatBlogDateUtc } from '@/lib/blog';
 import { resolveBlogSettings, type BlogSettingsData } from '@/lib/blogSettings';
+import NewsInlineBanner from '@/components/blocks/NewsInlineBanner';
 
 export interface BlogPostCMS {
   id?: string | number | null;
@@ -174,6 +175,113 @@ export default function BlogSection({
   const hasActiveFilters =
     searchQuery.trim().length > 0 || selectedBrand !== 'all' || selectedCategory !== 'all';
 
+  // Apartado A: secuencia editorial 1.er destacado → Banner 1 → 2.do destacado → Banner 2 → resto del listado
+  const useFeaturedSequence =
+    showFilters &&
+    safeCurrentPage === 1 &&
+    visiblePosts.length > 0 &&
+    Boolean(blogStyle.promoNewsBanner1 || blogStyle.promoNewsBanner2);
+
+  const featuredFirst = useFeaturedSequence ? visiblePosts[0] : null;
+  const featuredSecond = useFeaturedSequence && visiblePosts.length > 1 ? visiblePosts[1] : null;
+  const gridPosts = useFeaturedSequence ? visiblePosts.slice(2) : visiblePosts;
+
+  const renderFeaturedPostCard = (post: BlogPostCMS, rankLabel: string) => {
+    const postSlug = getBlogPostSlug(post);
+    const postHref = `/blog/${postSlug}`;
+    const postCategory = getNormalizedCategory(post.category);
+    const imgUrl = getMediaUrl(post.coverImage, post.coverImageUrl || post.image || '');
+    const formattedDate = formatBlogDateUtc(post.publishedDate);
+
+    return (
+      <article
+        key={`featured-${post.id ?? postSlug}-${rankLabel}`}
+        className={`group rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 grid grid-cols-1 lg:grid-cols-12 ${sectionAppearance.cardClass} ${blogStyle.listCardBorderClass}`}
+      >
+        <Link
+          href={postHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block relative lg:col-span-6 min-h-[240px] sm:min-h-[280px] overflow-hidden bg-[#4d4e4f]/10"
+        >
+          {imgUrl ? (
+            <Image
+              src={imgUrl}
+              alt={post.title}
+              fill
+              unoptimized
+              className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-[#4d4e4f] via-[#1b87c7] to-[#3cac59] flex items-center justify-center p-6">
+              <BookOpen className="w-12 h-12 text-white/40" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+          {blogStyle.showCategory ? (
+            <span
+              className={`absolute top-4 left-4 inline-flex items-center gap-1 px-3 py-1 rounded-full border text-[11px] font-bold uppercase tracking-wider shadow-sm ${blogStyle.categoryListBadgeClass}`}
+            >
+              <Tag className="w-3 h-3" />
+              <span>{postCategory}</span>
+            </span>
+          ) : null}
+        </Link>
+
+        <div className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between">
+          <div>
+            <div className="flex flex-wrap items-center gap-3 text-xs mb-3">
+              {blogStyle.showBrand && post.brand ? (
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border font-bold ${blogStyle.tagListBadgeClass}`}
+                >
+                  <Building2 className="w-3.5 h-3.5" />
+                  <span>{post.brand}</span>
+                </span>
+              ) : null}
+              {blogStyle.showDate && formattedDate ? (
+                <span className={`inline-flex items-center gap-1 ${sectionAppearance.cardSubtextClass}`}>
+                  <Calendar className="w-3.5 h-3.5" />
+                  <time dateTime={post.publishedDate || undefined}>{formattedDate}</time>
+                </span>
+              ) : null}
+            </div>
+
+            <h3
+              className={`font-heading text-2xl sm:text-3xl font-bold leading-snug mb-3 transition-colors ${sectionAppearance.cardTitleClass}`}
+            >
+              <Link
+                href={postHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`transition-colors ${blogStyle.accentHoverTextClass}`}
+              >
+                {post.title}
+              </Link>
+            </h3>
+
+            <p className={`text-sm sm:text-base leading-relaxed line-clamp-4 ${sectionAppearance.cardSubtextClass}`}>
+              {post.excerpt}
+            </p>
+          </div>
+
+          <div className={`mt-6 pt-4 border-t flex items-center justify-between gap-3 ${sectionAppearance.borderClass}`}>
+            <Link
+              href={postHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex items-center gap-1.5 text-sm font-bold hover:text-[#3cac59] transition-colors ${blogStyle.accentTextClass}`}
+            >
+              <span>Leer artículo completo</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </article>
+    );
+  };
+
   return (
     <section
       id="blog"
@@ -317,8 +425,29 @@ export default function BlogSection({
             </button>
           </div>
         ) : (
+          <div>
+            {/* Secuencia Apartado A: 1.er destacado → Banner 1 → 2.do destacado → Banner 2 */}
+            {useFeaturedSequence ? (
+              <div className="mb-10">
+                {featuredFirst ? renderFeaturedPostCard(featuredFirst, '1') : null}
+                {blogStyle.promoNewsBanner1 ? (
+                  <NewsInlineBanner banner={blogStyle.promoNewsBanner1} />
+                ) : null}
+                {featuredSecond ? (
+                  <div className={blogStyle.promoNewsBanner1 ? '' : 'mt-6'}>
+                    {renderFeaturedPostCard(featuredSecond, '2')}
+                  </div>
+                ) : null}
+                {blogStyle.promoNewsBanner2 ? (
+                  <NewsInlineBanner banner={blogStyle.promoNewsBanner2} />
+                ) : null}
+              </div>
+            ) : null}
+
+            {/* Resto del listado en grilla */}
+            {gridPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {visiblePosts.map((post, idx) => {
+            {gridPosts.map((post, idx) => {
               const postSlug = getBlogPostSlug(post);
               const postHref = `/blog/${postSlug}`;
               const postCategory = getNormalizedCategory(post.category);
@@ -424,6 +553,8 @@ export default function BlogSection({
                 </article>
               );
             })}
+          </div>
+            ) : null}
           </div>
         )}
 

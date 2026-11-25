@@ -2798,6 +2798,48 @@ export interface BlogSetting {
   accentColor?: ('azul' | 'verde' | 'grisOscuro') | null;
   cardBorderStyle?: ('subtle' | 'accent' | 'elevated') | null;
   /**
+   * Se muestra en Promo News (/blog) inmediatamente después del primer posteo destacado.
+   */
+  promoNewsBanner1?: {
+    enabled?: boolean | null;
+    title?: string | null;
+    /**
+     * Banner horizontal para pantallas de escritorio.
+     */
+    image?: (number | null) | Media;
+    /**
+     * Se muestra en pantallas móviles (< 768px). Si no se carga, usa la imagen principal.
+     */
+    mobileImage?: (number | null) | Media;
+    imageUrl?: string | null;
+    mobileImageUrl?: string | null;
+    /**
+     * Si se completa, abre en pestaña nueva (target="_blank"). Si queda vacío, se muestra solo como pieza visual.
+     */
+    href?: string | null;
+  };
+  /**
+   * Se muestra en Promo News (/blog) después del segundo posteo destacado y antes del resto del listado.
+   */
+  promoNewsBanner2?: {
+    enabled?: boolean | null;
+    title?: string | null;
+    /**
+     * Banner horizontal para pantallas de escritorio.
+     */
+    image?: (number | null) | Media;
+    /**
+     * Se muestra en pantallas móviles (< 768px). Si no se carga, usa la imagen principal.
+     */
+    mobileImage?: (number | null) | Media;
+    imageUrl?: string | null;
+    mobileImageUrl?: string | null;
+    /**
+     * Si se completa, abre en pestaña nueva (target="_blank"). Si queda vacío, se muestra solo como pieza visual.
+     */
+    href?: string | null;
+  };
+  /**
    * En Prensa y Contenidos, además de intercalar un banner cada 4 elementos, muestra un banner limpio antes de los controles de paginación cuando corresponda.
    */
   showBannerBeforePagination?: boolean | null;
@@ -3299,6 +3341,28 @@ export interface BlogSettingsSelect<T extends boolean = true> {
   badgeStyle?: T;
   accentColor?: T;
   cardBorderStyle?: T;
+  promoNewsBanner1?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        image?: T;
+        mobileImage?: T;
+        imageUrl?: T;
+        mobileImageUrl?: T;
+        href?: T;
+      };
+  promoNewsBanner2?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        image?: T;
+        mobileImage?: T;
+        imageUrl?: T;
+        mobileImageUrl?: T;
+        href?: T;
+      };
   showBannerBeforePagination?: T;
   banners?:
     | T

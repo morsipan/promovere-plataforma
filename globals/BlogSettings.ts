@@ -230,7 +230,174 @@ export const BlogSettings: GlobalConfig = {
           ],
         },
         {
-          label: 'Banners Publicitarios (Prensa y Contenidos)',
+          label: 'Banners Promo News (Destacados)',
+          fields: [
+            {
+              name: 'promoNewsBanner1',
+              type: 'group',
+              label: 'Banner 1 — Después del 1.er Posteo Destacado',
+              admin: {
+                description:
+                  'Se muestra en Promo News (/blog) inmediatamente después del primer posteo destacado.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'enabled',
+                      type: 'checkbox',
+                      label: 'Banner 1 activo',
+                      defaultValue: false,
+                      admin: { width: '35%' },
+                    },
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Título / Alt (Opcional)',
+                      admin: { width: '65%' },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'image',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: 'Imagen Principal — Escritorio (Media)',
+                      admin: {
+                        width: '50%',
+                        description: 'Banner horizontal para pantallas de escritorio.',
+                      },
+                    },
+                    {
+                      name: 'mobileImage',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: 'Banner Responsive / Mobile (opcional)',
+                      admin: {
+                        width: '50%',
+                        description:
+                          'Se muestra en pantallas móviles (< 768px). Si no se carga, usa la imagen principal.',
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'imageUrl',
+                      type: 'text',
+                      label: 'URL de Imagen Escritorio (Respaldo opcional)',
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'mobileImageUrl',
+                      type: 'text',
+                      label: 'URL de Imagen Mobile (Respaldo opcional)',
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+                {
+                  name: 'href',
+                  type: 'text',
+                  label: 'Enlace externo (Opcional)',
+                  admin: {
+                    description:
+                      'Si se completa, abre en pestaña nueva (target="_blank"). Si queda vacío, se muestra solo como pieza visual.',
+                  },
+                },
+              ],
+            },
+            {
+              name: 'promoNewsBanner2',
+              type: 'group',
+              label: 'Banner 2 — Después del 2.do Posteo Destacado',
+              admin: {
+                description:
+                  'Se muestra en Promo News (/blog) después del segundo posteo destacado y antes del resto del listado.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'enabled',
+                      type: 'checkbox',
+                      label: 'Banner 2 activo',
+                      defaultValue: false,
+                      admin: { width: '35%' },
+                    },
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Título / Alt (Opcional)',
+                      admin: { width: '65%' },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'image',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: 'Imagen Principal — Escritorio (Media)',
+                      admin: {
+                        width: '50%',
+                        description: 'Banner horizontal para pantallas de escritorio.',
+                      },
+                    },
+                    {
+                      name: 'mobileImage',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: 'Banner Responsive / Mobile (opcional)',
+                      admin: {
+                        width: '50%',
+                        description:
+                          'Se muestra en pantallas móviles (< 768px). Si no se carga, usa la imagen principal.',
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'imageUrl',
+                      type: 'text',
+                      label: 'URL de Imagen Escritorio (Respaldo opcional)',
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'mobileImageUrl',
+                      type: 'text',
+                      label: 'URL de Imagen Mobile (Respaldo opcional)',
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+                {
+                  name: 'href',
+                  type: 'text',
+                  label: 'Enlace externo (Opcional)',
+                  admin: {
+                    description:
+                      'Si se completa, abre en pestaña nueva (target="_blank"). Si queda vacío, se muestra solo como pieza visual.',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Banners News (Prensa y Contenidos)',
           fields: [
             {
               name: 'showBannerBeforePagination',
