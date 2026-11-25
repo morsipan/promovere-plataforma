@@ -2784,6 +2784,26 @@ export interface BlogSetting {
   showCategory?: boolean | null;
   showBrand?: boolean | null;
   /**
+   * Configurá el título general, etiqueta superior, bajada introductoria y opciones de visualización para la vista pública de Prensa (/prensa y Notas en Medios).
+   */
+  pressConfig?: {
+    badge?: string | null;
+    title?: string | null;
+    subtitle?: string | null;
+    showDate?: boolean | null;
+    showOutletBadge?: boolean | null;
+  };
+  /**
+   * Configurá el título general, etiqueta superior, bajada introductoria y opciones de visualización para la vista de Contenidos (Entrevistas y Videos).
+   */
+  contentsConfig?: {
+    badge?: string | null;
+    title?: string | null;
+    subtitle?: string | null;
+    showDate?: boolean | null;
+    showOutletBadge?: boolean | null;
+  };
+  /**
    * Aplica a los badges de categoría en todos los artículos y en el listado.
    */
   categoryColor?: ('azul' | 'verde' | 'grisOscuro') | null;
@@ -3336,6 +3356,24 @@ export interface BlogSettingsSelect<T extends boolean = true> {
   showDate?: T;
   showCategory?: T;
   showBrand?: T;
+  pressConfig?:
+    | T
+    | {
+        badge?: T;
+        title?: T;
+        subtitle?: T;
+        showDate?: T;
+        showOutletBadge?: T;
+      };
+  contentsConfig?:
+    | T
+    | {
+        badge?: T;
+        title?: T;
+        subtitle?: T;
+        showDate?: T;
+        showOutletBadge?: T;
+      };
   categoryColor?: T;
   tagColor?: T;
   badgeStyle?: T;

@@ -41,6 +41,22 @@ export interface PromoNewsFeaturedBannerInput {
   href?: string | null;
 }
 
+export interface EditorialSectionConfigInput {
+  badge?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  showDate?: boolean | null;
+  showOutletBadge?: boolean | null;
+}
+
+export interface ResolvedEditorialSectionConfig {
+  badge: string;
+  title: string;
+  subtitle: string;
+  showDate: boolean;
+  showOutletBadge: boolean;
+}
+
 export interface BlogSettingsData {
   blogTitle?: string | null;
   blogSubtitle?: string | null;
@@ -49,6 +65,8 @@ export interface BlogSettingsData {
   showDate?: boolean | null;
   showCategory?: boolean | null;
   showBrand?: boolean | null;
+  pressConfig?: EditorialSectionConfigInput | null;
+  contentsConfig?: EditorialSectionConfigInput | null;
   categoryColor?: BlogBrandColor | string | null;
   tagColor?: BlogBrandColor | string | null;
   badgeStyle?: BlogBadgeStyle | string | null;
@@ -71,6 +89,8 @@ export interface ResolvedBlogSettings {
   showDate: boolean;
   showCategory: boolean;
   showBrand: boolean;
+  pressConfig: ResolvedEditorialSectionConfig;
+  contentsConfig: ResolvedEditorialSectionConfig;
   categoryHeaderBadgeClass: string;
   categoryListBadgeClass: string;
   tagHeaderBadgeClass: string;
@@ -340,6 +360,28 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
   const promoNewsBanner1 = resolveSingleFeaturedBanner(raw?.promoNewsBanner1, 'promo-news-banner-1');
   const promoNewsBanner2 = resolveSingleFeaturedBanner(raw?.promoNewsBanner2, 'promo-news-banner-2');
 
+  const pressConfig: ResolvedEditorialSectionConfig = {
+    badge: (raw?.pressConfig?.badge || '').trim() || 'Prensa & Medios',
+    title: (raw?.pressConfig?.title || '').trim() || 'Promovêre en Prensa, Entrevistas y Videos',
+    subtitle:
+      (raw?.pressConfig?.subtitle || '').trim() ||
+      'Un único espacio que reúne nuestras apariciones en medios especializados del trade turístico junto con entrevistas, participaciones en ferias y coberturas audiovisuales.',
+    showDate: raw?.pressConfig?.showDate !== false,
+    showOutletBadge: raw?.pressConfig?.showOutletBadge !== false,
+  };
+
+  const contentsConfig: ResolvedEditorialSectionConfig = {
+    badge: (raw?.contentsConfig?.badge || '').trim() || 'Entrevistas y Coberturas',
+    title:
+      (raw?.contentsConfig?.title || '').trim() ||
+      'Entrevistas, Ferias y Coberturas Audiovisuales',
+    subtitle:
+      (raw?.contentsConfig?.subtitle || '').trim() ||
+      'Reviví nuestras entrevistas en medios, programas especiales de destinos y coberturas audiovisuales de la industria turística.',
+    showDate: raw?.contentsConfig?.showDate !== false,
+    showOutletBadge: raw?.contentsConfig?.showOutletBadge !== false,
+  };
+
   return {
     blogTitle: (raw?.blogTitle || '').trim() || DEFAULT_TITLE,
     blogSubtitle: (raw?.blogSubtitle || '').trim() || DEFAULT_SUBTITLE,
@@ -351,6 +393,8 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
     showDate: raw?.showDate !== false,
     showCategory: raw?.showCategory !== false,
     showBrand: raw?.showBrand !== false,
+    pressConfig,
+    contentsConfig,
     categoryHeaderBadgeClass: buildBadgeClasses(categoryColor, badgeStyle, !isLightHeader),
     categoryListBadgeClass: buildListOverlayBadgeClasses(categoryColor, badgeStyle),
     tagHeaderBadgeClass: buildBadgeClasses(tagColor, badgeStyle, !isLightHeader),

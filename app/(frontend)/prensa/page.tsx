@@ -9,6 +9,7 @@ import PageLivePreview from '@/components/PageLivePreview';
 import PressSection from '@/components/blocks/PressSection';
 import { pressContent } from '@/data/content';
 import { sortPressItemsNewestFirst } from '@/lib/press';
+import { resolveBlogSettings } from '@/lib/blogSettings';
 
 export const revalidate = 3600;
 
@@ -78,6 +79,8 @@ export default async function PrensaPage() {
     );
   }
 
+  const resolvedEditorial = resolveBlogSettings(blogSettings);
+
   return (
     <main className="min-h-screen bg-[#f9f9f9] text-[#4d4e4f] font-sans">
       <Navbar data={headerData} />
@@ -98,14 +101,14 @@ export default async function PrensaPage() {
 
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b87c7]/25 border border-[#1b87c7]/40 text-[#f9f9f9] text-xs font-bold uppercase tracking-wider mb-4 block w-fit">
             <Newspaper className="w-3.5 h-3.5 text-[#3cac59]" />
-            <span>{pressContent.badge}</span>
+            <span>{resolvedEditorial.pressConfig.badge || pressContent.badge}</span>
           </div>
 
           <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight mb-4 max-w-3xl">
-            {pressContent.title}
+            {resolvedEditorial.pressConfig.title || pressContent.title}
           </h1>
           <p className="text-base sm:text-lg text-[#f9f9f9]/80 max-w-2xl leading-relaxed mb-8">
-            {pressContent.subtitle}
+            {resolvedEditorial.pressConfig.subtitle || pressContent.subtitle}
           </p>
 
           <div className="flex flex-wrap items-center gap-3">

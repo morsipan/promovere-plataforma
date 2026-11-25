@@ -211,9 +211,21 @@ export default function PressSection({
     badgeColor: 'azul',
   });
 
-  const badge = data?.badge || pressContent.badge;
-  const title = data?.title || pressContent.title;
-  const subtitle = data?.subtitle || pressContent.subtitle;
+  const activeEditorialConfig =
+    showFilters && filter === 'video'
+      ? resolvedSettings.contentsConfig
+      : resolvedSettings.pressConfig;
+
+  const badge =
+    (showFilters ? activeEditorialConfig.badge : data?.badge || resolvedSettings.pressConfig.badge) ||
+    pressContent.badge;
+  const title =
+    (showFilters ? activeEditorialConfig.title : data?.title || resolvedSettings.pressConfig.title) ||
+    pressContent.title;
+  const subtitle =
+    (showFilters
+      ? activeEditorialConfig.subtitle
+      : data?.subtitle || resolvedSettings.pressConfig.subtitle) || pressContent.subtitle;
   const allPressLabel = data?.allPressLabel || pressContent.allPressLabel;
   const allPressHref = data?.allPressHref || pressContent.allPressHref;
   const showCommunityBanner = data?.showCommunityBanner !== false;
@@ -601,10 +613,19 @@ export default function PressSection({
                 <div className="p-6 flex flex-col justify-between flex-1">
                   <div>
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2">
-                      <span className="font-bold text-[#1b87c7] uppercase tracking-wide">
-                        {item.mediaOutlet}
-                      </span>
-                      {item.publishedDate ? (
+                      {(isVideo
+                        ? resolvedSettings.contentsConfig.showOutletBadge
+                        : resolvedSettings.pressConfig.showOutletBadge) ? (
+                        <span className="font-bold text-[#1b87c7] uppercase tracking-wide">
+                          {item.mediaOutlet}
+                        </span>
+                      ) : (
+                        <span />
+                      )}
+                      {item.publishedDate &&
+                      (isVideo
+                        ? resolvedSettings.contentsConfig.showDate
+                        : resolvedSettings.pressConfig.showDate) ? (
                         <span
                           className={`inline-flex items-center gap-1 ${sectionAppearance.cardSubtextClass}`}
                         >

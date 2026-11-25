@@ -130,6 +130,128 @@ export const BlogSettings: GlobalConfig = {
           ],
         },
         {
+          label: 'Configuración de Prensa',
+          fields: [
+            {
+              name: 'pressConfig',
+              type: 'group',
+              label: 'Encabezado y Opciones de Prensa (Notas en Medios)',
+              admin: {
+                description:
+                  'Configurá el título general, etiqueta superior, bajada introductoria y opciones de visualización para la vista pública de Prensa (/prensa y Notas en Medios).',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'badge',
+                      type: 'text',
+                      label: 'Etiqueta Superior (Badge)',
+                      defaultValue: 'Prensa & Medios',
+                      admin: { width: '40%' },
+                    },
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Título General de Prensa',
+                      defaultValue: 'Promovêre en Prensa, Entrevistas y Videos',
+                      admin: { width: '60%' },
+                    },
+                  ],
+                },
+                {
+                  name: 'subtitle',
+                  type: 'textarea',
+                  label: 'Bajada / Descripción Introductoria',
+                  defaultValue:
+                    'Un único espacio que reúne nuestras apariciones en medios especializados del trade turístico junto con entrevistas, participaciones en ferias y coberturas audiovisuales.',
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'showDate',
+                      type: 'checkbox',
+                      label: 'Mostrar fecha en las notas de Prensa',
+                      defaultValue: true,
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'showOutletBadge',
+                      type: 'checkbox',
+                      label: 'Mostrar nombre del medio / fuente',
+                      defaultValue: true,
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Configuración de Contenidos',
+          fields: [
+            {
+              name: 'contentsConfig',
+              type: 'group',
+              label: 'Encabezado y Opciones de Contenidos (Entrevistas y Coberturas)',
+              admin: {
+                description:
+                  'Configurá el título general, etiqueta superior, bajada introductoria y opciones de visualización para la vista de Contenidos (Entrevistas y Videos).',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'badge',
+                      type: 'text',
+                      label: 'Etiqueta Superior (Badge)',
+                      defaultValue: 'Entrevistas y Coberturas',
+                      admin: { width: '40%' },
+                    },
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Título General de Contenidos',
+                      defaultValue: 'Entrevistas, Ferias y Coberturas Audiovisuales',
+                      admin: { width: '60%' },
+                    },
+                  ],
+                },
+                {
+                  name: 'subtitle',
+                  type: 'textarea',
+                  label: 'Bajada / Descripción Introductoria',
+                  defaultValue:
+                    'Reviví nuestras entrevistas en medios, programas especiales de destinos y coberturas audiovisuales de la industria turística.',
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'showDate',
+                      type: 'checkbox',
+                      label: 'Mostrar fecha en videos y coberturas',
+                      defaultValue: true,
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'showOutletBadge',
+                      type: 'checkbox',
+                      label: 'Mostrar programa / canal de emisión',
+                      defaultValue: true,
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Etiquetas, Categorías y Tags',
           fields: [
             {
