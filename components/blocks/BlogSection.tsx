@@ -18,7 +18,7 @@ import { blogContent } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 import { getBlogPostSlug, formatBlogDateUtc } from '@/lib/blog';
-import { resolveBlogSettings, type BlogSettingsData } from '@/lib/blogSettings';
+import { resolveBlogSettings, type BlogSettingsData, type ResolvedBlogBanner } from '@/lib/blogSettings';
 
 export interface BlogPostCMS {
   id?: string | number | null;
@@ -56,6 +56,46 @@ export interface BlogSectionProps {
 function getNormalizedCategory(cat?: string | null): string {
   const cleaned = (cat || '').trim();
   return cleaned.length > 0 ? cleaned : 'Promo News';
+}
+
+function BlogInlineBanner({ banner }: { banner: ResolvedBlogBanner }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed || !banner.imageUrl) return null;
+
+  const content = (
+    <div className="relative w-full overflow-hidden rounded-3xl border border-gray-200/80 bg-white shadow-sm hover:shadow-md transition-shadow">
+      <div className="relative w-full aspect-[16/4] sm:aspect-[21/4] min-h-[110px] max-h-[260px] bg-[#f9f9f9]">
+        <Image
+          src={banner.imageUrl}
+          alt={banner.title}
+          fill
+          unoptimized
+          onError={() => setFailed(true)}
+          className="object-cover object-center"
+          sizes="(max-width: 1280px) 100vw, 1216px"
+        />
+      </div>
+    </div>
+  );
+
+  if (banner.href) {
+    return (
+      <div className="my-8">
+        <a
+          href={banner.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={banner.title}
+          className="block group focus:outline-none focus:ring-2 focus:ring-[#1b87c7] rounded-3xl"
+        >
+          {content}
+        </a>
+      </div>
+    );
+  }
+
+  return <figure className="my-8">{content}</figure>;
 }
 
 export default function BlogSection({
@@ -173,6 +213,20 @@ export default function BlogSection({
 
   const hasActiveFilters =
     searchQuery.trim().length > 0 || selectedBrand !== 'all' || selectedCategory !== 'all';
+
+  const activeBanners = showFilters ? blogStyle.banners : [];
+
+  // Agrupar los posteos visibles en bloques de 4 cuando hay banners activos en el Blog List
+  const postChunks = useMemo(() => {
+    if (!showFilters || activeBanners.length === 0) {
+      return [visiblePosts];
+    }
+    const chunks: BlogPostCMS[][] = [];
+    for (let i = 0; i < visiblePosts.length; i += 4) {
+      chunks.push(visiblePosts.slice(i, i + 4));
+    }
+    return chunks;
+  }, [visiblePosts, showFilters, activeBanners.length]);
 
   return (
     <section
@@ -317,111 +371,146 @@ export default function BlogSection({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {visiblePosts.map((post, idx) => {
-              const postSlug = getBlogPostSlug(post);
-              const postHref = `/blog/${postSlug}`;
-              const postCategory = getNormalizedCategory(post.category);
-              const imgUrl = getMediaUrl(
-                post.coverImage,
-                post.coverImageUrl || post.image || ''
-              );
-              const formattedDate = formatBlogDateUtc(post.publishedDate);
+          <div>
+            {postChunks.map((chunk, chunkIdx) => {
+              const showBannerAfterChunk =
+                showFilters &&
+                activeBanners.length > 0 &&
+                (chunk.length === 4 ||
+                  (chunkIdx === postChunks.length - 1 &&
+                    blogStyle.showBannerBeforePagination &&
+                    totalPages > 1));
+              const bannerRotationIdx =
+                ((safeCurrentPage - 1) * Math.max(1, postChunks.length) + chunkIdx) %
+                Math.max(1, activeBanners.length);
+              const bannerForChunk = showBannerAfterChunk
+                ? activeBanners[bannerRotationIdx]
+                : null;
 
               return (
-                <article
-                  key={`${post.id ?? postSlug}-${idx}`}
-                  className={`group rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${sectionAppearance.cardClass} ${blogStyle.listCardBorderClass}`}
-                >
-                  <div>
-                    <Link
-                      href={postHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block relative h-52 w-full overflow-hidden bg-[#4d4e4f]/10"
-                    >
-                      {imgUrl ? (
-                        <Image
-                          src={imgUrl}
-                          alt={post.title}
-                          fill
-                          unoptimized
-                          className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#4d4e4f] via-[#1b87c7] to-[#3cac59] flex items-center justify-center p-6">
-                          <BookOpen className="w-10 h-10 text-white/40" />
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-                      {blogStyle.showCategory ? (
-                        <span
-                          className={`absolute top-4 left-4 inline-flex items-center gap-1 px-3 py-1 rounded-full border text-[11px] font-bold uppercase tracking-wider shadow-sm ${blogStyle.categoryListBadgeClass}`}
-                        >
-                          <Tag className="w-3 h-3" />
-                          <span>{postCategory}</span>
-                        </span>
-                      ) : null}
-                    </Link>
-
-                    <div className="p-6 sm:p-7">
-                      <div className="flex flex-wrap items-center gap-3 text-xs mb-3">
-                        {blogStyle.showBrand && post.brand ? (
-                          <span
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border font-bold ${blogStyle.tagListBadgeClass}`}
-                          >
-                            <Building2 className="w-3.5 h-3.5" />
-                            <span>{post.brand}</span>
-                          </span>
-                        ) : null}
-                        {blogStyle.showDate && formattedDate ? (
-                          <span
-                            className={`inline-flex items-center gap-1 ${sectionAppearance.cardSubtextClass}`}
-                          >
-                            <Calendar className="w-3.5 h-3.5" />
-                            <time dateTime={post.publishedDate || undefined}>
-                              {formattedDate}
-                            </time>
-                          </span>
-                        ) : null}
-                      </div>
-
-                      <h3
-                        className={`font-heading text-xl font-bold leading-snug mb-3 transition-colors ${sectionAppearance.cardTitleClass}`}
-                      >
-                        <Link
-                          href={postHref}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`transition-colors ${blogStyle.accentHoverTextClass}`}
-                        >
-                          {post.title}
-                        </Link>
-                      </h3>
-
-                      <p
-                        className={`text-sm leading-relaxed line-clamp-3 ${sectionAppearance.cardSubtextClass}`}
-                      >
-                        {post.excerpt}
-                      </p>
-                    </div>
-                  </div>
-
+                <div key={`chunk-${safeCurrentPage}-${chunkIdx}`}>
                   <div
-                    className={`px-6 sm:px-7 py-4 border-t flex items-center justify-between gap-3 ${sectionAppearance.borderClass}`}
+                    className={
+                      showFilters && activeBanners.length > 0
+                        ? 'grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8'
+                        : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8'
+                    }
                   >
-                    <Link
-                      href={postHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold hover:text-[#3cac59] transition-colors ${blogStyle.accentTextClass}`}
-                    >
-                      <span>Leer artículo completo</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    {chunk.map((post, idx) => {
+                      const postSlug = getBlogPostSlug(post);
+                      const postHref = `/blog/${postSlug}`;
+                      const postCategory = getNormalizedCategory(post.category);
+                      const imgUrl = getMediaUrl(
+                        post.coverImage,
+                        post.coverImageUrl || post.image || ''
+                      );
+                      const formattedDate = formatBlogDateUtc(post.publishedDate);
+
+                      return (
+                        <article
+                          key={`${post.id ?? postSlug}-${chunkIdx}-${idx}`}
+                          className={`group rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${sectionAppearance.cardClass} ${blogStyle.listCardBorderClass}`}
+                        >
+                          <div>
+                            <Link
+                              href={postHref}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block relative h-52 w-full overflow-hidden bg-[#4d4e4f]/10"
+                            >
+                              {imgUrl ? (
+                                <Image
+                                  src={imgUrl}
+                                  alt={post.title}
+                                  fill
+                                  unoptimized
+                                  className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-[#4d4e4f] via-[#1b87c7] to-[#3cac59] flex items-center justify-center p-6">
+                                  <BookOpen className="w-10 h-10 text-white/40" />
+                                </div>
+                              )}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                              {blogStyle.showCategory ? (
+                                <span
+                                  className={`absolute top-4 left-4 inline-flex items-center gap-1 px-3 py-1 rounded-full border text-[11px] font-bold uppercase tracking-wider shadow-sm ${blogStyle.categoryListBadgeClass}`}
+                                >
+                                  <Tag className="w-3 h-3" />
+                                  <span>{postCategory}</span>
+                                </span>
+                              ) : null}
+                            </Link>
+
+                            <div className="p-6 sm:p-7">
+                              <div className="flex flex-wrap items-center gap-3 text-xs mb-3">
+                                {blogStyle.showBrand && post.brand ? (
+                                  <span
+                                    className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border font-bold ${blogStyle.tagListBadgeClass}`}
+                                  >
+                                    <Building2 className="w-3.5 h-3.5" />
+                                    <span>{post.brand}</span>
+                                  </span>
+                                ) : null}
+                                {blogStyle.showDate && formattedDate ? (
+                                  <span
+                                    className={`inline-flex items-center gap-1 ${sectionAppearance.cardSubtextClass}`}
+                                  >
+                                    <Calendar className="w-3.5 h-3.5" />
+                                    <time dateTime={post.publishedDate || undefined}>
+                                      {formattedDate}
+                                    </time>
+                                  </span>
+                                ) : null}
+                              </div>
+
+                              <h3
+                                className={`font-heading text-xl font-bold leading-snug mb-3 transition-colors ${sectionAppearance.cardTitleClass}`}
+                              >
+                                <Link
+                                  href={postHref}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`transition-colors ${blogStyle.accentHoverTextClass}`}
+                                >
+                                  {post.title}
+                                </Link>
+                              </h3>
+
+                              <p
+                                className={`text-sm leading-relaxed line-clamp-3 ${sectionAppearance.cardSubtextClass}`}
+                              >
+                                {post.excerpt}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div
+                            className={`px-6 sm:px-7 py-4 border-t flex items-center justify-between gap-3 ${sectionAppearance.borderClass}`}
+                          >
+                            <Link
+                              href={postHref}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold hover:text-[#3cac59] transition-colors ${blogStyle.accentTextClass}`}
+                            >
+                              <span>Leer artículo completo</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </Link>
+                          </div>
+                        </article>
+                      );
+                    })}
                   </div>
-                </article>
+
+                  {bannerForChunk ? (
+                    <BlogInlineBanner
+                      key={`banner-${safeCurrentPage}-${chunkIdx}-${bannerForChunk.id}`}
+                      banner={bannerForChunk}
+                    />
+                  ) : null}
+                </div>
               );
             })}
           </div>

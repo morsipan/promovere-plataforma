@@ -1,8 +1,27 @@
+import { getMediaUrl } from '@/lib/media';
+
 export type BlogBrandColor = 'azul' | 'verde' | 'grisOscuro';
 export type BlogHeaderBackground = 'grisOscuro' | 'azul' | 'verde' | 'blancoHumo';
 export type BlogHeaderTitleColor = 'blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde';
 export type BlogBadgeStyle = 'soft' | 'solid' | 'outline';
 export type BlogCardBorderStyle = 'subtle' | 'accent' | 'elevated';
+
+export interface BlogBannerItem {
+  id?: string | null;
+  enabled?: boolean | null;
+  order?: number | null;
+  title?: string | null;
+  image?: unknown;
+  imageUrl?: string | null;
+  href?: string | null;
+}
+
+export interface ResolvedBlogBanner {
+  id: string;
+  title: string;
+  imageUrl: string;
+  href: string | null;
+}
 
 export interface BlogSettingsData {
   blogTitle?: string | null;
@@ -17,6 +36,8 @@ export interface BlogSettingsData {
   badgeStyle?: BlogBadgeStyle | string | null;
   accentColor?: BlogBrandColor | string | null;
   cardBorderStyle?: BlogCardBorderStyle | string | null;
+  showBannerBeforePagination?: boolean | null;
+  banners?: BlogBannerItem[] | null;
 }
 
 export interface ResolvedBlogSettings {
@@ -42,6 +63,8 @@ export interface ResolvedBlogSettings {
   accentButtonClass: string;
   articleCardClass: string;
   listCardBorderClass: string;
+  showBannerBeforePagination: boolean;
+  banners: ResolvedBlogBanner[];
 }
 
 const DEFAULT_TITLE = 'Promo News';
@@ -222,6 +245,30 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
       ? 'shadow-lg shadow-[#4d4e4f]/10'
       : '';
 
+  const resolvedBanners: ResolvedBlogBanner[] = (Array.isArray(raw?.banners) ? raw.banners : [])
+    .map((b, idx) => {
+      const imgUrl = getMediaUrl(b?.image, (b?.imageUrl || '').trim());
+      const rawHref = (b?.href || '').trim();
+      const href =
+        rawHref.length > 0
+          ? /^https?:\/\//i.test(rawHref) || rawHref.startsWith('/')
+            ? rawHref
+            : `https://${rawHref}`
+          : null;
+      return {
+        id: b?.id || `blog-banner-${idx}`,
+        enabled: b?.enabled !== false,
+        order: typeof b?.order === 'number' && !Number.isNaN(b.order) ? b.order : idx,
+        origIndex: idx,
+        title: (b?.title || '').trim() || 'Banner Promovêre',
+        imageUrl: imgUrl,
+        href,
+      };
+    })
+    .filter((b) => b.enabled && b.imageUrl.length > 0)
+    .sort((a, b) => (a.order !== b.order ? a.order - b.order : a.origIndex - b.origIndex))
+    .map(({ id, title, imageUrl, href }) => ({ id, title, imageUrl, href }));
+
   return {
     blogTitle: (raw?.blogTitle || '').trim() || DEFAULT_TITLE,
     blogSubtitle: (raw?.blogSubtitle || '').trim() || DEFAULT_SUBTITLE,
@@ -245,5 +292,7 @@ export function resolveBlogSettings(raw?: BlogSettingsData | null): ResolvedBlog
     accentButtonClass: accentButtonMap[accentColor],
     articleCardClass,
     listCardBorderClass,
+    showBannerBeforePagination: raw?.showBannerBeforePagination !== false,
+    banners: resolvedBanners,
   };
 }

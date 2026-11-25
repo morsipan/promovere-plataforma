@@ -40,7 +40,7 @@ export default async function BlogPage() {
       payload.findGlobal({ slug: 'header', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'footer', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }).catch(() => null),
-      payload.findGlobal({ slug: 'blog-settings', depth: 1 }).catch(() => null),
+      payload.findGlobal({ slug: 'blog-settings', depth: 2 }).catch(() => null),
       payload
         .find({
           collection: 'blog-posts',

@@ -228,6 +228,91 @@ export const BlogSettings: GlobalConfig = {
             },
           ],
         },
+        {
+          label: 'Banners Publicitarios',
+          fields: [
+            {
+              name: 'showBannerBeforePagination',
+              type: 'checkbox',
+              label: 'Mostrar banner antes de la paginación',
+              defaultValue: true,
+              admin: {
+                description:
+                  'En el Blog List de Promo News, además de intercalar un banner cada 4 posteos, muestra un banner limpio antes de los controles de paginación cuando corresponda.',
+              },
+            },
+            {
+              name: 'banners',
+              type: 'array',
+              label: 'Banners Intercalados en Promo News (cada 4 posteos)',
+              labels: {
+                singular: 'Banner Publicitario',
+                plural: 'Banners Publicitarios',
+              },
+              admin: {
+                description:
+                  'Cargá uno o más banners desde Media. Se intercalan automáticamente cada 4 posteos en el Blog List y rotan según el orden configurado.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'enabled',
+                      type: 'checkbox',
+                      label: 'Banner activo',
+                      defaultValue: true,
+                      admin: { width: '35%' },
+                    },
+                    {
+                      name: 'order',
+                      type: 'number',
+                      label: 'Orden de rotación',
+                      defaultValue: 0,
+                      admin: {
+                        width: '35%',
+                        description: 'Menor número aparece primero.',
+                      },
+                    },
+                    {
+                      name: 'title',
+                      type: 'text',
+                      label: 'Título / Alt (Opcional)',
+                      admin: { width: '30%' },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'image',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: 'Imagen del Banner (Media)',
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'imageUrl',
+                      type: 'text',
+                      label: 'URL de Imagen (Respaldo opcional)',
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+                {
+                  name: 'href',
+                  type: 'text',
+                  label: 'Enlace externo (Opcional)',
+                  admin: {
+                    description:
+                      'Si se completa, abre en pestaña nueva (target="_blank"). Si queda vacío, se muestra solo como pieza visual.',
+                  },
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],
