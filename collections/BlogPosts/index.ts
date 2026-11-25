@@ -24,7 +24,7 @@ export const BlogPosts: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'brand', 'category', 'publishedDate', 'status'],
-    group: 'Sitios',
+    group: 'News',
     description:
       'Blog propio de Promovêre: novedades institucionales, lanzamientos y actualizaciones de las marcas representadas.',
   },

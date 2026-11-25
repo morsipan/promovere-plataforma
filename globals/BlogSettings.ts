@@ -7,7 +7,7 @@ const isInternalTeam = ({ req: { user } }: { req: { user?: any } }) =>
 export const BlogSettings: GlobalConfig = {
   slug: 'blog-settings',
   dbName: 'blog_settings',
-  label: 'Ajustes de Blog',
+  label: 'Ajustes de blog',
   access: {
     read: () => true,
     update: isInternalTeam,
@@ -24,7 +24,7 @@ export const BlogSettings: GlobalConfig = {
     ],
   },
   admin: {
-    group: 'Sitios',
+    group: 'News',
     description:
       'Configuración visual y editorial general para Promo News (listado y todos los posteos individuales del Blog).',
   },

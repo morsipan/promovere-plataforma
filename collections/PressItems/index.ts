@@ -13,7 +13,7 @@ export const PressItems: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'mediaOutlet', 'format', 'publishedDate', 'status'],
-    group: 'Sitios',
+    group: 'News',
     description:
       'Sección unificada de Prensa: gestioná notas en medios externos, entrevistas y coberturas en video.',
   },
