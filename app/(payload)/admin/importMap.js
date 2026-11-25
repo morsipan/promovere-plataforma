@@ -33,6 +33,7 @@ import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../componen
 import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { AdminRememberMe as AdminRememberMe_c7d7978054547d8837484ff9efd636e5 } from '../../../components/admin/AdminRememberMe'
 import { AdminSidebarUser as AdminSidebarUser_063de36e47cb8208665cb492ec3cbda2 } from '../../../components/admin/AdminSidebarUser'
+import { AdminAnalyticsView as AdminAnalyticsView_55d38702e4d86d52435b5ac4df3f55d0 } from '../../../components/admin/AdminAnalyticsView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
@@ -74,6 +75,7 @@ export const importMap = {
   "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,
   "/components/admin/AdminRememberMe#AdminRememberMe": AdminRememberMe_c7d7978054547d8837484ff9efd636e5,
   "/components/admin/AdminSidebarUser#AdminSidebarUser": AdminSidebarUser_063de36e47cb8208665cb492ec3cbda2,
+  "/components/admin/AdminAnalyticsView#AdminAnalyticsView": AdminAnalyticsView_55d38702e4d86d52435b5ac4df3f55d0,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24

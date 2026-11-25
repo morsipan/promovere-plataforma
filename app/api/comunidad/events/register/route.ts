@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import { getPayload } from 'payload';
 import config from '@payload-config';
 import { headers } from 'next/headers';
+import {
+  inferDeviceFromUserAgent,
+  recordAnalyticsEventServer,
+} from '@/lib/analyticsServer';
 
 export async function POST(request: Request) {
   try {
@@ -105,6 +109,14 @@ export async function POST(request: Request) {
         status: 'registered',
       },
       overrideAccess: true,
+    });
+
+    void recordAnalyticsEventServer({
+      eventType: 'conversion',
+      path: '/comunidad/dashboard',
+      label: `webinar:${eventDoc.modality || 'inscripcion'}`,
+      section: 'comunidad',
+      device: inferDeviceFromUserAgent(request.headers.get('user-agent')),
     });
 
     return NextResponse.json({

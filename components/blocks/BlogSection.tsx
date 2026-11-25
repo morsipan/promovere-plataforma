@@ -20,6 +20,7 @@ import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 import { getBlogPostSlug, formatBlogDateUtc } from '@/lib/blog';
 import { resolveBlogSettings, type BlogSettingsData } from '@/lib/blogSettings';
 import NewsInlineBanner from '@/components/blocks/NewsInlineBanner';
+import { trackEvent } from '@/lib/analytics';
 
 export interface BlogPostCMS {
   id?: string | number | null;
@@ -431,7 +432,7 @@ export default function BlogSection({
               <div className="mb-10">
                 {featuredFirst ? renderFeaturedPostCard(featuredFirst, '1') : null}
                 {blogStyle.promoNewsBanner1 ? (
-                  <NewsInlineBanner banner={blogStyle.promoNewsBanner1} />
+                  <NewsInlineBanner banner={blogStyle.promoNewsBanner1} section="promo-news" />
                 ) : null}
                 {featuredSecond ? (
                   <div className={blogStyle.promoNewsBanner1 ? '' : 'mt-6'}>
@@ -439,7 +440,7 @@ export default function BlogSection({
                   </div>
                 ) : null}
                 {blogStyle.promoNewsBanner2 ? (
-                  <NewsInlineBanner banner={blogStyle.promoNewsBanner2} />
+                  <NewsInlineBanner banner={blogStyle.promoNewsBanner2} section="promo-news" />
                 ) : null}
               </div>
             ) : null}
@@ -544,6 +545,13 @@ export default function BlogSection({
                       href={postHref}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        trackEvent({
+                          eventType: 'click',
+                          label: `blog:${post.brand || 'Promo News'}`,
+                          section: 'promo-news',
+                        })
+                      }
                       className={`inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold hover:text-[#3cac59] transition-colors ${blogStyle.accentTextClass}`}
                     >
                       <span>Leer artículo completo</span>

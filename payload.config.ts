@@ -24,6 +24,7 @@ import { CommunityEvents } from './collections/CommunityEvents'
 import { EventRegistrations } from './collections/EventRegistrations'
 import { BlogPosts } from './collections/BlogPosts'
 import { PressItems } from './collections/PressItems'
+import { AnalyticsEvents } from './collections/AnalyticsEvents'
 import { Media } from './collections/Media'
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
@@ -76,6 +77,12 @@ export default buildConfig({
     },
     components: {
       Nav: '/components/admin/AdminNav#AdminNav',
+      views: {
+        analytics: {
+          Component: '/components/admin/AdminAnalyticsView#AdminAnalyticsView',
+          path: '/analytics',
+        },
+      },
       graphics: {
         Logo: '/components/admin/Logo#Logo',
         Icon: '/components/admin/Icon#Icon',
@@ -93,6 +100,7 @@ export default buildConfig({
     CommunityPromotions,
     CommunityEvents,
     EventRegistrations,
+    AnalyticsEvents,
     Users,
     Media,
   ],

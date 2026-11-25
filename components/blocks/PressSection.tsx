@@ -21,6 +21,7 @@ import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 import { resolveBlogSettings, type BlogSettingsData } from '@/lib/blogSettings';
 import NewsInlineBanner from '@/components/blocks/NewsInlineBanner';
+import { trackEvent } from '@/lib/analytics';
 
 export interface PressItemCMS {
   id?: string | number | null;
@@ -672,7 +673,14 @@ export default function PressSection({
                     {isVideo ? (
                       <button
                         type="button"
-                        onClick={() => setActiveVideo(item)}
+                        onClick={() => {
+                          trackEvent({
+                            eventType: 'click',
+                            label: `video:${item.mediaOutlet}`,
+                            section: 'contenidos',
+                          });
+                          setActiveVideo(item);
+                        }}
                         className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#3cac59] hover:text-[#1b87c7] transition-colors cursor-pointer"
                       >
                         <PlayCircle className="w-4 h-4" />
@@ -684,6 +692,13 @@ export default function PressSection({
                           href={externalHref}
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={() =>
+                            trackEvent({
+                              eventType: 'click',
+                              label: `press:${item.mediaOutlet}`,
+                              section: 'prensa',
+                            })
+                          }
                           className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#1b87c7] hover:text-[#3cac59] transition-colors"
                         >
                           <span>
@@ -713,6 +728,7 @@ export default function PressSection({
                     <NewsInlineBanner
                       key={`press-banner-${safeCurrentPage}-${chunkIdx}-${bannerForChunk.id}`}
                       banner={bannerForChunk}
+                      section={filter === 'video' ? 'contenidos' : 'prensa'}
                     />
                   ) : null}
                 </div>
@@ -830,6 +846,13 @@ export default function PressSection({
             <div className="shrink-0 flex flex-col sm:flex-row gap-3">
               <Link
                 href={communityCtaHref}
+                onClick={() =>
+                  trackEvent({
+                    eventType: 'click',
+                    label: 'cta:comunidad',
+                    section: 'prensa',
+                  })
+                }
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white text-[#4d4e4f] hover:bg-[#f9f9f9] font-bold text-sm shadow-lg transition-all hover:-translate-y-0.5"
               >
                 <span>{communityCtaLabel}</span>

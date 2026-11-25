@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { Baloo_Da_2, Roboto } from 'next/font/google';
 import TopProgressBar from '@/components/TopProgressBar';
+import AnalyticsPageTracker from '@/components/AnalyticsPageTracker';
 import '../globals.css';
 
 const balooDa2 = Baloo_Da_2({
@@ -55,6 +56,7 @@ export default function FrontendLayout({
       >
         <Suspense fallback={null}>
           <TopProgressBar />
+          <AnalyticsPageTracker />
         </Suspense>
         {children}
       </body>

@@ -114,6 +114,31 @@ export const AdminNavClient: React.FC<AdminNavClientProps> = ({ groups, user }) 
             </NavGroup>
           ))}
 
+          {/* Acceso directo a Analíticas (solo admin y editor, colapsado por defecto) */}
+          {user?.role && ['admin', 'editor'].includes(user.role) ? (
+            <NavGroup key="nav-group-analytics" isOpen={false} label="Analíticas">
+              {(() => {
+                const analyticsHref = formatAdminURL({
+                  adminRoute,
+                  path: '/analytics',
+                });
+                const isAnalyticsActive =
+                  pathname === analyticsHref || pathname.startsWith(`${analyticsHref}/`);
+                return (
+                  <Link
+                    className={`${baseClass}__link`}
+                    href={analyticsHref}
+                    id="nav-analytics-dashboard"
+                    prefetch={false}
+                  >
+                    {isAnalyticsActive ? <div className={`${baseClass}__link-indicator`} /> : null}
+                    <span className={`${baseClass}__link-label`}>Dashboard de analíticas</span>
+                  </Link>
+                );
+              })()}
+            </NavGroup>
+          ) : null}
+
           {/* Tarjeta minimalista de usuario en la parte inferior del sidebar */}
           <AdminSidebarUser user={user} />
         </nav>

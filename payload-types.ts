@@ -75,6 +75,7 @@ export interface Config {
     'community-promotions': CommunityPromotion;
     'community-events': CommunityEvent;
     'event-registrations': EventRegistration;
+    'analytics-events': AnalyticsEvent;
     users: User;
     media: Media;
     'payload-kv': PayloadKv;
@@ -92,6 +93,7 @@ export interface Config {
     'community-promotions': CommunityPromotionsSelect<false> | CommunityPromotionsSelect<true>;
     'community-events': CommunityEventsSelect<false> | CommunityEventsSelect<true>;
     'event-registrations': EventRegistrationsSelect<false> | EventRegistrationsSelect<true>;
+    'analytics-events': AnalyticsEventsSelect<false> | AnalyticsEventsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -1522,6 +1524,21 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "analytics-events".
+ */
+export interface AnalyticsEvent {
+  id: number;
+  eventType: 'page_view' | 'click' | 'conversion';
+  path: string;
+  label: string;
+  bannerId?: string | null;
+  section?: string | null;
+  device: 'desktop' | 'mobile';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -1575,6 +1592,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'event-registrations';
         value: number | EventRegistration;
+      } | null)
+    | ({
+        relationTo: 'analytics-events';
+        value: number | AnalyticsEvent;
       } | null)
     | ({
         relationTo: 'users';
@@ -2553,6 +2574,20 @@ export interface EventRegistrationsSelect<T extends boolean = true> {
   userCompany?: T;
   userRole?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "analytics-events_select".
+ */
+export interface AnalyticsEventsSelect<T extends boolean = true> {
+  eventType?: T;
+  path?: T;
+  label?: T;
+  bannerId?: T;
+  section?: T;
+  device?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -6,6 +6,10 @@ import {
   type NativeFormType,
   type LeadProfileSegment,
 } from '@/lib/integrations/forms';
+import {
+  inferDeviceFromUserAgent,
+  recordAnalyticsEventServer,
+} from '@/lib/analyticsServer';
 
 const ALLOWED_FORM_TYPES = new Set<NativeFormType>([
   'contacto_comercial',
@@ -151,6 +155,15 @@ export async function POST(request: Request) {
         { status: 502 }
       );
     }
+
+    // Registrar conversión de formulario de forma no bloqueante
+    void recordAnalyticsEventServer({
+      eventType: 'conversion',
+      path: '/contacto',
+      label: `form:${formType}`,
+      section: source,
+      device: inferDeviceFromUserAgent(request.headers.get('user-agent')),
+    });
 
     return NextResponse.json({
       ok: true,

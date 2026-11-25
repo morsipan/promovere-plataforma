@@ -3,8 +3,15 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import type { ResolvedBlogBanner } from '@/lib/blogSettings';
+import { trackEvent } from '@/lib/analytics';
 
-export default function NewsInlineBanner({ banner }: { banner: ResolvedBlogBanner }) {
+export default function NewsInlineBanner({
+  banner,
+  section,
+}: {
+  banner: ResolvedBlogBanner;
+  section?: string;
+}) {
   const [desktopFailed, setDesktopFailed] = useState(false);
   const [mobileFailed, setMobileFailed] = useState(false);
 
@@ -65,6 +72,14 @@ export default function NewsInlineBanner({ banner }: { banner: ResolvedBlogBanne
           target="_blank"
           rel="noopener noreferrer"
           aria-label={banner.title}
+          onClick={() =>
+            trackEvent({
+              eventType: 'click',
+              label: `banner:${banner.title}`,
+              bannerId: banner.id,
+              section: section || banner.placement || 'news',
+            })
+          }
           className="block group focus:outline-none focus:ring-2 focus:ring-[#1b87c7] rounded-3xl"
         >
           {content}
