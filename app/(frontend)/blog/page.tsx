@@ -42,9 +42,9 @@ export default async function BlogPage() {
         .find({
           collection: 'blog-posts',
           where: { status: { equals: 'published' } },
-          sort: '-publishedDate',
+          sort: '-publishedDate,-createdAt',
           depth: 1,
-          limit: 50,
+          limit: 200,
         })
         .catch(() => ({ docs: [] })),
     ]);
@@ -122,7 +122,7 @@ export default async function BlogPage() {
         </div>
       </section>
 
-      <BlogSection collectionPosts={blogPosts} hideViewAllCta />
+      <BlogSection collectionPosts={blogPosts} hideViewAllCta showFilters />
 
       <Footer data={footerData} settings={siteSettings} />
     </main>

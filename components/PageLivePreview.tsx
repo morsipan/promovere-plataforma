@@ -175,6 +175,8 @@ export default function PageLivePreview({
             data={block}
             collectionPosts={blogPosts}
             hideViewAllCta={slug === 'blog'}
+            showFilters={slug === 'blog'}
+            maxItems={slug === 'home' ? 6 : undefined}
           />
         );
       case 'press':
