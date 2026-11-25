@@ -75,6 +75,7 @@ export default buildConfig({
       titleSuffix: '— Promovêre CMS',
     },
     components: {
+      Nav: '/components/admin/AdminNav#AdminNav',
       graphics: {
         Logo: '/components/admin/Logo#Logo',
         Icon: '/components/admin/Icon#Icon',

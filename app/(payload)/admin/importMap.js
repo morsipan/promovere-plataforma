@@ -28,6 +28,7 @@ import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MediaViewToggle as MediaViewToggle_ba59ba2978943d3e5fabb4d24abab31f } from '../../../components/admin/MediaViewToggle'
+import { AdminNav as AdminNav_231477f0faa4368be46fd47ffb9da4d9 } from '../../../components/admin/AdminNav'
 import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
 import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { AdminRememberMe as AdminRememberMe_c7d7978054547d8837484ff9efd636e5 } from '../../../components/admin/AdminRememberMe'
@@ -68,6 +69,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "/components/admin/MediaViewToggle#MediaViewToggle": MediaViewToggle_ba59ba2978943d3e5fabb4d24abab31f,
+  "/components/admin/AdminNav#AdminNav": AdminNav_231477f0faa4368be46fd47ffb9da4d9,
   "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,
   "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,
   "/components/admin/AdminRememberMe#AdminRememberMe": AdminRememberMe_c7d7978054547d8837484ff9efd636e5,
