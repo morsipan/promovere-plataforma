@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -10,6 +10,9 @@ import {
   ArrowRight,
   Search,
   X,
+  ChevronLeft,
+  ChevronRight,
+  Tag,
 } from 'lucide-react';
 import { blogContent } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
@@ -45,6 +48,12 @@ export interface BlogSectionProps {
   hideViewAllCta?: boolean;
   showFilters?: boolean;
   maxItems?: number;
+  pageSize?: number;
+}
+
+function getNormalizedCategory(cat?: string | null): string {
+  const cleaned = (cat || '').trim();
+  return cleaned.length > 0 ? cleaned : 'Promo News';
 }
 
 export default function BlogSection({
@@ -53,9 +62,12 @@ export default function BlogSection({
   hideViewAllCta = false,
   showFilters = false,
   maxItems,
+  pageSize = 9,
 }: BlogSectionProps = {}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBrand, setSelectedBrand] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const sectionAppearance = resolveAppearance(data?.appearance, {
     backgroundColor: 'blancoHumo',
@@ -79,6 +91,7 @@ export default function BlogSection({
       ? data.posts
       : blogContent.posts;
 
+  // Agrupación / opciones por Marca (conservada intacta)
   const brands = useMemo(() => {
     const set = new Set<string>();
     for (const post of allPosts) {
@@ -89,10 +102,30 @@ export default function BlogSection({
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'es'));
   }, [allPosts]);
 
+  // Opciones coherentes por Categoría
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    for (const post of allPosts) {
+      set.add(getNormalizedCategory(post.category));
+    }
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'es'));
+  }, [allPosts]);
+
+  // Resetear a página 1 cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedBrand, selectedCategory]);
+
   const filteredPosts = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     const list = allPosts.filter((post) => {
       if (selectedBrand !== 'all' && (post.brand || '').trim() !== selectedBrand) {
+        return false;
+      }
+      if (
+        selectedCategory !== 'all' &&
+        getNormalizedCategory(post.category) !== selectedCategory
+      ) {
         return false;
       }
       if (!q) return true;
@@ -100,11 +133,41 @@ export default function BlogSection({
         post.title.toLowerCase().includes(q) ||
         post.excerpt.toLowerCase().includes(q) ||
         (post.brand || '').toLowerCase().includes(q) ||
-        (post.category || '').toLowerCase().includes(q)
+        getNormalizedCategory(post.category).toLowerCase().includes(q)
       );
     });
     return typeof maxItems === 'number' && maxItems > 0 ? list.slice(0, maxItems) : list;
-  }, [allPosts, searchQuery, selectedBrand, maxItems]);
+  }, [allPosts, searchQuery, selectedBrand, selectedCategory, maxItems]);
+
+  // Paginación segura para el listado completo (showFilters)
+  const safePageSize = Math.max(1, pageSize);
+  const totalItems = filteredPosts.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / safePageSize));
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const visiblePosts = useMemo(() => {
+    if (!showFilters) return filteredPosts;
+    const startIndex = (safeCurrentPage - 1) * safePageSize;
+    return filteredPosts.slice(startIndex, startIndex + safePageSize);
+  }, [filteredPosts, showFilters, safeCurrentPage, safePageSize]);
+
+  const startItemNumber = totalItems === 0 ? 0 : (safeCurrentPage - 1) * safePageSize + 1;
+  const endItemNumber = Math.min(safeCurrentPage * safePageSize, totalItems);
+
+  const pageNumbers = useMemo(() => {
+    const pages: number[] = [];
+    const maxButtons = 5;
+    let start = Math.max(1, safeCurrentPage - Math.floor(maxButtons / 2));
+    const end = Math.min(totalPages, start + maxButtons - 1);
+    start = Math.max(1, end - maxButtons + 1);
+    for (let p = start; p <= end; p++) {
+      pages.push(p);
+    }
+    return pages;
+  }, [safeCurrentPage, totalPages]);
+
+  const hasActiveFilters =
+    searchQuery.trim().length > 0 || selectedBrand !== 'all' || selectedCategory !== 'all';
 
   return (
     <section
@@ -149,54 +212,89 @@ export default function BlogSection({
           ) : null}
         </div>
 
-        {/* Barra de búsqueda y filtro por marca en la vista completa de Promo News (/blog) */}
+        {/* Barra de búsqueda, filtro por Marca (conservado) y filtro por Categoría */}
         {showFilters ? (
-          <div className="bg-white rounded-2xl border border-gray-200/80 p-4 sm:p-5 shadow-xs mb-10 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar en Promo News por título, marca o destino..."
-                className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-gray-200 bg-[#f9f9f9] focus:bg-white focus:ring-2 focus:ring-[#1b87c7] outline-none text-[#4d4e4f]"
-              />
+          <div className="bg-white rounded-2xl border border-gray-200/80 p-4 sm:p-5 shadow-xs mb-10 space-y-3">
+            <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar en Promo News por título, marca, categoría o destino..."
+                  className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-gray-200 bg-[#f9f9f9] focus:bg-white focus:ring-2 focus:ring-[#1b87c7] outline-none text-[#4d4e4f]"
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2.5">
+                {/* Filtro por Marca (conservado) */}
+                <select
+                  value={selectedBrand}
+                  onChange={(e) => setSelectedBrand(e.target.value)}
+                  aria-label="Filtrar artículos por marca"
+                  className="px-3.5 py-2.5 text-sm rounded-xl border border-gray-200 bg-[#f9f9f9] focus:bg-white focus:ring-2 focus:ring-[#1b87c7] outline-none text-[#4d4e4f] font-medium cursor-pointer"
+                >
+                  <option value="all">Todas las marcas ({allPosts.length})</option>
+                  {brands.map((brand) => (
+                    <option key={brand} value={brand}>
+                      {brand}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Filtro por Categoría */}
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  aria-label="Filtrar artículos por categoría"
+                  className="px-3.5 py-2.5 text-sm rounded-xl border border-gray-200 bg-[#f9f9f9] focus:bg-white focus:ring-2 focus:ring-[#3cac59] outline-none text-[#4d4e4f] font-medium cursor-pointer"
+                >
+                  <option value="all">Todas las categorías</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+
+                {hasActiveFilters ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSelectedBrand('all');
+                      setSelectedCategory('all');
+                    }}
+                    className="inline-flex items-center gap-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-bold text-[#4d4e4f] hover:bg-gray-100 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Limpiar</span>
+                  </button>
+                ) : null}
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <select
-                value={selectedBrand}
-                onChange={(e) => setSelectedBrand(e.target.value)}
-                aria-label="Filtrar artículos por marca"
-                className="px-3.5 py-2.5 text-sm rounded-xl border border-gray-200 bg-[#f9f9f9] focus:bg-white focus:ring-2 focus:ring-[#1b87c7] outline-none text-[#4d4e4f] font-medium cursor-pointer"
-              >
-                <option value="all">Todas las marcas ({allPosts.length})</option>
-                {brands.map((brand) => (
-                  <option key={brand} value={brand}>
-                    {brand}
-                  </option>
-                ))}
-              </select>
-
-              {searchQuery || selectedBrand !== 'all' ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedBrand('all');
-                  }}
-                  className="inline-flex items-center gap-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-bold text-[#4d4e4f] hover:bg-gray-100 cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5" />
-                  <span>Limpiar</span>
-                </button>
+            {/* Indicador de resultados y paginación */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-100 text-xs text-[#4d4e4f]/70">
+              <span>
+                {totalItems === 0
+                  ? '0 artículos encontrados'
+                  : `Mostrando ${startItemNumber}–${endItemNumber} de ${totalItems} ${
+                      totalItems === 1 ? 'artículo' : 'artículos'
+                    }`}
+              </span>
+              {totalPages > 1 ? (
+                <span className="font-semibold text-[#1b87c7]">
+                  Página {safeCurrentPage} de {totalPages}
+                </span>
               ) : null}
             </div>
           </div>
         ) : null}
 
-        {/* Grilla de artículos — Cada ítem enlaza estrictamente a SU propio /blog/[slug] */}
-        {filteredPosts.length === 0 ? (
+        {/* Grilla de artículos — Cada ítem abre su propio /blog/[slug] en PESTAÑA NUEVA */}
+        {visiblePosts.length === 0 ? (
           <div className="bg-white rounded-3xl border border-dashed border-gray-300 p-12 text-center">
             <p className="font-heading text-xl font-bold text-[#4d4e4f] mb-2">
               No encontramos notas con ese criterio
@@ -206,6 +304,7 @@ export default function BlogSection({
               onClick={() => {
                 setSearchQuery('');
                 setSelectedBrand('all');
+                setSelectedCategory('all');
               }}
               className="mt-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white text-xs font-bold cursor-pointer"
             >
@@ -214,9 +313,10 @@ export default function BlogSection({
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {filteredPosts.map((post, idx) => {
+            {visiblePosts.map((post, idx) => {
               const postSlug = getBlogPostSlug(post);
               const postHref = `/blog/${postSlug}`;
+              const postCategory = getNormalizedCategory(post.category);
               const imgUrl = getMediaUrl(
                 post.coverImage,
                 post.coverImageUrl || post.image || ''
@@ -231,6 +331,8 @@ export default function BlogSection({
                   <div>
                     <Link
                       href={postHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="block relative h-52 w-full overflow-hidden bg-[#4d4e4f]/10"
                     >
                       {imgUrl ? (
@@ -248,11 +350,10 @@ export default function BlogSection({
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-                      {post.category ? (
-                        <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/95 text-[#1b87c7] text-[11px] font-bold uppercase tracking-wider shadow-sm">
-                          {post.category}
-                        </span>
-                      ) : null}
+                      <span className="absolute top-4 left-4 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/95 text-[#1b87c7] text-[11px] font-bold uppercase tracking-wider shadow-sm">
+                        <Tag className="w-3 h-3" />
+                        <span>{postCategory}</span>
+                      </span>
                     </Link>
 
                     <div className="p-6 sm:p-7">
@@ -278,7 +379,12 @@ export default function BlogSection({
                       <h3
                         className={`font-heading text-xl font-bold leading-snug mb-3 group-hover:text-[#1b87c7] transition-colors ${sectionAppearance.cardTitleClass}`}
                       >
-                        <Link href={postHref} className="hover:text-[#1b87c7] transition-colors">
+                        <Link
+                          href={postHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-[#1b87c7] transition-colors"
+                        >
                           {post.title}
                         </Link>
                       </h3>
@@ -296,6 +402,8 @@ export default function BlogSection({
                   >
                     <Link
                       href={postHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#1b87c7] hover:text-[#3cac59] transition-colors"
                     >
                       <span>Leer artículo completo</span>
@@ -307,6 +415,83 @@ export default function BlogSection({
             })}
           </div>
         )}
+
+        {/* Controles de Paginación */}
+        {showFilters && totalPages > 1 ? (
+          <nav
+            aria-label="Paginación de Promo News"
+            className="mt-12 flex flex-wrap items-center justify-center gap-2"
+          >
+            <button
+              type="button"
+              disabled={safeCurrentPage <= 1}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm font-bold text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Anterior</span>
+            </button>
+
+            {pageNumbers[0] > 1 ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage(1)}
+                  className="w-10 h-10 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm font-bold text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7] transition-colors cursor-pointer"
+                >
+                  1
+                </button>
+                {pageNumbers[0] > 2 ? (
+                  <span className="px-1 text-gray-400 text-sm">…</span>
+                ) : null}
+              </>
+            ) : null}
+
+            {pageNumbers.map((pageNum) => {
+              const isCurrent = pageNum === safeCurrentPage;
+              return (
+                <button
+                  key={pageNum}
+                  type="button"
+                  aria-current={isCurrent ? 'page' : undefined}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`w-10 h-10 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer ${
+                    isCurrent
+                      ? 'bg-[#1b87c7] text-white shadow-md shadow-[#1b87c7]/25'
+                      : 'border border-gray-200 bg-white text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7]'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            {pageNumbers[pageNumbers.length - 1] < totalPages ? (
+              <>
+                {pageNumbers[pageNumbers.length - 1] < totalPages - 1 ? (
+                  <span className="px-1 text-gray-400 text-sm">…</span>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage(totalPages)}
+                  className="w-10 h-10 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm font-bold text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7] transition-colors cursor-pointer"
+                >
+                  {totalPages}
+                </button>
+              </>
+            ) : null}
+
+            <button
+              type="button"
+              disabled={safeCurrentPage >= totalPages}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm font-bold text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            >
+              <span>Siguiente</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </nav>
+        ) : null}
 
         {/* CTA hacia /blog */}
         {!hideViewAllCta && ctaLabel && ctaHref ? (

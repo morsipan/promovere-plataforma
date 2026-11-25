@@ -10,7 +10,6 @@ import {
   BookOpen,
   Building2,
   Calendar,
-  ExternalLink,
   Sparkles,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -246,37 +245,23 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
             <div className="p-6 sm:p-10 md:p-12">
               <BlogRichText content={post.content} fallbackText={post.excerpt} />
 
-              {/* Pie del artículo: volver a Promo News + Comunidad + trazabilidad URL original */}
-              <div className="mt-10 pt-8 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Link
-                    href="/blog"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4d4e4f] hover:bg-[#38393a] text-white text-xs sm:text-sm font-bold transition-colors"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>Volver a Promo News</span>
-                  </Link>
+              {/* Pie del artículo: volver a Promo News + Comunidad */}
+              <div className="mt-10 pt-8 border-t border-gray-200 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4d4e4f] hover:bg-[#38393a] text-white text-xs sm:text-sm font-bold transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Volver a Promo News</span>
+                </Link>
 
-                  <Link
-                    href="/comunidad"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] hover:bg-[#156d9f] text-white text-xs sm:text-sm font-bold transition-colors"
-                  >
-                    <Sparkles className="w-4 h-4 text-[#3cac59]" />
-                    <span>Ir a Comunidad Promovêre</span>
-                  </Link>
-                </div>
-
-                {post.externalUrl ? (
-                  <a
-                    href={post.externalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4d4e4f]/70 hover:text-[#1b87c7] transition-colors"
-                  >
-                    <span>Fuente original</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                ) : null}
+                <Link
+                  href="/comunidad"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] hover:bg-[#156d9f] text-white text-xs sm:text-sm font-bold transition-colors"
+                >
+                  <Sparkles className="w-4 h-4 text-[#3cac59]" />
+                  <span>Ir a Comunidad Promovêre</span>
+                </Link>
               </div>
             </div>
           </div>
@@ -305,6 +290,8 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
                     <Link
                       key={`${rel.id ?? relSlug}-${idx}`}
                       href={relHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="group bg-white rounded-2xl border border-gray-200/80 hover:border-[#1b87c7]/50 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
                     >
                       <div>
