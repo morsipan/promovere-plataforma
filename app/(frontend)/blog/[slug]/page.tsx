@@ -174,20 +174,6 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[#3cac59]/20 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-xs font-bold text-[#f9f9f9]/85 hover:text-white transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Volver a Promo News</span>
-            </Link>
-            <span className="text-white/30">/</span>
-            <span className="text-xs font-semibold text-[#3cac59]">
-              {post.category || 'Promo News'}
-            </span>
-          </div>
-
           <div className="flex flex-wrap items-center gap-3 mb-4">
             {post.category ? (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1b87c7]/25 border border-[#1b87c7]/40 text-[#f9f9f9] text-xs font-bold uppercase tracking-wider">
