@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@600;700&family=Roboto:wght@400;500;700&display=swap');
+
 /* ==========================================================================
-   Promovêre CMS — Ajustes Minimalistas del Panel de Administración
+   Promovêre CMS — Ajustes Minimalistas y Jerarquía Visual del Panel /admin
    ========================================================================== */
 
 /* 1. Ocultar el ícono de cuenta del usuario en el topbar (breadcrumb) */
@@ -30,4 +32,159 @@ body.promovere-media-grid-active .collection-list__tables,
 body.promovere-media-grid-active .table-wrap,
 body.promovere-media-grid-active .table {
   display: none !important;
+}
+
+/* ==========================================================================
+   5. Jerarquía Visual del Sidebar: Grupos Principales vs Subítems
+   Paleta oficial: #4d4e4f (Antracita), #1b87c7 (Azul), #3cac59 (Verde), #f9f9f9 (Blanco Humo)
+   Tipografías: Baloo Da 2 (Encabezados de grupo) y Roboto (Subítems)
+   ========================================================================== */
+
+.nav .nav-group {
+  margin-bottom: 14px !important;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--theme-elevation-100);
+}
+
+.nav .nav-group:last-of-type {
+  border-bottom: none;
+  margin-bottom: 8px !important;
+}
+
+/* Encabezado de grupo principal (Sitios, News, Comunidad, Usuarios, Biblioteca multimedia) */
+.nav .nav-group__toggle {
+  width: 100%;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 7px 10px !important;
+  margin-bottom: 4px !important;
+  border-radius: 8px !important;
+  border-left: 3px solid #1b87c7 !important;
+  background-color: rgba(27, 135, 199, 0.07) !important;
+  color: #4d4e4f !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.nav .nav-group__toggle:hover {
+  background-color: rgba(27, 135, 199, 0.13) !important;
+}
+
+.nav .nav-group__label {
+  font-family: 'Baloo Da 2', system-ui, -apple-system, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: #4d4e4f !important;
+  line-height: 1.2 !important;
+}
+
+.nav .nav-group__indicator {
+  color: #1b87c7 !important;
+  opacity: 0.85;
+}
+
+/* Acento sutil en Verde Corporativo para News y Comunidad */
+.nav #nav-group-News .nav-group__toggle {
+  border-left-color: #3cac59 !important;
+  background-color: rgba(60, 172, 89, 0.08) !important;
+}
+
+.nav #nav-group-News .nav-group__toggle:hover {
+  background-color: rgba(60, 172, 89, 0.14) !important;
+}
+
+.nav #nav-group-News .nav-group__indicator {
+  color: #3cac59 !important;
+}
+
+/* Acento neutro en Gris Antracita para Usuarios y Biblioteca multimedia */
+.nav #nav-group-Usuarios .nav-group__toggle,
+.nav [id='nav-group-Biblioteca multimedia'] .nav-group__toggle,
+.nav #nav-group-Configuración .nav-group__toggle {
+  border-left-color: #4d4e4f !important;
+  background-color: rgba(77, 78, 79, 0.06) !important;
+}
+
+.nav #nav-group-Usuarios .nav-group__toggle:hover,
+.nav [id='nav-group-Biblioteca multimedia'] .nav-group__toggle:hover,
+.nav #nav-group-Configuración .nav-group__toggle:hover {
+  background-color: rgba(77, 78, 79, 0.11) !important;
+}
+
+.nav #nav-group-Usuarios .nav-group__indicator,
+.nav [id='nav-group-Biblioteca multimedia'] .nav-group__indicator,
+.nav #nav-group-Configuración .nav-group__indicator {
+  color: #4d4e4f !important;
+}
+
+/* Contenedor indentado de subítems con guía visual izquierda */
+.nav .nav-group__content {
+  margin-left: 10px !important;
+  padding-left: 10px !important;
+  border-left: 1px solid var(--theme-elevation-150) !important;
+  margin-top: 4px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Subítems internos en Roboto con hover #f9f9f9 */
+.nav .nav-group__content .nav__link {
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  padding: 6px 10px !important;
+  border-radius: 6px !important;
+  color: var(--theme-text) !important;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  position: relative;
+}
+
+.nav .nav-group__content .nav__link:hover {
+  background-color: #f9f9f9 !important;
+  color: #1b87c7 !important;
+}
+
+.nav .nav-group__content .nav__link-label {
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif !important;
+  font-size: 13.5px !important;
+  line-height: 1.35 !important;
+}
+
+/* Subítem activo claramente resaltado */
+.nav .nav-group__content .nav__link:has(.nav__link-indicator) {
+  background-color: rgba(27, 135, 199, 0.1) !important;
+  color: #1b87c7 !important;
+  font-weight: 500 !important;
+}
+
+.nav .nav-group__content .nav__link-indicator {
+  background-color: #1b87c7 !important;
+}
+
+/* Adaptación limpia para tema oscuro de Payload CMS */
+[data-theme='dark'] .nav .nav-group__label {
+  color: #f9f9f9 !important;
+}
+
+[data-theme='dark'] .nav .nav-group__toggle {
+  color: #f9f9f9 !important;
+  background-color: rgba(27, 135, 199, 0.16) !important;
+}
+
+[data-theme='dark'] .nav #nav-group-News .nav-group__toggle {
+  background-color: rgba(60, 172, 89, 0.16) !important;
+}
+
+[data-theme='dark'] .nav #nav-group-Usuarios .nav-group__toggle,
+[data-theme='dark'] .nav [id='nav-group-Biblioteca multimedia'] .nav-group__toggle,
+[data-theme='dark'] .nav #nav-group-Configuración .nav-group__toggle {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme='dark'] .nav .nav-group__content .nav__link:hover {
+  background-color: var(--theme-elevation-100) !important;
+  color: #f9f9f9 !important;
 }
