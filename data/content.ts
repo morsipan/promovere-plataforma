@@ -423,7 +423,7 @@ export const pressContent = {
   title: "Promovêre en Prensa, Entrevistas y Videos",
   subtitle:
     "Un único espacio que reúne nuestras apariciones en medios especializados del trade turístico junto con entrevistas, participaciones en ferias y coberturas audiovisuales.",
-  allPressLabel: "Ver sección completa de Prensa",
+  allPressLabel: "Ver todas las notas de prensa y medios",
   allPressHref: "/prensa",
   communityBannerTitle: "¿Sos agencia de viajes u operador mayorista?",
   communityBannerSubtitle:

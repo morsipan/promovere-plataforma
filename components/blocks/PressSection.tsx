@@ -11,6 +11,9 @@ import {
   Clock,
   Sparkles,
   ArrowRight,
+  Search,
+  ChevronLeft,
+  ChevronRight,
   X,
 } from 'lucide-react';
 import { pressContent } from '@/data/content';
@@ -48,6 +51,9 @@ export interface PressSectionProps {
   };
   collectionItems?: PressItemCMS[] | null;
   hideViewAllCta?: boolean;
+  showFilters?: boolean;
+  maxItems?: number;
+  pageSize?: number;
 }
 
 const MONTHS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
@@ -121,8 +127,14 @@ export default function PressSection({
   data,
   collectionItems,
   hideViewAllCta = false,
+  showFilters = false,
+  maxItems,
+  pageSize = 12,
 }: PressSectionProps = {}) {
   const [filter, setFilter] = useState<'all' | 'nota' | 'video'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedOutlet, setSelectedOutlet] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [activeVideo, setActiveVideo] = useState<PressItemCMS | null>(null);
 
   // Sincronizar filtro inicial con los anclajes del footer (#notas-de-prensa / #entrevistas-y-coberturas)
@@ -166,10 +178,66 @@ export default function PressSection({
       ? data.items
       : pressContent.items;
 
+  // Listado ordenado de medios / fuentes para el filtro rápido en /prensa
+  const outlets = useMemo(() => {
+    const set = new Set<string>();
+    for (const item of items) {
+      const cleaned = (item.mediaOutlet || '').trim();
+      if (cleaned.length > 0) set.add(cleaned);
+    }
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'es'));
+  }, [items]);
+
+  // Reiniciar paginación al cambiar filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, searchQuery, selectedOutlet]);
+
   const filteredItems = useMemo(() => {
-    if (filter === 'all') return items;
-    return items.filter((item) => item.format === filter);
-  }, [items, filter]);
+    const q = searchQuery.trim().toLowerCase();
+    const list = items.filter((item) => {
+      if (filter !== 'all' && item.format !== filter) return false;
+      if (selectedOutlet !== 'all' && (item.mediaOutlet || '').trim() !== selectedOutlet) {
+        return false;
+      }
+      if (!q) return true;
+      return (
+        item.title.toLowerCase().includes(q) ||
+        (item.summary || '').toLowerCase().includes(q) ||
+        (item.mediaOutlet || '').toLowerCase().includes(q)
+      );
+    });
+    return typeof maxItems === 'number' && maxItems > 0 ? list.slice(0, maxItems) : list;
+  }, [items, filter, searchQuery, selectedOutlet, maxItems]);
+
+  const safePageSize = Math.max(1, pageSize);
+  const totalItems = filteredItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / safePageSize));
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const visibleItems = useMemo(() => {
+    if (!showFilters) return filteredItems;
+    const startIdx = (safeCurrentPage - 1) * safePageSize;
+    return filteredItems.slice(startIdx, startIdx + safePageSize);
+  }, [filteredItems, showFilters, safeCurrentPage, safePageSize]);
+
+  const startItemNumber = totalItems === 0 ? 0 : (safeCurrentPage - 1) * safePageSize + 1;
+  const endItemNumber = Math.min(safeCurrentPage * safePageSize, totalItems);
+
+  const pageNumbers = useMemo(() => {
+    const pages: number[] = [];
+    const maxButtons = 5;
+    let start = Math.max(1, safeCurrentPage - Math.floor(maxButtons / 2));
+    const end = Math.min(totalPages, start + maxButtons - 1);
+    start = Math.max(1, end - maxButtons + 1);
+    for (let p = start; p <= end; p++) {
+      pages.push(p);
+    }
+    return pages;
+  }, [safeCurrentPage, totalPages]);
+
+  const hasActiveSearchFilters =
+    searchQuery.trim().length > 0 || selectedOutlet !== 'all' || filter !== 'all';
 
   const notesCount = items.filter((i) => i.format === 'nota').length;
   const videosCount = items.filter((i) => i.format === 'video').length;
@@ -250,9 +318,91 @@ export default function PressSection({
           })}
         </div>
 
+        {/* Buscador y filtro rápido por Medio / Fuente (en la vista completa /prensa) */}
+        {showFilters ? (
+          <div className="bg-white rounded-2xl border border-gray-200/80 p-4 sm:p-5 shadow-xs mb-10 space-y-3">
+            <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar notas de prensa por título, resumen o medio..."
+                  className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-gray-200 bg-[#f9f9f9] focus:bg-white focus:ring-2 focus:ring-[#1b87c7] outline-none text-[#4d4e4f]"
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2.5">
+                <select
+                  value={selectedOutlet}
+                  onChange={(e) => setSelectedOutlet(e.target.value)}
+                  aria-label="Filtrar notas por medio o fuente"
+                  className="px-3.5 py-2.5 text-sm rounded-xl border border-gray-200 bg-[#f9f9f9] focus:bg-white focus:ring-2 focus:ring-[#1b87c7] outline-none text-[#4d4e4f] font-medium cursor-pointer"
+                >
+                  <option value="all">Todos los medios ({outlets.length})</option>
+                  {outlets.map((outlet) => (
+                    <option key={outlet} value={outlet}>
+                      {outlet}
+                    </option>
+                  ))}
+                </select>
+
+                {hasActiveSearchFilters ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSelectedOutlet('all');
+                      setFilter('all');
+                    }}
+                    className="inline-flex items-center gap-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-bold text-[#4d4e4f] hover:bg-gray-100 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Limpiar</span>
+                  </button>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-100 text-xs text-[#4d4e4f]/70">
+              <span>
+                {totalItems === 0
+                  ? '0 coberturas encontradas'
+                  : `Mostrando ${startItemNumber}–${endItemNumber} de ${totalItems} ${
+                      totalItems === 1 ? 'cobertura' : 'coberturas'
+                    }`}
+              </span>
+              {totalPages > 1 ? (
+                <span className="font-semibold text-[#1b87c7]">
+                  Página {safeCurrentPage} de {totalPages}
+                </span>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+
         {/* Grilla unificada de Notas en Medios y Videos */}
+        {visibleItems.length === 0 ? (
+          <div className="bg-white rounded-3xl border border-dashed border-gray-300 p-12 text-center">
+            <p className="font-heading text-xl font-bold text-[#4d4e4f] mb-2">
+              No encontramos notas de prensa con ese criterio
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedOutlet('all');
+                setFilter('all');
+              }}
+              className="mt-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white text-xs font-bold cursor-pointer"
+            >
+              Ver todas las coberturas
+            </button>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {filteredItems.map((item, idx) => {
+          {visibleItems.map((item, idx) => {
             const isVideo = item.format === 'video';
             const imgUrl = getMediaUrl(
               item.coverImage,
@@ -412,13 +562,91 @@ export default function PressSection({
             );
           })}
         </div>
+        )}
 
-        {/* Enlace a página completa de Prensa (cuando está en la One Page) */}
+        {/* Controles de Paginación (en la vista completa /prensa) */}
+        {showFilters && totalPages > 1 ? (
+          <nav
+            aria-label="Paginación de Notas de Prensa"
+            className="mt-12 flex flex-wrap items-center justify-center gap-2"
+          >
+            <button
+              type="button"
+              disabled={safeCurrentPage <= 1}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm font-bold text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Anterior</span>
+            </button>
+
+            {pageNumbers[0] > 1 ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage(1)}
+                  className="w-10 h-10 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm font-bold text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7] transition-colors cursor-pointer"
+                >
+                  1
+                </button>
+                {pageNumbers[0] > 2 ? (
+                  <span className="px-1 text-gray-400 text-sm">…</span>
+                ) : null}
+              </>
+            ) : null}
+
+            {pageNumbers.map((pageNum) => {
+              const isCurrent = pageNum === safeCurrentPage;
+              return (
+                <button
+                  key={pageNum}
+                  type="button"
+                  aria-current={isCurrent ? 'page' : undefined}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`w-10 h-10 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer ${
+                    isCurrent
+                      ? 'bg-[#1b87c7] text-white shadow-md shadow-[#1b87c7]/25'
+                      : 'border border-gray-200 bg-white text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7]'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            {pageNumbers[pageNumbers.length - 1] < totalPages ? (
+              <>
+                {pageNumbers[pageNumbers.length - 1] < totalPages - 1 ? (
+                  <span className="px-1 text-gray-400 text-sm">…</span>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage(totalPages)}
+                  className="w-10 h-10 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm font-bold text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7] transition-colors cursor-pointer"
+                >
+                  {totalPages}
+                </button>
+              </>
+            ) : null}
+
+            <button
+              type="button"
+              disabled={safeCurrentPage >= totalPages}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm font-bold text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            >
+              <span>Siguiente</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </nav>
+        ) : null}
+
+        {/* Enlace a página completa de Prensa (cuando está en la Home) */}
         {!hideViewAllCta && allPressLabel && allPressHref ? (
-          <div className="mt-10 text-center">
+          <div className="mt-12 text-center">
             <Link
               href={allPressHref}
-              className="inline-flex items-center gap-2 text-sm font-bold text-[#1b87c7] hover:text-[#3cac59] transition-colors"
+              className={`inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 ${sectionAppearance.buttonClass}`}
             >
               <span>{allPressLabel}</span>
               <ArrowRight className="w-4 h-4" />

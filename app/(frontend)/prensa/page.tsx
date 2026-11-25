@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import PageLivePreview from '@/components/PageLivePreview';
 import PressSection from '@/components/blocks/PressSection';
 import { pressContent } from '@/data/content';
+import { sortPressItemsNewestFirst } from '@/lib/press';
 
 export const revalidate = 3600;
 
@@ -55,7 +56,7 @@ export default async function PrensaPage() {
     headerData = headerRes;
     footerData = footerRes;
     siteSettings = settingsRes;
-    pressItems = pressRes?.docs || [];
+    pressItems = sortPressItemsNewestFirst(pressRes?.docs || []);
   } catch {
     // Fallback a contenido estático centralizado si aún no existe documento en CMS
   }
@@ -122,7 +123,7 @@ export default async function PrensaPage() {
         </div>
       </section>
 
-      <PressSection collectionItems={pressItems} hideViewAllCta />
+      <PressSection collectionItems={pressItems} hideViewAllCta showFilters />
 
       <Footer data={footerData} settings={siteSettings} />
     </main>

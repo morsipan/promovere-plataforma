@@ -189,6 +189,8 @@ export default function PageLivePreview({
             data={block}
             collectionItems={pressItems}
             hideViewAllCta={slug === 'prensa'}
+            showFilters={slug === 'prensa'}
+            maxItems={slug === 'home' ? 6 : undefined}
           />
         );
       case 'prMetrics':

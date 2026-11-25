@@ -2,6 +2,7 @@ import PageLivePreview from '@/components/PageLivePreview';
 import { getPayload } from 'payload';
 import config from '@payload-config';
 import { getMediaUrl } from '@/lib/media';
+import { sortPressItemsNewestFirst } from '@/lib/press';
 import type { Metadata } from 'next';
 
 export const revalidate = 3600;
@@ -89,9 +90,9 @@ export default async function Home() {
         .find({
           collection: 'press-items',
           where: { status: { equals: 'published' } },
-          sort: '-publishedDate',
+          sort: '-publishedDate,-createdAt',
           depth: 1,
-          limit: 6,
+          limit: 100,
         })
         .catch(() => ({ docs: [] })),
     ]);
@@ -104,7 +105,7 @@ export default async function Home() {
     siteSettings = settingsRes;
     blogSettings = blogSettingsRes;
     blogPosts = blogRes?.docs || [];
-    pressItems = pressRes?.docs || [];
+    pressItems = sortPressItemsNewestFirst(pressRes?.docs || []).slice(0, 6);
   } catch (error) {
     console.warn('Payload Pages: cargando contenido estático por defecto.');
   }
