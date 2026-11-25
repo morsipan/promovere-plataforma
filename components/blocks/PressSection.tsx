@@ -291,32 +291,34 @@ export default function PressSection({
         <div id="notas-de-prensa" className="scroll-mt-24" />
         <div id="entrevistas-y-coberturas" className="scroll-mt-24" />
 
-        {/* Filtros de Sección Unificada: Todo | Notas en Medios | Entrevistas & Videos */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-12" role="tablist" aria-label="Filtrar cobertura de prensa">
-          {[
-            { key: 'all' as const, label: `Todo (${items.length})` },
-            { key: 'nota' as const, label: `Notas en Medios (${notesCount})` },
-            { key: 'video' as const, label: `Entrevistas y Videos (${videosCount})` },
-          ].map((tab) => {
-            const isActive = filter === tab.key;
-            return (
-              <button
-                key={tab.key}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => setFilter(tab.key)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-[#1b87c7] text-white shadow-md shadow-[#1b87c7]/25'
-                    : 'bg-[#f9f9f9] text-[#4d4e4f] border border-gray-200 hover:border-[#1b87c7]/50 hover:text-[#1b87c7]'
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
+        {/* Filtros de Sección Unificada (solo en la vista completa /prensa, ocultos en la Home) */}
+        {showFilters ? (
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8" role="tablist" aria-label="Filtrar cobertura de prensa">
+            {[
+              { key: 'all' as const, label: `Todo (${items.length})` },
+              { key: 'nota' as const, label: `Notas en Medios (${notesCount})` },
+              { key: 'video' as const, label: `Entrevistas y Videos (${videosCount})` },
+            ].map((tab) => {
+              const isActive = filter === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setFilter(tab.key)}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-[#1b87c7] text-white shadow-md shadow-[#1b87c7]/25'
+                      : 'bg-[#f9f9f9] text-[#4d4e4f] border border-gray-200 hover:border-[#1b87c7]/50 hover:text-[#1b87c7]'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
 
         {/* Buscador y filtro rápido por Medio / Fuente (en la vista completa /prensa) */}
         {showFilters ? (

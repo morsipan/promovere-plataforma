@@ -295,7 +295,7 @@ export default function PageLivePreview({
                 <BlogSection collectionPosts={blogPosts} blogSettings={blogSettings} />
               ) : null}
               {slug === 'home' && index === contactBlockIndex && !hasPressBlock ? (
-                <PressSection collectionItems={pressItems} />
+                <PressSection collectionItems={pressItems} maxItems={6} />
               ) : null}
               {renderBlock(block, index)}
             </div>
@@ -310,7 +310,7 @@ export default function PageLivePreview({
             <BlogSection collectionPosts={blogPosts} blogSettings={blogSettings} />
           ) : null}
           {slug === 'home' && contactBlockIndex === -1 && !hasPressBlock ? (
-            <PressSection collectionItems={pressItems} />
+            <PressSection collectionItems={pressItems} maxItems={6} />
           ) : null}
         </>
       ) : slug === 'home' ? (
@@ -324,7 +324,7 @@ export default function PageLivePreview({
           <PartnersSection />
           <TestimonialsSection />
           <BlogSection collectionPosts={blogPosts} blogSettings={blogSettings} />
-          <PressSection collectionItems={pressItems} />
+          <PressSection collectionItems={pressItems} maxItems={6} />
           <ContactSection />
         </>
       ) : slug === 'comunidad' ? (
