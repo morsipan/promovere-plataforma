@@ -76,19 +76,34 @@ function formatDateEs(dateStr?: string | null): string {
   return `${day} ${month} ${year}`;
 }
 
-function getEmbedUrl(rawUrl?: string | null): string | null {
+function extractYouTubeId(rawUrl?: string | null): string | null {
   if (!rawUrl) return null;
   try {
     const url = new URL(rawUrl);
     if (url.hostname.includes('youtube.com')) {
       const v = url.searchParams.get('v');
-      if (v) return `https://www.youtube.com/embed/${v}?autoplay=1`;
-      if (url.pathname.startsWith('/embed/')) return rawUrl;
+      if (v) return v;
+      const embedMatch = /^\/embed\/([A-Za-z0-9_-]{11})/.exec(url.pathname);
+      if (embedMatch) return embedMatch[1];
     }
     if (url.hostname.includes('youtu.be')) {
-      const id = url.pathname.replace('/', '');
-      if (id) return `https://www.youtube.com/embed/${id}?autoplay=1`;
+      const id = url.pathname.replace('/', '').split('/')[0];
+      if (id) return id;
     }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function getEmbedUrl(rawUrl?: string | null): string | null {
+  if (!rawUrl) return null;
+  const ytId = extractYouTubeId(rawUrl);
+  if (ytId) {
+    return `https://www.youtube.com/embed/${ytId}?autoplay=1`;
+  }
+  try {
+    const url = new URL(rawUrl);
     if (url.hostname.includes('vimeo.com')) {
       const id = url.pathname.split('/').filter(Boolean).pop();
       if (id) return `https://player.vimeo.com/video/${id}?autoplay=1`;
@@ -97,6 +112,17 @@ function getEmbedUrl(rawUrl?: string | null): string | null {
     return null;
   }
   return null;
+}
+
+function getYouTubeWatchUrl(rawUrl?: string | null): string | null {
+  const ytId = extractYouTubeId(rawUrl);
+  if (ytId) return `https://www.youtube.com/watch?v=${ytId}`;
+  return rawUrl || null;
+}
+
+function getYouTubeThumbnailUrl(rawUrl?: string | null): string {
+  const ytId = extractYouTubeId(rawUrl);
+  return ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '';
 }
 
 function resolveExternalHref(item: PressItemCMS): string | null {
@@ -153,6 +179,23 @@ export default function PressSection({
     window.addEventListener('hashchange', syncFilterFromHash);
     return () => window.removeEventListener('hashchange', syncFilterFromHash);
   }, []);
+
+  // Cerrar modal de video con tecla Escape y bloquear scroll mientras está abierto
+  useEffect(() => {
+    if (!activeVideo) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveVideo(null);
+      }
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeVideo]);
 
   const sectionAppearance = resolveAppearance(data?.appearance, {
     backgroundColor: 'blanco',
@@ -408,10 +451,9 @@ export default function PressSection({
           {visibleItems.map((item, idx) => {
             const isVideo = item.format === 'video';
             const itemKey = String(item.id || `press-item-${idx}`);
-            const imgUrl = getMediaUrl(
-              item.coverImage,
-              item.coverImageUrl || item.image || ''
-            );
+            const imgUrl =
+              getMediaUrl(item.coverImage, item.coverImageUrl || item.image || '') ||
+              (isVideo ? getYouTubeThumbnailUrl(item.videoUrl) : '');
             const showImage = Boolean(imgUrl) && !brokenImages[itemKey];
             const externalHref = !isVideo ? resolveExternalHref(item) : null;
             const externalDomain = getExternalDomainLabel(externalHref);
@@ -476,8 +518,22 @@ export default function PressSection({
                 key={item.id || `press-item-${idx}`}
                 className={`group rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 flex flex-col sm:flex-row ${sectionAppearance.cardClass}`}
               >
-                {/* Miniatura (en notas de prensa abre enlace externo en pestaña nueva) */}
-                {!isVideo && externalHref ? (
+                {/* Miniatura (en notas de prensa abre enlace externo; en videos abre modal exclusivo) */}
+                {isVideo ? (
+                  <button
+                    type="button"
+                    onClick={() => setActiveVideo(item)}
+                    aria-label={`Reproducir video: ${item.title}`}
+                    className="block relative sm:w-52 md:w-48 lg:w-56 h-52 sm:h-auto shrink-0 overflow-hidden bg-[#4d4e4f] cursor-pointer text-left"
+                  >
+                    {thumbnailMedia}
+                    <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <span className="w-12 h-12 rounded-full bg-[#3cac59]/90 group-hover:bg-[#1b87c7] text-white flex items-center justify-center shadow-lg transition-all group-hover:scale-110">
+                        <PlayCircle className="w-6 h-6" />
+                      </span>
+                    </span>
+                  </button>
+                ) : externalHref ? (
                   <a
                     href={externalHref}
                     target="_blank"
@@ -515,7 +571,15 @@ export default function PressSection({
                     <h3
                       className={`font-heading text-lg sm:text-xl font-bold leading-snug mb-2.5 group-hover:text-[#1b87c7] transition-colors ${sectionAppearance.cardTitleClass}`}
                     >
-                      {!isVideo && externalHref ? (
+                      {isVideo ? (
+                        <button
+                          type="button"
+                          onClick={() => setActiveVideo(item)}
+                          className="text-left hover:text-[#1b87c7] transition-colors cursor-pointer"
+                        >
+                          {item.title}
+                        </button>
+                      ) : externalHref ? (
                         <a
                           href={externalHref}
                           target="_blank"
@@ -702,9 +766,12 @@ export default function PressSection({
         ) : null}
       </div>
 
-      {/* Modal de Reproducción de Video / Entrevista */}
+      {/* Modal exclusivo de Reproducción de Video / Entrevista (desmonta iframe al cerrar) */}
       {activeVideo ? (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeVideo.title}
           className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
           onClick={() => setActiveVideo(null)}
         >
@@ -734,6 +801,7 @@ export default function PressSection({
             {embedUrl ? (
               <div className="relative aspect-video w-full bg-black">
                 <iframe
+                  key={embedUrl}
                   src={embedUrl}
                   title={activeVideo.title}
                   className="absolute inset-0 w-full h-full"
@@ -746,12 +814,12 @@ export default function PressSection({
                 <p className="text-sm text-[#4d4e4f]/80 mb-4">{activeVideo.summary}</p>
                 {activeVideo.videoUrl ? (
                   <a
-                    href={activeVideo.videoUrl}
+                    href={getYouTubeWatchUrl(activeVideo.videoUrl) || activeVideo.videoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1b87c7] text-white text-sm font-bold hover:bg-[#1571a8] transition-colors"
                   >
-                    <span>Ver video externo</span>
+                    <span>Ver video en YouTube</span>
                     <ExternalLink className="w-4 h-4" />
                   </a>
                 ) : null}
@@ -762,12 +830,12 @@ export default function PressSection({
               <p className="text-xs text-[#4d4e4f]/75 line-clamp-2">{activeVideo.summary}</p>
               {activeVideo.videoUrl ? (
                 <a
-                  href={activeVideo.videoUrl}
+                  href={getYouTubeWatchUrl(activeVideo.videoUrl) || activeVideo.videoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1b87c7] hover:underline shrink-0"
                 >
-                  <span>Abrir original</span>
+                  <span>Abrir en YouTube</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               ) : null}
