@@ -9,6 +9,7 @@
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
     "import:press": "tsx --env-file=.env scripts/import-press.ts",
+    "sync:press-images": "tsx --env-file=.env scripts/sync-press-images.ts",
     "seed": "tsx --env-file=.env scripts/seed.ts"
   },
   "dependencies": {

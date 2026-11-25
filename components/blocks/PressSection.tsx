@@ -136,6 +136,7 @@ export default function PressSection({
   const [selectedOutlet, setSelectedOutlet] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [activeVideo, setActiveVideo] = useState<PressItemCMS | null>(null);
+  const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
 
   // Sincronizar filtro inicial con los anclajes del footer (#notas-de-prensa / #entrevistas-y-coberturas)
   useEffect(() => {
@@ -406,27 +407,37 @@ export default function PressSection({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {visibleItems.map((item, idx) => {
             const isVideo = item.format === 'video';
+            const itemKey = String(item.id || `press-item-${idx}`);
             const imgUrl = getMediaUrl(
               item.coverImage,
               item.coverImageUrl || item.image || ''
             );
+            const showImage = Boolean(imgUrl) && !brokenImages[itemKey];
             const externalHref = !isVideo ? resolveExternalHref(item) : null;
             const externalDomain = getExternalDomainLabel(externalHref);
 
             const thumbnailMedia = (
               <>
-                {imgUrl ? (
+                {showImage ? (
                   <Image
                     src={imgUrl}
                     alt={item.title}
                     fill
                     unoptimized
+                    onError={() =>
+                      setBrokenImages((prev) =>
+                        prev[itemKey] ? prev : { ...prev, [itemKey]: true }
+                      )
+                    }
                     className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     sizes="(max-width: 640px) 100vw, 240px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-[#4d4e4f] via-[#1b87c7] to-[#3cac59] flex items-center justify-center p-4">
-                    <Newspaper className="w-9 h-9 text-white/40" />
+                  <div className="w-full h-full bg-gradient-to-br from-[#4d4e4f] via-[#1b87c7] to-[#3cac59] flex flex-col items-center justify-center p-4 text-center">
+                    <Newspaper className="w-8 h-8 text-white/75 mb-1.5" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-white/85 line-clamp-2 px-2">
+                      {item.mediaOutlet}
+                    </span>
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
