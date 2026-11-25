@@ -53,12 +53,13 @@ export default async function Home() {
   let headerData: any = null;
   let footerData: any = null;
   let siteSettings: any = null;
+  let blogSettings: any = null;
   let blogPosts: any[] = [];
   let pressItems: any[] = [];
 
   try {
     const payload = await getPayload({ config });
-    const [pagesRes, headerRes, footerRes, settingsRes, blogRes, pressRes] = await Promise.all([
+    const [pagesRes, headerRes, footerRes, settingsRes, blogSettingsRes, blogRes, pressRes] = await Promise.all([
       payload
         .find({
           collection: 'pages',
@@ -74,6 +75,7 @@ export default async function Home() {
       payload.findGlobal({ slug: 'header', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'footer', depth: 1 }).catch(() => null),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }).catch(() => null),
+      payload.findGlobal({ slug: 'blog-settings', depth: 1 }).catch(() => null),
       payload
         .find({
           collection: 'blog-posts',
@@ -100,6 +102,7 @@ export default async function Home() {
     headerData = headerRes;
     footerData = footerRes;
     siteSettings = settingsRes;
+    blogSettings = blogSettingsRes;
     blogPosts = blogRes?.docs || [];
     pressItems = pressRes?.docs || [];
   } catch (error) {
@@ -112,6 +115,7 @@ export default async function Home() {
       headerData={headerData}
       footerData={footerData}
       siteSettings={siteSettings}
+      blogSettings={blogSettings}
       blogPosts={blogPosts}
       pressItems={pressItems}
       slug="home"

@@ -28,6 +28,7 @@ import { Media } from './collections/Media'
 import { Header } from './globals/Header'
 import { Footer } from './globals/Footer'
 import { SiteSettings } from './globals/SiteSettings'
+import { BlogSettings } from './globals/BlogSettings'
 import { CommunitySettings } from './globals/CommunitySettings'
 import { getVercelBlobToken, getBlobAccess, isVercelBlobEnabled } from './lib/blob'
 
@@ -94,7 +95,7 @@ export default buildConfig({
     Users,
     Media,
   ],
-  globals: [Header, Footer, SiteSettings, CommunitySettings],
+  globals: [Header, Footer, SiteSettings, BlogSettings, CommunitySettings],
   plugins: [
     // 1. Almacenamiento en Vercel Blob (se activa si existe token válido de Blob)
     vercelBlobStorage({

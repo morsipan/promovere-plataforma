@@ -17,6 +17,7 @@ import Footer from '@/components/Footer';
 import BlogRichText from '@/components/blocks/BlogRichText';
 import { getMediaUrl } from '@/lib/media';
 import { normalizeBlogSlug, getBlogPostSlug, formatBlogDateUtc } from '@/lib/blog';
+import { resolveBlogSettings } from '@/lib/blogSettings';
 import { blogContent } from '@/data/content';
 
 export const revalidate = 3600;
@@ -139,20 +140,23 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
   let headerData: any = null;
   let footerData: any = null;
   let siteSettings: any = null;
+  let blogSettingsRaw: any = null;
 
   const [{ post, relatedPosts }] = await Promise.all([
     resolveBlogPost(slug),
     (async () => {
       try {
         const payload = await getPayload({ config });
-        const [headerRes, footerRes, settingsRes] = await Promise.all([
+        const [headerRes, footerRes, settingsRes, blogSettingsRes] = await Promise.all([
           payload.findGlobal({ slug: 'header', depth: 1 }).catch(() => null),
           payload.findGlobal({ slug: 'footer', depth: 1 }).catch(() => null),
           payload.findGlobal({ slug: 'site-settings', depth: 1 }).catch(() => null),
+          payload.findGlobal({ slug: 'blog-settings', depth: 1 }).catch(() => null),
         ]);
         headerData = headerRes;
         footerData = footerRes;
         siteSettings = settingsRes;
+        blogSettingsRaw = blogSettingsRes;
       } catch {}
     })(),
   ]);
@@ -163,46 +167,59 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
 
   const coverImgUrl = getMediaUrl(post.coverImage, post.coverImageUrl || '');
   const formattedDate = formatBlogDateUtc(post.publishedDate);
+  const blogStyle = resolveBlogSettings(blogSettingsRaw);
 
   return (
     <main className="min-h-screen bg-[#f9f9f9] text-[#4d4e4f] font-sans">
       <Navbar data={headerData} />
 
       {/* Encabezado del Artículo */}
-      <header className="pt-28 pb-12 sm:pb-16 bg-[#4d4e4f] text-white relative overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#1b87c7]/25 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[#3cac59]/20 blur-3xl pointer-events-none" />
+      <header className={`pt-28 pb-12 sm:pb-16 relative overflow-hidden ${blogStyle.headerBgClass}`}>
+        {!blogStyle.isLightHeader ? (
+          <>
+            <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#1b87c7]/25 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[#3cac59]/20 blur-3xl pointer-events-none" />
+          </>
+        ) : null}
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center gap-3 mb-4">
-            {post.category ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1b87c7]/25 border border-[#1b87c7]/40 text-[#f9f9f9] text-xs font-bold uppercase tracking-wider">
-                <BookOpen className="w-3.5 h-3.5 text-[#3cac59]" />
+            {blogStyle.showCategory && post.category ? (
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider ${blogStyle.categoryHeaderBadgeClass}`}
+              >
+                <BookOpen className="w-3.5 h-3.5" />
                 <span>{post.category}</span>
               </span>
             ) : null}
 
-            {post.brand ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3cac59]/20 border border-[#3cac59]/40 text-[#3cac59] text-xs font-bold">
+            {blogStyle.showBrand && post.brand ? (
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold ${blogStyle.tagHeaderBadgeClass}`}
+              >
                 <Building2 className="w-3.5 h-3.5" />
                 <span>{post.brand}</span>
               </span>
             ) : null}
 
-            {formattedDate ? (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#f9f9f9]/80">
+            {blogStyle.showDate && formattedDate ? (
+              <span
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold ${blogStyle.headerMetaTextClass}`}
+              >
                 <Calendar className="w-3.5 h-3.5 text-[#3cac59]" />
                 <time dateTime={post.publishedDate}>{formattedDate}</time>
               </span>
             ) : null}
           </div>
 
-          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight mb-4">
+          <h1
+            className={`font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight mb-4 ${blogStyle.headerTitleClass}`}
+          >
             {post.title}
           </h1>
 
           {post.excerpt ? (
-            <p className="text-base sm:text-lg text-[#f9f9f9]/85 leading-relaxed">
+            <p className={`text-base sm:text-lg leading-relaxed ${blogStyle.headerSubtitleClass}`}>
               {post.excerpt}
             </p>
           ) : null}
@@ -212,7 +229,7 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
       {/* Cuerpo del Artículo */}
       <article className="py-12 sm:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm overflow-hidden">
+          <div className={blogStyle.articleCardClass}>
             {/* Imagen principal desde Media / API */}
             {coverImgUrl ? (
               <div className="relative w-full aspect-[16/9] max-h-[480px] bg-[#4d4e4f]/10 overflow-hidden">
@@ -261,7 +278,7 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
                 </h2>
                 <Link
                   href="/blog"
-                  className="text-xs sm:text-sm font-bold text-[#1b87c7] hover:underline"
+                  className={`text-xs sm:text-sm font-bold hover:underline ${blogStyle.accentTextClass}`}
                 >
                   Ver listado completo →
                 </Link>
@@ -278,7 +295,7 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
                       href={relHref}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group bg-white rounded-2xl border border-gray-200/80 hover:border-[#1b87c7]/50 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                      className={`group bg-white rounded-2xl border border-gray-200/80 hover:border-[#1b87c7]/50 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between ${blogStyle.listCardBorderClass}`}
                     >
                       <div>
                         <div className="relative h-36 w-full bg-[#4d4e4f]/10 overflow-hidden">
@@ -298,8 +315,10 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
                           )}
                         </div>
                         <div className="p-4">
-                          {rel.brand ? (
-                            <span className="text-[11px] font-bold text-[#3cac59] uppercase tracking-wider block mb-1">
+                          {blogStyle.showBrand && rel.brand ? (
+                            <span
+                              className={`text-[11px] font-bold uppercase tracking-wider block mb-1 ${blogStyle.tagTextClass}`}
+                            >
                               {rel.brand}
                             </span>
                           ) : null}
@@ -308,7 +327,9 @@ export default async function BlogPostDetailPage({ params }: BlogPostPageProps) 
                           </h3>
                         </div>
                       </div>
-                      <div className="px-4 pb-4 pt-2 flex items-center gap-1 text-xs font-bold text-[#1b87c7]">
+                      <div
+                        className={`px-4 pb-4 pt-2 flex items-center gap-1 text-xs font-bold ${blogStyle.accentTextClass}`}
+                      >
                         <span>Leer artículo</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </div>

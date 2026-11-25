@@ -18,6 +18,7 @@ import { blogContent } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 import { getBlogPostSlug, formatBlogDateUtc } from '@/lib/blog';
+import { resolveBlogSettings, type BlogSettingsData } from '@/lib/blogSettings';
 
 export interface BlogPostCMS {
   id?: string | number | null;
@@ -45,6 +46,7 @@ export interface BlogSectionProps {
     posts?: BlogPostCMS[] | null;
   };
   collectionPosts?: BlogPostCMS[] | null;
+  blogSettings?: BlogSettingsData | null;
   hideViewAllCta?: boolean;
   showFilters?: boolean;
   maxItems?: number;
@@ -59,6 +61,7 @@ function getNormalizedCategory(cat?: string | null): string {
 export default function BlogSection({
   data,
   collectionPosts,
+  blogSettings,
   hideViewAllCta = false,
   showFilters = false,
   maxItems,
@@ -68,6 +71,8 @@ export default function BlogSection({
   const [selectedBrand, setSelectedBrand] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const blogStyle = resolveBlogSettings(blogSettings);
 
   const sectionAppearance = resolveAppearance(data?.appearance, {
     backgroundColor: 'blancoHumo',
@@ -285,7 +290,7 @@ export default function BlogSection({
                     }`}
               </span>
               {totalPages > 1 ? (
-                <span className="font-semibold text-[#1b87c7]">
+                <span className={`font-semibold ${blogStyle.accentTextClass}`}>
                   Página {safeCurrentPage} de {totalPages}
                 </span>
               ) : null}
@@ -326,7 +331,7 @@ export default function BlogSection({
               return (
                 <article
                   key={`${post.id ?? postSlug}-${idx}`}
-                  className={`group rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${sectionAppearance.cardClass}`}
+                  className={`group rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${sectionAppearance.cardClass} ${blogStyle.listCardBorderClass}`}
                 >
                   <div>
                     <Link
@@ -350,21 +355,27 @@ export default function BlogSection({
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-                      <span className="absolute top-4 left-4 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/95 text-[#1b87c7] text-[11px] font-bold uppercase tracking-wider shadow-sm">
-                        <Tag className="w-3 h-3" />
-                        <span>{postCategory}</span>
-                      </span>
+                      {blogStyle.showCategory ? (
+                        <span
+                          className={`absolute top-4 left-4 inline-flex items-center gap-1 px-3 py-1 rounded-full border text-[11px] font-bold uppercase tracking-wider shadow-sm ${blogStyle.categoryListBadgeClass}`}
+                        >
+                          <Tag className="w-3 h-3" />
+                          <span>{postCategory}</span>
+                        </span>
+                      ) : null}
                     </Link>
 
                     <div className="p-6 sm:p-7">
                       <div className="flex flex-wrap items-center gap-3 text-xs mb-3">
-                        {post.brand ? (
-                          <span className="inline-flex items-center gap-1.5 font-bold text-[#3cac59]">
+                        {blogStyle.showBrand && post.brand ? (
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border font-bold ${blogStyle.tagListBadgeClass}`}
+                          >
                             <Building2 className="w-3.5 h-3.5" />
                             <span>{post.brand}</span>
                           </span>
                         ) : null}
-                        {formattedDate ? (
+                        {blogStyle.showDate && formattedDate ? (
                           <span
                             className={`inline-flex items-center gap-1 ${sectionAppearance.cardSubtextClass}`}
                           >
@@ -377,13 +388,13 @@ export default function BlogSection({
                       </div>
 
                       <h3
-                        className={`font-heading text-xl font-bold leading-snug mb-3 group-hover:text-[#1b87c7] transition-colors ${sectionAppearance.cardTitleClass}`}
+                        className={`font-heading text-xl font-bold leading-snug mb-3 transition-colors ${sectionAppearance.cardTitleClass}`}
                       >
                         <Link
                           href={postHref}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:text-[#1b87c7] transition-colors"
+                          className={`transition-colors ${blogStyle.accentHoverTextClass}`}
                         >
                           {post.title}
                         </Link>
@@ -404,7 +415,7 @@ export default function BlogSection({
                       href={postHref}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#1b87c7] hover:text-[#3cac59] transition-colors"
+                      className={`inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold hover:text-[#3cac59] transition-colors ${blogStyle.accentTextClass}`}
                     >
                       <span>Leer artículo completo</span>
                       <ArrowRight className="w-4 h-4" />
@@ -457,8 +468,8 @@ export default function BlogSection({
                   onClick={() => setCurrentPage(pageNum)}
                   className={`w-10 h-10 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer ${
                     isCurrent
-                      ? 'bg-[#1b87c7] text-white shadow-md shadow-[#1b87c7]/25'
-                      : 'border border-gray-200 bg-white text-[#4d4e4f] hover:border-[#1b87c7] hover:text-[#1b87c7]'
+                      ? blogStyle.accentActivePageClass
+                      : `border border-gray-200 bg-white text-[#4d4e4f] ${blogStyle.accentPageHoverClass}`
                   }`}
                 >
                   {pageNum}

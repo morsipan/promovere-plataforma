@@ -107,12 +107,14 @@ export interface Config {
     header: Header;
     footer: Footer;
     'site-settings': SiteSetting;
+    'blog-settings': BlogSetting;
     'community-settings': CommunitySetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'blog-settings': BlogSettingsSelect<false> | BlogSettingsSelect<true>;
     'community-settings': CommunitySettingsSelect<false> | CommunitySettingsSelect<true>;
   };
   locale: null;
@@ -2761,6 +2763,44 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * Configuración visual y editorial general para Promo News (listado y todos los posteos individuales del Blog).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-settings".
+ */
+export interface BlogSetting {
+  id: number;
+  /**
+   * Título principal mostrado en la cabecera del listado de Promo News (/blog).
+   */
+  blogTitle?: string | null;
+  /**
+   * Descripción breve mostrada debajo del título principal en /blog.
+   */
+  blogSubtitle?: string | null;
+  headerBackground?: ('grisOscuro' | 'azul' | 'verde' | 'blancoHumo') | null;
+  headerTitleColor?: ('blanco' | 'blancoHumo' | 'grisOscuro' | 'azul' | 'verde') | null;
+  showDate?: boolean | null;
+  showCategory?: boolean | null;
+  showBrand?: boolean | null;
+  /**
+   * Aplica a los badges de categoría en todos los artículos y en el listado.
+   */
+  categoryColor?: ('azul' | 'verde' | 'grisOscuro') | null;
+  /**
+   * Aplica a los tags de marca/destino en todos los posteos y tarjetas.
+   */
+  tagColor?: ('verde' | 'azul' | 'grisOscuro') | null;
+  badgeStyle?: ('soft' | 'solid' | 'outline') | null;
+  /**
+   * Enlaces, paginación activa y realces de lectura.
+   */
+  accentColor?: ('azul' | 'verde' | 'grisOscuro') | null;
+  cardBorderStyle?: ('subtle' | 'accent' | 'elevated') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Configurá textos, estilos visuales de los elementos, aviso urgente, canal de WhatsApp y los 3 espacios de banners publicitarios del portal privado.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3205,6 +3245,27 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   youtube?: T;
   googleAnalyticsId?: T;
   metaPixelId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-settings_select".
+ */
+export interface BlogSettingsSelect<T extends boolean = true> {
+  blogTitle?: T;
+  blogSubtitle?: T;
+  headerBackground?: T;
+  headerTitleColor?: T;
+  showDate?: T;
+  showCategory?: T;
+  showBrand?: T;
+  categoryColor?: T;
+  tagColor?: T;
+  badgeStyle?: T;
+  accentColor?: T;
+  cardBorderStyle?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

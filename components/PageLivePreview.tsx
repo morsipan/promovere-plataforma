@@ -64,6 +64,7 @@ export interface PageLivePreviewProps {
   headerData?: any;
   footerData?: any;
   siteSettings?: any;
+  blogSettings?: any;
   blogPosts?: any[];
   pressItems?: any[];
   slug?: string;
@@ -105,6 +106,7 @@ export default function PageLivePreview({
   headerData,
   footerData,
   siteSettings,
+  blogSettings,
   blogPosts,
   pressItems,
   slug = 'home',
@@ -174,6 +176,7 @@ export default function PageLivePreview({
             key={`block-${index}`}
             data={block}
             collectionPosts={blogPosts}
+            blogSettings={blogSettings}
             hideViewAllCta={slug === 'blog'}
             showFilters={slug === 'blog'}
             maxItems={slug === 'home' ? 6 : undefined}
@@ -287,7 +290,7 @@ export default function PageLivePreview({
                 <TestimonialsSection />
               ) : null}
               {slug === 'home' && index === contactBlockIndex && !hasBlogBlock ? (
-                <BlogSection collectionPosts={blogPosts} />
+                <BlogSection collectionPosts={blogPosts} blogSettings={blogSettings} />
               ) : null}
               {slug === 'home' && index === contactBlockIndex && !hasPressBlock ? (
                 <PressSection collectionItems={pressItems} />
@@ -302,7 +305,7 @@ export default function PageLivePreview({
             <TestimonialsSection />
           ) : null}
           {slug === 'home' && contactBlockIndex === -1 && !hasBlogBlock ? (
-            <BlogSection collectionPosts={blogPosts} />
+            <BlogSection collectionPosts={blogPosts} blogSettings={blogSettings} />
           ) : null}
           {slug === 'home' && contactBlockIndex === -1 && !hasPressBlock ? (
             <PressSection collectionItems={pressItems} />
@@ -318,7 +321,7 @@ export default function PageLivePreview({
           <DistributionSection />
           <PartnersSection />
           <TestimonialsSection />
-          <BlogSection collectionPosts={blogPosts} />
+          <BlogSection collectionPosts={blogPosts} blogSettings={blogSettings} />
           <PressSection collectionItems={pressItems} />
           <ContactSection />
         </>
