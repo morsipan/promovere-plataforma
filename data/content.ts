@@ -113,7 +113,7 @@ export const heroContent = {
   badge: "Especialistas en Marketing y Representación Turística",
   title: "Somos Promovêre",
   subtitle:
-    "Una década conectando marcas turísticas con Latinoamérica: impulsamos la presencia comercial, el posicionamiento y las ventas de destinos y hoteles de clase mundial.",
+    "Impulsamos marcas turísticas en los mercados de América Latina, promoviendo su presencia comercial y posicionamiento en una amplia red de tour operadores, agencias de viajes y medios especializados / masivos.",
   cta1: { label: "Nuestras Representaciones", href: "#representaciones" },
   cta2: { label: "Comunidad Promovêre", href: "/comunidad" },
   backgroundImage: "/assets/WebP/hero-bg-promovere.webp",
@@ -128,21 +128,21 @@ export const servicesContent = {
     {
       id: "ve-reps",
       image: "/assets/SVG/servicio-reps.svg",
-      title: "REPs — Representaciones Turísticas (Vê REPS®)",
+      title: "Representaciones Turísticas (Vê REPS®)",
       subtitle: "Gestión comercial activa",
       description:
         "Visitas comerciales sistemáticas a operadores mayoristas y agencias, capacitaciones presenciales y virtuales, participación en workshops y representación oficial en LATAM.",
       highlights: [
         "Visitas comerciales personalizadas",
-        "Presencia activa en el canal trade",
-        "Participación en workshops y ferias",
+        "Capacitación continua al trade",
+        "Presencia en eventos sectoriales",
         "Posicionamiento comercial regional",
       ],
     },
     {
       id: "marketing-turistico",
       image: "/assets/SVG/servicio-marketing.svg",
-      title: "Marketing — Marketing Turístico",
+      title: "Marketing Turístico",
       subtitle: "Campañas de alta conversión",
       description:
         "Campañas integrales de promoción y marketing digital omnicanal, branding turístico, captación de leads cualificados y generación de demanda orientada a resultados comerciales.",
@@ -156,7 +156,7 @@ export const servicesContent = {
     {
       id: "relaciones-publicas",
       image: "/assets/SVG/servicio-pr.svg",
-      title: "PR — Relaciones Públicas",
+      title: "Relaciones Públicas",
       subtitle: "Visibilidad en prensa y trade",
       description:
         "Estrategias de comunicación online y offline en medios masivos y prensa especializada del trade turístico, ruedas de prensa, entrevistas y acuerdos con líderes de opinión.",
@@ -168,40 +168,40 @@ export const servicesContent = {
       ],
     },
     {
-      id: "eventos-caravanas",
-      image: "/assets/SVG/servicio-eventos.svg",
-      title: "Events — Caravanas · Road Show · Logística",
-      subtitle: "Activaciones comerciales presenciales",
+      id: "events",
+      image: "/assets/SVG/servicio-capacitacion.svg",
+      title: "Events",
+      subtitle: "Diferenciación y valor para tu marca",
       description:
-        "Organización integral de caravanas comerciales, road shows, desayunos de trabajo, eventos de lanzamiento y coordinación logística en ciudades clave de Latinoamérica.",
+        "Organización integral de eventos corporativos, caravanas comerciales, roadshows y coordinación logística en ciudades estratégicas de América Latina.",
       highlights: [
         "Caravanas comerciales en ciudades clave",
-        "Road shows y desayunos de trabajo",
+        "Roadshows y desayunos de trabajo",
+        "Eventos de lanzamiento y workshops",
         "Producción y coordinación logística",
-        "Convocatoria a tomadores de decisión",
       ],
     },
     {
-      id: "trade-producto-capacitacion",
-      image: "/assets/SVG/servicio-capacitacion.svg",
-      title: "Trade: Producto + Capacitación",
-      subtitle: "Armado comercial y formación al canal",
+      id: "trade",
+      image: "/assets/SVG/servicio-desarrollo.svg",
+      title: "Trade",
+      subtitle: "Formación especializada y presencia continua",
       description:
-        "Asesoramiento a turoperadores para el desarrollo de circuitos e itinerarios diferenciales, junto a programas de formación continua para la fuerza de ventas de agencias y operadores.",
+        "Capacitación y desarrollo de Producto junto a turoperadores y agencias de viajes: armado de circuitos, fichas técnicas y formación continua para la fuerza de ventas.",
       highlights: [
-        "Desarrollo de producto e itinerarios",
+        "Capacitación y desarrollo de Producto",
         "Webinars y talleres interactivos",
         "Material didáctico y fichas técnicas",
-        "Certificaciones para fuerza de ventas",
+        "Entrenamiento para fuerza de ventas",
       ],
     },
     {
-      id: "fams-tours-press",
-      image: "/assets/SVG/servicio-desarrollo.svg",
-      title: "FAMS — Fam Tours / Fam Press",
-      subtitle: "Experiencias de inmersión en destino",
+      id: "fams",
+      image: "/assets/SVG/servicio-eventos.svg",
+      title: "FAMS",
+      subtitle: "Experiencias memorables de inmersión",
       description:
-        "Diseño y coordinación de viajes de familiarización (Fam Tours) para agentes top producers y viajes de prensa (Fam Press) con periodistas y medios estratégicos del sector.",
+        "Diseño y coordinación integral de Fam Tours para agentes top producers y Fam Press con periodistas y medios estratégicos para vivir el destino en primera persona.",
       highlights: [
         "Fam Tours con agentes top producers",
         "Fam Press con prensa especializada",
@@ -213,10 +213,10 @@ export const servicesContent = {
 };
 
 export const representationsContent = {
-  badge: "Nuestras REPS",
-  title: "Marcas y Destinos Internacionales",
+  badge: "Nuestras Representaciones",
+  title: "Destinos y Marcas Internacionales",
   subtitle:
-    "Orgullosos de representar de forma oficial a prestigiosos destinos turísticos y cadenas hoteleras líderes en América Latina.",
+    "Orgullosos de representar de forma oficial a prestigiosos destinos turísticos, DMC's y cadenas hoteleras líderes.",
   items: [
     {
       id: "cuba-gaviota",
@@ -283,9 +283,9 @@ export const representationsContent = {
 
 export const partnersContent = {
   badge: "Nuestras Campañas",
-  title: "Nuestras Campañas de PR y Marketing",
+  title: "Campañas de marketing y PR",
   subtitle:
-    "Campañas activas de relaciones públicas, marketing turístico y posicionamiento anual desarrolladas junto a marcas globales, cadenas hoteleras y destinos en LATAM.",
+    "Trabajamos con marcas globales con el objetivo de acercarlos a los mercados emisivos de Cono Sur y LATAM y potenciar su alcance promocional en la región.",
   ctaLabel: "Quiero mi campaña anual",
   ctaHref: "#contacto",
   partners: [
@@ -352,24 +352,20 @@ export const distributionContent = {
   subtitle:
     "Presencia activa y capilar en los principales mercados emisores de América Latina. Conectamos tu producto directamente con quienes deciden la compra turística.",
   stats: [
-    { value: "10 años", label: "Impulsando destinos y hoteles en la región" },
-    { value: "LATAM", label: "Cobertura activa en mercados emisores estratégicos" },
-    { value: "360°", label: "Representación comercial, marketing, PR y capacitación" },
-    { value: "100%", label: "Enfoque B2B especializado y respeto al canal trade" },
+    { value: "+ 150", label: "Tour operadores mayoristas" },
+    { value: "+ 18.000", label: "Agentes de viajes" },
+    { value: "+ 2500", label: "Agentes capacitados" },
+    { value: "100%", label: "B2B" },
   ],
   countries: [
-    "Argentina",
-    "Brasil",
-    "Chile",
-    "Uruguay",
-    "Paraguay",
-    "Perú",
-    "Colombia",
-    "México",
-    "Bolivia",
-    "Ecuador",
-    "Panamá",
-    "Costa Rica",
+    "ARGENTINA",
+    "BRASIL",
+    "CHILE",
+    "URUGUAY",
+    "PARAGUAY",
+    "PERU",
+    "BOLIVIA",
+    "COLOMBIA",
   ],
   cta1: { label: "Sumar mi marca a la Red", href: "#contacto" },
   cta2: { label: "Explorar Comunidad Trade", href: "/comunidad" },

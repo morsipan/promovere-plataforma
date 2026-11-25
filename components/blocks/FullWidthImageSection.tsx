@@ -43,10 +43,10 @@ export default function FullWidthImageSection({ data }: FullWidthImageSectionPro
   // Alturas predefinidas (cuando no es 'natural')
   const heightClasses = {
     natural: 'h-auto',
-    auto: 'min-h-[320px] aspect-video sm:aspect-[21/9]',
-    small: 'h-[280px] sm:h-[360px]',
-    medium: 'h-[420px] sm:h-[540px]',
-    large: 'h-[560px] sm:h-[720px]',
+    auto: 'min-h-[240px] aspect-video sm:aspect-[21/9]',
+    small: 'h-[160px] sm:h-[210px] md:h-[250px]',
+    medium: 'h-[320px] sm:h-[420px]',
+    large: 'h-[480px] sm:h-[620px]',
     screen: 'min-h-screen',
   }[height];
 
@@ -116,17 +116,17 @@ export default function FullWidthImageSection({ data }: FullWidthImageSectionPro
   const bannerInner = (
     <>
       {isNaturalHeight ? (
-        /* Modo 100% Altura Real de la Imagen (ej: 1200x150 escalado proporcional sin recortes) */
+        /* Modo 100% Altura Real de la Imagen con tope proporcional para evitar desproporciones */
         <>
           <img
             src={desktopImageUrl}
             alt={altText}
-            className={`hidden sm:block w-full h-auto max-w-full object-contain mx-auto ${hoverImageClass}`}
+            className={`hidden sm:block w-full h-auto max-h-[280px] max-w-full object-contain mx-auto ${hoverImageClass}`}
           />
           <img
             src={mobileImageUrl}
             alt={altText}
-            className={`block sm:hidden w-full h-auto max-w-full object-contain mx-auto ${hoverImageClass}`}
+            className={`block sm:hidden w-full h-auto max-h-[220px] max-w-full object-contain mx-auto ${hoverImageClass}`}
           />
         </>
       ) : (

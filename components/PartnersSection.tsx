@@ -41,7 +41,7 @@ export default function PartnersSection({ data }: PartnersSectionProps = {}) {
   const rawTitle = data?.title || partnersContent.title;
   const title =
     /partners\s+y\s+aliados|alianzas?\s+estratégicas/i.test(rawTitle)
-      ? 'Nuestras Campañas de PR y Marketing'
+      ? 'Campañas de marketing y PR'
       : rawTitle;
   const subtitle = data?.subtitle || partnersContent.subtitle;
   const ctaLabel = data?.ctaLabel || 'Quiero mi campaña anual';
