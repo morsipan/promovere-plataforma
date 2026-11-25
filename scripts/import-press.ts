@@ -883,7 +883,8 @@ async function run() {
   let inserted = 0;
   let skipped = 0;
 
-  for (const art of articles) {
+  // Insertar desde el más antiguo al más reciente para que created_at quede ordenado del más nuevo al más viejo
+  for (const art of [...articles].reverse()) {
     if (existingKeys.has(art.canonicalKey)) {
       skipped++;
       continue;

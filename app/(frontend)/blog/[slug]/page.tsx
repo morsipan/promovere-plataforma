@@ -82,7 +82,7 @@ async function resolveBlogPost(rawSlug: string) {
               { id: { not_equals: postDoc.id } },
             ],
           },
-          sort: '-publishedDate,-createdAt',
+          sort: '-createdAt',
           depth: 1,
           limit: 3,
         })

@@ -81,7 +81,7 @@ export default async function Home() {
         .find({
           collection: 'blog-posts',
           where: { status: { equals: 'published' } },
-          sort: '-publishedDate',
+          sort: '-createdAt',
           depth: 1,
           limit: 6,
         })
@@ -90,7 +90,7 @@ export default async function Home() {
         .find({
           collection: 'press-items',
           where: { status: { equals: 'published' } },
-          sort: '-publishedDate,-createdAt',
+          sort: '-createdAt',
           depth: 1,
           limit: 100,
         })

@@ -340,8 +340,9 @@ async function main() {
     slugsNormalized: [] as Array<{ original: string; normalized: string }>,
   };
 
-  for (let i = 0; i < PROMO_NEWS_URLS.length; i++) {
-    const rawUrl = PROMO_NEWS_URLS[i];
+  const orderedUrls = [...PROMO_NEWS_URLS].reverse();
+  for (let i = 0; i < orderedUrls.length; i++) {
+    const rawUrl = orderedUrls[i];
     const encodedUrl = encodeURI(rawUrl);
     const slug = normalizeSlug(rawUrl);
     const rawSegment = rawUrl.split('/').filter(Boolean).pop() || '';

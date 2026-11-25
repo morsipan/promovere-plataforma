@@ -10,6 +10,7 @@ export const PressItems: CollectionConfig = {
     singular: 'Cobertura de Prensa',
     plural: 'Prensa',
   },
+  defaultSort: '-createdAt',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'mediaOutlet', 'format', 'publishedDate', 'status'],

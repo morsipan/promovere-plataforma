@@ -45,7 +45,7 @@ export default async function BlogPage() {
         .find({
           collection: 'blog-posts',
           where: { status: { equals: 'published' } },
-          sort: '-publishedDate,-createdAt',
+          sort: '-createdAt',
           depth: 1,
           limit: 200,
         })

@@ -163,7 +163,8 @@ async function run() {
   let inserted = 0;
   let skipped = 0;
 
-  for (const v of PRESS_VIDEOS) {
+  // Insertar desde el más antiguo al más reciente para que created_at quede ordenado del más nuevo al más viejo
+  for (const v of [...PRESS_VIDEOS].reverse()) {
     if (existingIds.has(v.videoId)) {
       skipped++;
       continue;

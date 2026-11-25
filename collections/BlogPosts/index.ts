@@ -21,6 +21,7 @@ export const BlogPosts: CollectionConfig = {
     singular: 'Artículo de Blog',
     plural: 'Blog',
   },
+  defaultSort: '-createdAt',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'brand', 'category', 'publishedDate', 'status'],
