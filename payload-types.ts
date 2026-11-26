@@ -1223,7 +1223,7 @@ export interface PressItem {
   createdAt: string;
 }
 /**
- * Catálogo oficial de destinos, cadenas hoteleras y operadores representados por Promovêre. Alimenta el portal privado de la Comunidad.
+ * Catálogo oficial de Reps y marcas representadas por Promovêre. Controla su publicación en la Home (/reps/[slug]) y en Comunidad.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "representations".
@@ -1253,9 +1253,27 @@ export interface Representation {
    */
   tag?: string | null;
   /**
-   * Resumen de la propuesta de valor y diferencial para el trade turístico.
+   * Resumen de la propuesta de valor y diferencial para el trade turístico (sin tarifas ni precios públicos).
    */
   description: string;
+  /**
+   * Contenido editorial de la página pública de la Rep (nunca incluir tarifas ni precios públicos).
+   */
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
    * Foto principal en alta resolución para la tarjeta del destino/marca.
    */
@@ -1275,6 +1293,18 @@ export interface Representation {
    * Ej: https://wa.me/5491112345678
    */
   contactWhatsapp?: string | null;
+  /**
+   * Si se desmarca, la Rep desaparece automáticamente de la Home y su página /reps/[slug] devuelve 404.
+   */
+  isPublished?: boolean | null;
+  /**
+   * Ej: caribe-mexicano, atelier-de-hoteles, hoteles-solaris.
+   */
+  slug?: string | null;
+  /**
+   * URL de referencia de la web anterior para trazabilidad.
+   */
+  sourceUrl?: string | null;
   status: 'active' | 'draft';
   featured?: boolean | null;
   /**
@@ -2480,6 +2510,7 @@ export interface RepresentationsSelect<T extends boolean = true> {
   category?: T;
   tag?: T;
   description?: T;
+  content?: T;
   coverImage?: T;
   logo?: T;
   coverImageUrl?: T;
@@ -2487,6 +2518,9 @@ export interface RepresentationsSelect<T extends boolean = true> {
   mediaKitUrl?: T;
   contactEmail?: T;
   contactWhatsapp?: T;
+  isPublished?: T;
+  slug?: T;
+  sourceUrl?: T;
   status?: T;
   featured?: T;
   order?: T;

@@ -1,4 +1,16 @@
 import type { CollectionConfig } from 'payload'
+import { revalidatePath } from 'next/cache'
+import {
+  lexicalEditor,
+  BoldFeature,
+  ItalicFeature,
+  UnderlineFeature,
+  LinkFeature,
+  UnorderedListFeature,
+  OrderedListFeature,
+  HeadingFeature,
+  ParagraphFeature,
+} from '@payloadcms/richtext-lexical'
 
 export const Representations: CollectionConfig = {
   slug: 'representations',
@@ -6,12 +18,33 @@ export const Representations: CollectionConfig = {
     singular: 'Marca / Rep',
     plural: 'Marcas y reps',
   },
+  defaultSort: 'order',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'brand', 'country', 'category', 'status', 'order'],
+    defaultColumns: ['brand', 'slug', 'country', 'isPublished', 'status', 'order'],
     group: 'Comunidad',
     description:
-      'Catálogo oficial de destinos, cadenas hoteleras y operadores representados por Promovêre. Alimenta el portal privado de la Comunidad.',
+      'Catálogo oficial de Reps y marcas representadas por Promovêre. Controla su publicación en la Home (/reps/[slug]) y en Comunidad.',
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        try {
+          revalidatePath('/')
+          revalidatePath('/reps', 'layout')
+        } catch {}
+        return doc
+      },
+    ],
+    afterDelete: [
+      ({ doc }) => {
+        try {
+          revalidatePath('/')
+          revalidatePath('/reps', 'layout')
+        } catch {}
+        return doc
+      },
+    ],
   },
   access: {
     read: () => true,
@@ -88,11 +121,33 @@ export const Representations: CollectionConfig = {
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción Comercial',
+      label: 'Resumen / Descripción Comercial',
       required: true,
       admin: {
-        description: 'Resumen de la propuesta de valor y diferencial para el trade turístico.',
+        description:
+          'Resumen de la propuesta de valor y diferencial para el trade turístico (sin tarifas ni precios públicos).',
       },
+    },
+    {
+      name: 'content',
+      type: 'richText',
+      label: 'Contenido de la Página de la Rep (/reps/[slug])',
+      admin: {
+        description:
+          'Contenido editorial de la página pública de la Rep (nunca incluir tarifas ni precios públicos).',
+      },
+      editor: lexicalEditor({
+        features: () => [
+          ParagraphFeature(),
+          HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+          BoldFeature(),
+          ItalicFeature(),
+          UnderlineFeature(),
+          LinkFeature({ enabledCollections: ['media'] }),
+          UnorderedListFeature(),
+          OrderedListFeature(),
+        ],
+      }),
     },
     {
       type: 'row',
@@ -166,6 +221,38 @@ export const Representations: CollectionConfig = {
       ],
     },
     // Sidebar metadata
+    {
+      name: 'isPublished',
+      type: 'checkbox',
+      label: 'Publicado (visible en Home y /reps/[slug])',
+      defaultValue: true,
+      index: true,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Si se desmarca, la Rep desaparece automáticamente de la Home y su página /reps/[slug] devuelve 404.',
+      },
+    },
+    {
+      name: 'slug',
+      type: 'text',
+      label: 'Slug (URL pública /reps/[slug])',
+      unique: true,
+      index: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Ej: caribe-mexicano, atelier-de-hoteles, hoteles-solaris.',
+      },
+    },
+    {
+      name: 'sourceUrl',
+      type: 'text',
+      label: 'URL de Origen (Referencia)',
+      admin: {
+        position: 'sidebar',
+        description: 'URL de referencia de la web anterior para trazabilidad.',
+      },
+    },
     {
       name: 'status',
       type: 'select',

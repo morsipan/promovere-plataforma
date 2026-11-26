@@ -1,11 +1,13 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { MapPin, Building2, ArrowUpRight } from 'lucide-react';
 import { representationsContent } from '@/data/content';
 import { getMediaUrl } from '@/lib/media';
 import { resolveAppearance, AppearanceData } from '@/lib/appearance';
 
 interface RepresentationItemCMS {
-  id?: string;
+  id?: string | number;
+  slug?: string | null;
   title: string;
   brand: string;
   country: string;
@@ -13,7 +15,11 @@ interface RepresentationItemCMS {
   tag?: string;
   description: string;
   image?: unknown;
+  coverImage?: unknown;
+  logo?: unknown;
   imageUrl?: string;
+  coverImageUrl?: string | null;
+  isPublished?: boolean | null;
 }
 
 interface RepresentationsSectionProps {
@@ -24,9 +30,13 @@ interface RepresentationsSectionProps {
     subtitle?: string;
     items?: RepresentationItemCMS[];
   };
+  collectionReps?: RepresentationItemCMS[] | null;
 }
 
-export default function RepresentationsSection({ data }: RepresentationsSectionProps = {}) {
+export default function RepresentationsSection({
+  data,
+  collectionReps,
+}: RepresentationsSectionProps = {}) {
   // Resolución dinámica de apariencia no-code
   const sectionAppearance = resolveAppearance(data?.appearance, {
     backgroundColor: 'blanco',
@@ -37,8 +47,19 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
   const badge = data?.badge || representationsContent.badge;
   const title = data?.title || representationsContent.title;
   const subtitle = data?.subtitle || representationsContent.subtitle;
-  const items =
-    data?.items && data.items.length > 0 ? data.items : representationsContent.items;
+
+  // Si se recibe la colección `representations` desde CMS (filtrada por isPublished = true),
+  // respetar estrictamente ese listado para que al despublicar una Rep desaparezca de la Home.
+  const hasCmsCollection = Array.isArray(collectionReps);
+  const items: RepresentationItemCMS[] = hasCmsCollection
+    ? collectionReps.filter((rep) => rep.isPublished !== false)
+    : data?.items && data.items.length > 0
+    ? data.items
+    : representationsContent.items;
+
+  if (hasCmsCollection && items.length === 0) {
+    return null;
+  }
 
   return (
     <section id="representaciones" className={`py-20 md:py-28 relative overflow-hidden ${sectionAppearance.bgClass}`}>
@@ -81,17 +102,21 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
           {items.map((item, index) => {
             const isFeatured = index === 0 || index === 3;
             const fallbackImageUrl =
-              'imageUrl' in item && typeof (item as any).imageUrl === 'string'
+              (typeof item.coverImageUrl === 'string' && item.coverImageUrl) ||
+              ('imageUrl' in item && typeof (item as any).imageUrl === 'string'
                 ? (item as any).imageUrl
-                : '';
+                : '');
             const imageUrl = getMediaUrl(
-              item.image,
+              item.coverImage ?? item.image,
               fallbackImageUrl || (typeof item.image === 'string' ? item.image : ''),
             );
+            const logoUrl = getMediaUrl(item.logo, '');
+            const repHref = item.slug ? `/reps/${item.slug}` : '/comunidad/login';
 
             return (
-              <div
+              <Link
                 key={item.id || `rep-${index}`}
+                href={repHref}
                 className={`group relative overflow-hidden rounded-3xl bg-[#4d4e4f] shadow-md hover:shadow-2xl transition-all duration-500 min-h-[380px] sm:min-h-[420px] flex flex-col justify-between ${
                   isFeatured ? 'md:col-span-1 lg:col-span-1' : ''
                 }`}
@@ -102,23 +127,38 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
                     src={imageUrl}
                     alt={`${item.title} - ${item.brand}`}
                     fill
+                    unoptimized
                     className="object-cover object-center group-hover:scale-105 transition-transform duration-700 brightness-90"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
-                ) : null}
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#4d4e4f] via-[#1b87c7]/75 to-[#3cac59]/60" />
+                )}
 
                 {/* Overlays corporativos */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#4d4e4f] via-[#4d4e4f]/40 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
 
                 {/* Badges superiores */}
-                <div className="relative z-10 p-6 flex items-start justify-between">
-                  {item.category ? (
+                <div className="relative z-10 p-6 flex items-start justify-between gap-2">
+                  {logoUrl ? (
+                    <div className="relative w-12 h-12 rounded-xl bg-white/95 p-1.5 shadow-sm shrink-0">
+                      <Image
+                        src={logoUrl}
+                        alt={`Logo ${item.brand || item.title}`}
+                        fill
+                        unoptimized
+                        className="object-contain p-1"
+                      />
+                    </div>
+                  ) : item.category ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider border border-white/20 font-sans">
                       <Building2 className="w-3.5 h-3.5 text-[#3cac59]" />
                       {item.category}
                     </span>
-                  ) : null}
+                  ) : (
+                    <span />
+                  )}
                   {item.tag ? (
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#1b87c7] text-white text-xs font-bold shadow-sm font-sans">
                       {item.tag}
@@ -153,15 +193,12 @@ export default function RepresentationsSection({ data }: RepresentationsSectionP
                     {item.description}
                   </p>
 
-                  <a
-                    href="/comunidad/login"
-                    className="inline-flex items-center gap-2 text-xs font-bold text-white group-hover:text-[#1b87c7] transition-colors font-sans"
-                  >
-                    <span>Ver información comercial</span>
+                  <span className="inline-flex items-center gap-2 text-xs font-bold text-white group-hover:text-[#1b87c7] transition-colors font-sans">
+                    <span>{item.slug ? 'Ver representación' : 'Ver información comercial'}</span>
                     <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
-                  </a>
+                  </span>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

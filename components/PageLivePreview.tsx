@@ -67,6 +67,7 @@ export interface PageLivePreviewProps {
   blogSettings?: any;
   blogPosts?: any[];
   pressItems?: any[];
+  representations?: any[];
   slug?: string;
 }
 
@@ -109,6 +110,7 @@ export default function PageLivePreview({
   blogSettings,
   blogPosts,
   pressItems,
+  representations,
   slug = 'home',
 }: PageLivePreviewProps) {
   const [liveData, setLiveData] = useState<any>(null);
@@ -141,7 +143,13 @@ export default function PageLivePreview({
       case 'services':
         return <ServicesSection key={`block-${index}`} data={block} />;
       case 'representations':
-        return <RepresentationsSection key={`block-${index}`} data={block} />;
+        return (
+          <RepresentationsSection
+            key={`block-${index}`}
+            data={block}
+            collectionReps={representations}
+          />
+        );
       case 'distribution':
         return <DistributionSection key={`block-${index}`} data={block} />;
       case 'partners':
@@ -319,7 +327,7 @@ export default function PageLivePreview({
         <>
           <HeroSection data={heroBlock} />
           <ServicesSection />
-          <RepresentationsSection />
+          <RepresentationsSection collectionReps={representations} />
           <PrMetricsSection />
           <DistributionSection />
           <PartnersSection />

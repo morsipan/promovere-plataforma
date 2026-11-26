@@ -57,10 +57,11 @@ export default async function Home() {
   let blogSettings: any = null;
   let blogPosts: any[] = [];
   let pressItems: any[] = [];
+  let publishedReps: any[] | undefined = undefined;
 
   try {
     const payload = await getPayload({ config });
-    const [pagesRes, headerRes, footerRes, settingsRes, blogSettingsRes, blogRes, pressRes] = await Promise.all([
+    const [pagesRes, headerRes, footerRes, settingsRes, blogSettingsRes, blogRes, pressRes, repsRes] = await Promise.all([
       payload
         .find({
           collection: 'pages',
@@ -95,6 +96,15 @@ export default async function Home() {
           limit: 100,
         })
         .catch(() => ({ docs: [] })),
+      payload
+        .find({
+          collection: 'representations',
+          where: { isPublished: { equals: true } },
+          sort: 'order',
+          depth: 1,
+          limit: 50,
+        })
+        .catch(() => null),
     ]);
 
     if (pagesRes?.docs && pagesRes.docs.length > 0) {
@@ -106,6 +116,9 @@ export default async function Home() {
     blogSettings = blogSettingsRes;
     blogPosts = blogRes?.docs || [];
     pressItems = sortPressItemsNewestFirst(pressRes?.docs || []).slice(0, 6);
+    if (repsRes && Array.isArray(repsRes.docs)) {
+      publishedReps = repsRes.docs;
+    }
   } catch (error) {
     console.warn('Payload Pages: cargando contenido estático por defecto.');
   }
@@ -119,6 +132,7 @@ export default async function Home() {
       blogSettings={blogSettings}
       blogPosts={blogPosts}
       pressItems={pressItems}
+      representations={publishedReps}
       slug="home"
     />
   );
