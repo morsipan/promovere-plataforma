@@ -141,7 +141,7 @@ export const servicesContent = {
     },
     {
       id: "marketing-turistico",
-      image: "/assets/SVG/servicio-marketing.svg",
+      image: "/assets/SVG/servicio-mkt.svg",
       title: "Marketing Turístico",
       subtitle: "Campañas de alta conversión",
       description:
@@ -169,7 +169,7 @@ export const servicesContent = {
     },
     {
       id: "events",
-      image: "/assets/SVG/servicio-capacitacion.svg",
+      image: "/assets/SVG/servicio-events.svg",
       title: "Events",
       subtitle: "Diferenciación y valor para tu marca",
       description:
@@ -183,7 +183,7 @@ export const servicesContent = {
     },
     {
       id: "trade",
-      image: "/assets/SVG/servicio-desarrollo.svg",
+      image: "/assets/SVG/servicio-trade.svg",
       title: "Trade",
       subtitle: "Formación especializada y presencia continua",
       description:
@@ -197,7 +197,7 @@ export const servicesContent = {
     },
     {
       id: "fams",
-      image: "/assets/SVG/servicio-eventos.svg",
+      image: "/assets/SVG/servicio-fams.svg",
       title: "FAMS",
       subtitle: "Experiencias memorables de inmersión",
       description:
