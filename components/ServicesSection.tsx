@@ -69,6 +69,28 @@ interface ServicesSectionProps {
   };
 }
 
+const DEFAULT_SERVICE_LOGOS = [
+  '/assets/SVG/servicio-reps.svg',
+  '/assets/SVG/servicio-mkt.svg',
+  '/assets/SVG/servicio-pr.svg',
+  '/assets/SVG/servicio-events.svg',
+  '/assets/SVG/servicio-trade.svg',
+  '/assets/SVG/servicio-fams.svg',
+];
+
+function resolveServiceLogoFallback(title: string, index: number): string {
+  const lower = (title || '').toLowerCase();
+  if (lower.includes('rep')) return '/assets/SVG/servicio-reps.svg';
+  if (lower.includes('marketing') || lower.includes('mkt')) return '/assets/SVG/servicio-mkt.svg';
+  if (lower.includes('relaciones') || lower.includes('pr')) return '/assets/SVG/servicio-pr.svg';
+  if (lower.includes('event') || lower.includes('growth')) return '/assets/SVG/servicio-events.svg';
+  if (lower.includes('trade') || lower.includes('cap') || lower.includes('desarrollo')) {
+    return '/assets/SVG/servicio-trade.svg';
+  }
+  if (lower.includes('fam')) return '/assets/SVG/servicio-fams.svg';
+  return DEFAULT_SERVICE_LOGOS[index] || '';
+}
+
 export default function ServicesSection({ data }: ServicesSectionProps = {}) {
   // Resolución dinámica de apariencia no-code
   const sectionAppearance = resolveAppearance(data?.appearance, {
@@ -125,15 +147,14 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service, index) => {
             const imageMedia = 'image' in service ? (service as ServiceItemCMS).image : undefined;
-            const imageUrl = getMediaUrl(imageMedia, '');
+            const cmsImageUrl = getMediaUrl(imageMedia, '');
             const customIcon = 'customIcon' in service ? (service as ServiceItemCMS).customIcon : undefined;
             const customIconUrl = getMediaUrl(customIcon, '');
+            const resolvedLogoUrl =
+              cmsImageUrl || customIconUrl || resolveServiceLogoFallback(service.title, index);
 
             const hasIcon = Boolean(service.icon && service.icon !== 'none');
-            const Icon = hasIcon ? iconMap[service.icon!] || null : null;
-
-            const hasBrandingImage = Boolean(imageUrl);
-            const hasVisual = hasBrandingImage || Boolean(customIconUrl) || Boolean(Icon);
+            const Icon = !resolvedLogoUrl && hasIcon ? iconMap[service.icon!] || null : null;
 
             const highlights: string[] = Array.isArray(service.highlights)
               ? service.highlights
@@ -147,49 +168,21 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
                 className={`group relative rounded-2xl p-7 sm:p-8 border transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${sectionAppearance.cardClass}`}
               >
                 <div>
-                  {/* Visual Header (Branding Image o Ícono) */}
-                  {hasVisual ? (
-                    <div className="flex items-center justify-between mb-6">
-                      {hasBrandingImage ? (
-                        <div className="relative h-14 sm:h-16 w-auto max-w-[160px] flex items-center">
-                          <Image
-                            src={imageUrl}
-                            alt={service.title}
-                            width={160}
-                            height={64}
-                            unoptimized
-                            className="max-h-14 sm:max-h-16 w-auto object-contain object-left"
-                          />
-                        </div>
-                      ) : (
-                        <div
-                          className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors duration-300 ${sectionAppearance.accentIconBgClass}`}
-                        >
-                          {customIconUrl ? (
-                            <div className="relative w-7 h-7">
-                              <Image
-                                src={customIconUrl}
-                                alt={service.title}
-                                fill
-                                unoptimized
-                                className="object-contain"
-                              />
-                            </div>
-                          ) : Icon ? (
-                            <Icon className="w-7 h-7" />
-                          ) : null}
-                        </div>
-                      )}
-                      <span className={`text-xs font-bold tracking-widest uppercase ${sectionAppearance.isDark ? 'text-white/40' : 'text-gray-300'}`}>
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
+                  {/* Logo del servicio directamente sobre el título (sin caja ni numeración lateral) */}
+                  {resolvedLogoUrl ? (
+                    <div className="mb-4">
+                      <img
+                        src={resolvedLogoUrl}
+                        alt={service.title}
+                        className="h-14 sm:h-16 w-auto max-w-[200px] object-contain object-left block"
+                        loading="lazy"
+                      />
                     </div>
-                  ) : (
-                    /* Si no se coloca ni imagen ni ícono, no ocupa ningún espacio vertical */
-                    <span className={`absolute top-6 right-6 text-xs font-bold tracking-widest uppercase ${sectionAppearance.isDark ? 'text-white/40' : 'text-gray-300'}`}>
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                  )}
+                  ) : Icon ? (
+                    <div className="mb-4">
+                      <Icon className={`w-8 h-8 ${sectionAppearance.accentTextClass}`} />
+                    </div>
+                  ) : null}
 
                   {/* Title & Subtitle */}
                   {service.subtitle ? (
