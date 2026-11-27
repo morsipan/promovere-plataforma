@@ -2,6 +2,9 @@ import Image from 'next/image';
 import { Globe, ArrowRight, CheckCircle2, MapPin } from 'lucide-react';
 import { distributionContent } from '@/data/content';
 import { resolveAppearance, AppearanceData } from '@/lib/appearance';
+import DistributionBrandCarousel, {
+  type DistributionBrandItem,
+} from '@/components/blocks/DistributionBrandCarousel';
 
 interface StatItemCMS {
   value: string;
@@ -27,6 +30,11 @@ interface DistributionSectionProps {
     cta2Href?: string;
     stats?: StatItemCMS[];
     channels?: ChannelItemCMS[];
+    carouselEnabled?: boolean | null;
+    carouselTitle?: string | null;
+    carouselSpeed?: 'slow' | 'normal' | 'fast' | string | null;
+    pauseOnHover?: boolean | null;
+    brandCarousel?: DistributionBrandItem[] | null;
   };
 }
 
@@ -187,6 +195,16 @@ export default function DistributionSection({ data }: DistributionSectionProps =
             </div>
           </div>
         </div>
+
+        {/* Carrusel Infinito Administrable de Operadores y Marcas */}
+        <DistributionBrandCarousel
+          enabled={data?.carouselEnabled}
+          title={data?.carouselTitle || 'Operadores y Marcas Conectados en LATAM'}
+          speed={data?.carouselSpeed}
+          pauseOnHover={data?.pauseOnHover}
+          brands={data?.brandCarousel}
+          isDarkSection={sectionAppearance.isDark}
+        />
       </div>
     </section>
   );

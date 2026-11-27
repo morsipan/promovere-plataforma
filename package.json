@@ -12,6 +12,8 @@
     "import:press-videos": "tsx --env-file=.env scripts/import-press-videos.ts",
     "sync:press-images": "tsx --env-file=.env scripts/sync-press-images.ts",
     "seed:reps": "tsx --env-file=.env scripts/seed-reps.ts",
+    "seed:services": "tsx --env-file=.env scripts/seed-service-pages.ts",
+    "seed:distribution-brands": "tsx --env-file=.env scripts/seed-distribution-brands.ts",
     "seed": "tsx --env-file=.env scripts/seed.ts"
   },
   "dependencies": {

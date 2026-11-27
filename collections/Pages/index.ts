@@ -38,7 +38,7 @@ export const Pages: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'updatedAt'],
+    defaultColumns: ['title', 'slug', 'isPublished', 'updatedAt'],
     group: 'Sitios',
     livePreview: {
       url: ({ data, req }) => {
@@ -106,6 +106,9 @@ export const Pages: CollectionConfig = {
         try {
           const path = doc?.slug === 'home' ? '/' : `/${doc?.slug || ''}`;
           revalidatePath(path);
+          if (doc?.slug) {
+            revalidatePath(`/servicios/${doc.slug}`);
+          }
           if (doc?.slug === 'home') {
             revalidatePath('/');
           }
@@ -130,6 +133,18 @@ export const Pages: CollectionConfig = {
       label: 'Título de la Página',
       required: true,
       defaultValue: 'Inicio — One Page Promovêre',
+    },
+    {
+      name: 'isPublished',
+      type: 'checkbox',
+      label: 'Publicada (visible en el sitio)',
+      defaultValue: true,
+      index: true,
+      admin: {
+        position: 'sidebar',
+        description:
+          'Si se desmarca, la página deja de mostrarse públicamente y devuelve 404.',
+      },
     },
     {
       name: 'slug',

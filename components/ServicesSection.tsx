@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   Briefcase,
   Megaphone,
@@ -20,6 +21,7 @@ import {
   Heart,
   Phone,
   Tag,
+  ArrowRight,
   LucideIcon,
 } from 'lucide-react';
 import { servicesContent } from '@/data/content';
@@ -89,6 +91,23 @@ function resolveServiceLogoFallback(title: string, index: number): string {
   }
   if (lower.includes('fam')) return '/assets/SVG/servicio-fams.svg';
   return DEFAULT_SERVICE_LOGOS[index] || '';
+}
+
+function resolveServicePageHref(title: string, index: number): string | null {
+  const lower = (title || '').toLowerCase();
+  if (lower.includes('representacion') || lower.includes('rep')) {
+    return '/servicios/representaciones-turisticas';
+  }
+  if (lower.includes('marketing') || lower.includes('mkt')) {
+    return '/servicios/marketing-turistico';
+  }
+  if (lower.includes('relaciones') || lower.includes('pr')) {
+    return '/servicios/relaciones-publicas';
+  }
+  if (index === 0) return '/servicios/representaciones-turisticas';
+  if (index === 1) return '/servicios/marketing-turistico';
+  if (index === 2) return '/servicios/relaciones-publicas';
+  return null;
 }
 
 export default function ServicesSection({ data }: ServicesSectionProps = {}) {
@@ -216,6 +235,23 @@ export default function ServicesSection({ data }: ServicesSectionProps = {}) {
                     ))}
                   </div>
                 ) : null}
+
+                {/* Enlace a página dedicada del servicio (cuando corresponde) */}
+                {(() => {
+                  const serviceHref = resolveServicePageHref(service.title, index);
+                  if (!serviceHref) return null;
+                  return (
+                    <div className="mt-5 pt-3 border-t border-gray-100">
+                      <Link
+                        href={serviceHref}
+                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#1b87c7] hover:text-[#3cac59] transition-colors"
+                      >
+                        <span>Conocer más sobre este servicio</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  );
+                })()}
               </div>
             );
           })}

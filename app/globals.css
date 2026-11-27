@@ -94,3 +94,29 @@
     text-wrap: balance;
   }
 }
+
+@keyframes distribution-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.distribution-marquee-track {
+  animation-name: distribution-marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.distribution-marquee-pauseable:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .distribution-marquee-track {
+    animation: none;
+  }
+}

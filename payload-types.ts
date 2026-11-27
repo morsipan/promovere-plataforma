@@ -154,6 +154,10 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
+  /**
+   * Si se desmarca, la página deja de mostrarse públicamente y devuelve 404.
+   */
+  isPublished?: boolean | null;
   slug: string;
   /**
    * Personalizá los colores base de fondo, títulos, textos y acento para esta página o landing (disponible en todas las páginas actuales y futuras).
@@ -369,6 +373,25 @@ export interface Page {
               title: string;
               description: string;
               coverage?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        carouselEnabled?: boolean | null;
+        carouselSpeed?: ('slow' | 'normal' | 'fast') | null;
+        pauseOnHover?: boolean | null;
+        carouselTitle?: string | null;
+        /**
+         * Agregá, editá, reordená o eliminá los logos de operadores y marcas que rotan en el carrusel infinito de Red de Distribución.
+         */
+        brandCarousel?:
+          | {
+              name: string;
+              /**
+               * Si se completa, abre en pestaña nueva.
+               */
+              url?: string | null;
+              active?: boolean | null;
+              logo: number | Media;
               id?: string | null;
             }[]
           | null;
@@ -1683,6 +1706,7 @@ export interface PayloadMigration {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  isPublished?: T;
   slug?: T;
   pageStyles?:
     | T
@@ -1830,6 +1854,19 @@ export interface PagesSelect<T extends boolean = true> {
                     title?: T;
                     description?: T;
                     coverage?: T;
+                    id?: T;
+                  };
+              carouselEnabled?: T;
+              carouselSpeed?: T;
+              pauseOnHover?: T;
+              carouselTitle?: T;
+              brandCarousel?:
+                | T
+                | {
+                    name?: T;
+                    url?: T;
+                    active?: T;
+                    logo?: T;
                     id?: T;
                   };
               id?: T;

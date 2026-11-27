@@ -90,7 +90,7 @@ export default async function DynamicInternalPage({ params }: PageProps) {
     console.error(`Error al consultar página con slug "${slug}":`, error);
   }
 
-  if (!pageDoc) {
+  if (!pageDoc || (pageDoc as any).isPublished === false) {
     notFound();
   }
 

@@ -117,5 +117,94 @@ export const DistributionBlock: Block = {
         },
       ],
     },
+    // Carrusel Infinito Administrable de Operadores y Marcas
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'carouselEnabled',
+          type: 'checkbox',
+          label: 'Mostrar Carrusel Infinito de Marcas / Operadores',
+          defaultValue: true,
+          admin: { width: '34%' },
+        },
+        {
+          name: 'carouselSpeed',
+          type: 'select',
+          enumName: 'enum_dist_spd',
+          label: 'Velocidad del Carrusel',
+          defaultValue: 'normal',
+          options: [
+            { label: 'Lenta', value: 'slow' },
+            { label: 'Normal (Default)', value: 'normal' },
+            { label: 'Rápida', value: 'fast' },
+          ],
+          admin: { width: '33%' },
+        },
+        {
+          name: 'pauseOnHover',
+          type: 'checkbox',
+          label: 'Pausar al pasar el cursor',
+          defaultValue: true,
+          admin: { width: '33%' },
+        },
+      ],
+    },
+    {
+      name: 'carouselTitle',
+      type: 'text',
+      label: 'Título del Carrusel de Marcas (Opcional)',
+      defaultValue: 'Operadores y Marcas Conectados en LATAM',
+    },
+    {
+      name: 'brandCarousel',
+      type: 'array',
+      label: 'Carrusel de Marcas / Operadores (Red de Distribución)',
+      labels: {
+        singular: 'Marca / Operador',
+        plural: 'Marcas y Operadores',
+      },
+      admin: {
+        description:
+          'Agregá, editá, reordená o eliminá los logos de operadores y marcas que rotan en el carrusel infinito de Red de Distribución.',
+      },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'name',
+              type: 'text',
+              label: 'Nombre de la Marca / Operador (Alt)',
+              required: true,
+              admin: { width: '45%' },
+            },
+            {
+              name: 'url',
+              type: 'text',
+              label: 'URL Externa (Opcional)',
+              admin: {
+                width: '40%',
+                description: 'Si se completa, abre en pestaña nueva.',
+              },
+            },
+            {
+              name: 'active',
+              type: 'checkbox',
+              label: 'Activo',
+              defaultValue: true,
+              admin: { width: '15%' },
+            },
+          ],
+        },
+        {
+          name: 'logo',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Logo (Media)',
+          required: true,
+        },
+      ],
+    },
   ],
 }
