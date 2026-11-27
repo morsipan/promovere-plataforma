@@ -814,15 +814,22 @@ export default function PressSection({
           </nav>
         ) : null}
 
-        {/* Enlace a página completa de Prensa (cuando está en la Home) */}
+        {/* Enlace a página completa de Prensa y Entrevistas (cuando está en la Home) */}
         {!hideViewAllCta && allPressLabel && allPressHref ? (
-          <div className="mt-12 text-center">
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Link
               href={allPressHref}
               className={`inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 ${sectionAppearance.buttonClass}`}
             >
               <span>{allPressLabel}</span>
               <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/entrevistas-y-coberturas"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm border border-[#1b87c7]/30 bg-white text-[#1b87c7] hover:bg-[#1b87c7]/5 hover:border-[#1b87c7] transition-all hover:-translate-y-0.5"
+            >
+              <PlayCircle className="w-4 h-4 text-[#3cac59]" />
+              <span>Ver entrevistas y coberturas en video</span>
             </Link>
           </div>
         ) : null}

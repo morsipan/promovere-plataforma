@@ -202,6 +202,17 @@ export default function RepresentationsSection({
             );
           })}
         </div>
+
+        {/* Enlace al catálogo completo de marcas en Comunidad Promovêre */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/comunidad/marcas"
+            className={`inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 ${sectionAppearance.buttonClass}`}
+          >
+            <span>Explorar marcas y material comercial en Comunidad</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
     </section>
   );

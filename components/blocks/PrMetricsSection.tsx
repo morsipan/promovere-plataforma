@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import { Radio, TrendingUp, CalendarCheck2, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { Radio, TrendingUp, CalendarCheck2, Sparkles, ArrowRight } from 'lucide-react';
 import { resolveAppearance, type AppearanceData } from '@/lib/appearance';
 
 export interface PrMetricItemCMS {
@@ -169,6 +170,16 @@ export default function PrMetricsSection({ data }: PrMetricsSectionProps = {}) {
               </div>
             );
           })}
+        </div>
+
+        <div className="mt-10 text-center">
+          <Link
+            href="/servicios/relaciones-publicas"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#1b87c7] hover:text-[#3cac59] transition-colors"
+          >
+            <span>Conocer nuestro servicio de Relaciones Públicas</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </section>

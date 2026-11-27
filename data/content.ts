@@ -557,9 +557,9 @@ export const footerContent = {
     {
       title: "Servicios",
       links: [
-        { label: "Representaciones (Vê REPS®)", href: "#servicios" },
-        { label: "Marketing Turístico", href: "#servicios" },
-        { label: "Relaciones Públicas", href: "#servicios" },
+        { label: "Representaciones (Vê REPS®)", href: "/servicios/representaciones-turisticas" },
+        { label: "Marketing Turístico", href: "/servicios/marketing-turistico" },
+        { label: "Relaciones Públicas", href: "/servicios/relaciones-publicas" },
         { label: "Capacitación & Ventas", href: "#servicios" },
         { label: "Desarrollo de Producto", href: "#servicios" },
         { label: "Eventos y Fam Tours", href: "#servicios" },
