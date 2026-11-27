@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { getMediaUrl } from '@/lib/media';
 
 export interface DistributionBrandItem {
@@ -36,33 +36,53 @@ export default function DistributionBrandCarousel({
   isDarkSection = true,
 }: DistributionBrandCarouselProps) {
   const [brokenIds, setBrokenIds] = useState<Record<string, boolean>>({});
+  const [isHovered, setIsHovered] = useState(false);
 
-  if (enabled === false) return null;
+  const activeBrands = useMemo(() => {
+    if (enabled === false) return [];
+    return (Array.isArray(brands) ? brands : [])
+      .filter((b) => b && b.active !== false)
+      .map((b, idx) => ({
+        id: b.id || `dist-brand-${idx}`,
+        name: (b.name || 'Operador').trim(),
+        logoUrl: getMediaUrl(b.logo, ''),
+        href: normalizeOptionalUrl(b.url),
+      }))
+      .filter((b) => b.logoUrl.length > 0 && !brokenIds[b.id]);
+  }, [enabled, brands, brokenIds]);
 
-  const activeBrands = (Array.isArray(brands) ? brands : [])
-    .filter((b) => b && b.active !== false)
-    .map((b, idx) => ({
-      id: b.id || `dist-brand-${idx}`,
-      name: (b.name || 'Operador').trim(),
-      logoUrl: getMediaUrl(b.logo, ''),
-      href: normalizeOptionalUrl(b.url),
-    }))
-    .filter((b) => b.logoUrl.length > 0 && !brokenIds[b.id]);
+  // Si hay pocas marcas cargadas en CMS (ej. 1-5), repetir dentro de cada mitad
+  // para garantizar cobertura completa sin huecos en pantallas anchas.
+  const halfTrackItems = useMemo(() => {
+    if (activeBrands.length === 0) return [];
+    const minItemsPerHalf = 8;
+    const repeatCount = Math.max(1, Math.ceil(minItemsPerHalf / activeBrands.length));
+    const list: Array<(typeof activeBrands)[number] & { copyKey: string }> = [];
+    for (let r = 0; r < repeatCount; r++) {
+      for (const b of activeBrands) {
+        list.push({ ...b, copyKey: `${r}-${b.id}` });
+      }
+    }
+    return list;
+  }, [activeBrands]);
 
-  if (activeBrands.length === 0) return null;
+  if (enabled === false || halfTrackItems.length === 0) return null;
 
-  const durationSeconds = speed === 'slow' ? 58 : speed === 'fast' ? 24 : 38;
+  // Duración proporcional al número de elementos para mantener velocidad visual constante
+  const secondsPerItem = speed === 'slow' ? 2.8 : speed === 'fast' ? 1.15 : 1.85;
+  const durationSeconds = Math.max(16, Math.round(halfTrackItems.length * secondsPerItem));
+  const shouldPause = pauseOnHover !== false && isHovered;
 
-  // Duplicar la pista para desplazamiento infinito 0% -> -50% sin saltos
-  const renderTrack = (prefix: string) =>
-    activeBrands.map((brand) => {
+  const renderHalf = (prefix: 'a' | 'b') =>
+    halfTrackItems.map((brand) => {
       const cardInner = (
         <div className="bg-white rounded-2xl border border-gray-200/80 px-5 sm:px-6 py-3.5 sm:py-4 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center min-w-[155px] sm:min-w-[185px] h-[76px] sm:h-[86px]">
           <img
             src={brand.logoUrl}
             alt={brand.name}
             title={brand.name}
-            loading="lazy"
+            loading="eager"
+            draggable={false}
             onError={() =>
               setBrokenIds((prev) => (prev[brand.id] ? prev : { ...prev, [brand.id]: true }))
             }
@@ -74,7 +94,7 @@ export default function DistributionBrandCarousel({
       if (brand.href) {
         return (
           <a
-            key={`${prefix}-${brand.id}`}
+            key={`${prefix}-${brand.copyKey}`}
             href={brand.href}
             target="_blank"
             rel="noopener noreferrer"
@@ -87,7 +107,7 @@ export default function DistributionBrandCarousel({
       }
 
       return (
-        <div key={`${prefix}-${brand.id}`} className="shrink-0">
+        <div key={`${prefix}-${brand.copyKey}`} className="shrink-0">
           {cardInner}
         </div>
       );
@@ -95,6 +115,13 @@ export default function DistributionBrandCarousel({
 
   return (
     <div className="mt-14 pt-10 border-t border-white/15">
+      <style>{`
+        @keyframes promovereDistMarquee {
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-50%, 0, 0); }
+        }
+      `}</style>
+
       {title ? (
         <p
           className={`text-center text-xs sm:text-sm font-bold uppercase tracking-widest mb-6 font-heading ${
@@ -105,7 +132,13 @@ export default function DistributionBrandCarousel({
         </p>
       ) : null}
 
-      <div className="relative overflow-hidden py-2">
+      <div
+        className="relative overflow-hidden py-2"
+        onMouseEnter={() => {
+          if (pauseOnHover !== false) setIsHovered(true);
+        }}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         {/* Degradados laterales sutiles */}
         <div
           className={`pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 z-10 ${
@@ -123,16 +156,21 @@ export default function DistributionBrandCarousel({
         />
 
         <div
-          className={`flex w-max items-center gap-4 sm:gap-5 distribution-marquee-track ${
-            pauseOnHover !== false ? 'distribution-marquee-pauseable' : ''
-          }`}
+          className="flex flex-nowrap w-max items-center"
           style={{
-            animationDuration: `${durationSeconds}s`,
+            animation: `promovereDistMarquee ${durationSeconds}s linear infinite`,
+            animationPlayState: shouldPause ? 'paused' : 'running',
+            willChange: 'transform',
           }}
         >
-          <div className="flex items-center gap-4 sm:gap-5 pr-4 sm:pr-5">{renderTrack('a')}</div>
-          <div className="flex items-center gap-4 sm:gap-5 pr-4 sm:pr-5" aria-hidden="true">
-            {renderTrack('b')}
+          <div className="flex flex-nowrap items-center gap-4 sm:gap-5 pr-4 sm:pr-5 shrink-0">
+            {renderHalf('a')}
+          </div>
+          <div
+            className="flex flex-nowrap items-center gap-4 sm:gap-5 pr-4 sm:pr-5 shrink-0"
+            aria-hidden="true"
+          >
+            {renderHalf('b')}
           </div>
         </div>
       </div>
